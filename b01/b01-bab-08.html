@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pemrograman Berorientasi Objek — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+      --cyan:      #00C8FF;
+      --cyan-dim:  #00628090;
+      --green:     #00FF94;
+      --green-dim: #00804A50;
+      --amber:     #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:    #9D6FFF;
+      --purple-dim:#4B2A9040;
+      --red:       #FF5F6D;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri { display: flex; align-items: center; gap: 0.85rem; }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char { color: var(--green); font-weight: 600; margin-right: 0.2rem; }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif { color: var(--text-primary); font-weight: 500; }
+
+    /* MAIN */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item { display: flex; align-items: center; gap: 0.4rem; }
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* DAFTAR SUBBAB */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before { content: '//'; color: var(--cyan); font-size: 0.8rem; }
+
+    .daftar-subbab ol { list-style: none; padding: 0; display: grid; gap: 0.35rem; }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* TIPOGRAFI KONTEN */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol { padding-left: 1.5rem; margin-bottom: 1.25rem; color: var(--text-secondary); font-size: 0.93rem; }
+    .konten ul { list-style: none; padding-left: 0; }
+    .konten ul li { padding-left: 1.25rem; position: relative; margin-bottom: 0.5rem; }
+    .konten ul li::before { content: '▸'; color: var(--cyan); position: absolute; left: 0; font-size: 0.7rem; top: 0.35rem; }
+    .konten ol li { margin-bottom: 0.5rem; }
+    .konten strong { color: var(--text-primary); font-weight: 600; }
+    .konten a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(0,200,255,0.3); transition: all 0.2s; }
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* BLOK KODE */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik { display: flex; gap: 0.4rem; }
+    .blok-kode-header .titik-titik span { width: 10px; height: 10px; border-radius: 50%; }
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre { padding: 1.25rem 1.5rem; overflow-x: auto; margin: 0; }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* KARTU */
+    .kartu-info, .kartu-peringatan, .kartu-tips, .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info       { background: rgba(0,200,255,0.05);   border: 1px solid rgba(0,200,255,0.2); }
+    .kartu-peringatan { background: rgba(255,184,48,0.05);  border: 1px solid rgba(255,184,48,0.25); }
+    .kartu-tips       { background: rgba(0,255,148,0.05);   border: 1px solid rgba(0,255,148,0.2); }
+    .kartu-catatan    { background: rgba(157,111,255,0.06); border: 1px solid rgba(157,111,255,0.25); }
+
+    .kartu-ikon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .kartu-isi  { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* TABEL */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--font-mono); }
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* NAVIGASI BAB */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover { border-color: rgba(0,200,255,0.4); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+    .indikator-progres { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .nomor-bab-sekarang { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.08em; }
+    .dot-progres { display: flex; gap: 4px; }
+    .dot-progres span { width: 5px; height: 5px; border-radius: 50%; background: var(--border); }
+    .dot-progres span.aktif { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); background: var(--bg-base); padding: 2rem 0; }
+    footer .wadah { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-kiri { display: flex; align-items: center; gap: 0.75rem; }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .footer-kanan { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-muted); text-align: right; }
+    .footer-kanan a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ANIMASI */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* RESPONSIF */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+      .navigasi-bab .wadah { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+      .posisi-tengah { grid-column: 1 / -1; order: -1; }
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-08-pemrograman-berorientasi-objek</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian III — Python Menengah</span>
+          <span class="label-nomor-bab">Bab 8 / 15</span>
+        </div>
+        <h1 class="judul-bab">Pemrograman Berorientasi Objek<span class="aksen">.</span></h1>
+        <p class="deskripsi-bab">
+          Sejauh ini kamu menulis kode sebagai deretan instruksi dan fungsi terpisah. Pemrograman berorientasi objek *(object-oriented programming)* menawarkan cara berpikir yang berbeda: kumpulkan data dan fungsi yang berkaitan ke dalam satu unit bernama kelas. Hampir semua library kecerdasan buatan — dari scikit-learn sampai PyTorch — dibangun di atas paradigma ini, jadi memahaminya bukan pilihan, melainkan keharusan.
+        </p>
+        <div class="pita-info-bab">
+          <div class="info-item"><span>⏱</span><span class="info-val">~3 jam baca + latihan</span></div>
+          <div class="info-item"><span>📦</span><span class="info-val">Tidak ada library — Python murni</span></div>
+          <div class="info-item"><span>🔗</span><span class="info-val">Prasyarat: Bab 3–7</span></div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li><span class="nomor-subbab">8.1</span><a href="#subbab-1">Konsep kelas dan objek</a></li>
+          <li><span class="nomor-subbab">8.2</span><a href="#subbab-2">Atribut dan metode</a></li>
+          <li><span class="nomor-subbab">8.3</span><a href="#subbab-3">Konstruktor __init__</a></li>
+          <li><span class="nomor-subbab">8.4</span><a href="#subbab-4">Pewarisan (inheritance) dasar</a></li>
+          <li><span class="nomor-subbab">8.5</span><a href="#subbab-5">Kapan OOP membantu dan kapan tidak perlu</a></li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">8.1 Konsep Kelas dan Objek</h2>
+
+        <p>
+          Mari mulai dari analogi sederhana. Bayangkan sebuah <strong>cetak biru</strong> *(blueprint)* rumah — dokumen teknis yang mendeskripsikan semua detail: jumlah kamar, posisi pintu, ukuran jendela. Cetak biru itu bukan rumah yang sebenarnya, ia hanya deskripsi. Tapi dari satu cetak biru, kamu bisa membangun banyak rumah nyata — setiap rumah punya alamat berbeda, penghuninya berbeda, kondisinya berbeda, tapi semua mengikuti desain yang sama.
+        </p>
+
+        <p>
+          Di Python, <strong>kelas</strong> *(class)* adalah cetak biru itu. <strong>Objek</strong> *(object)* adalah rumah nyata yang dibangun dari cetak biru tersebut. Setiap objek yang dibuat dari kelas yang sama berbagi struktur dan kemampuan yang sama, tapi punya <strong>data sendiri</strong> yang independen. Proses membuat objek dari kelas disebut <strong>instansiasi</strong> *(instantiation)*, dan objek yang dihasilkan disebut <strong>instans</strong> *(instance)*.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Mendefinisikan kelas — ini adalah cetak biru, belum jadi objek</span>
+<span class="kw">class</span> <span class="fn">ModelML</span>:
+    <span class="st">"""Kelas sederhana untuk merepresentasikan model ML."""</span>
+    <span class="kw">pass</span>   <span class="cm"># 'pass' sebagai penampung sementara</span>
+
+<span class="cm"># Membuat objek (instansiasi) dari kelas</span>
+model_a = <span class="fn">ModelML</span>()   <span class="cm"># objek pertama</span>
+model_b = <span class="fn">ModelML</span>()   <span class="cm"># objek kedua — terpisah dari model_a</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(model_a))   <span class="cm"># → &lt;class '__main__.ModelML'&gt;</span>
+<span class="fn">print</span>(model_a <span class="kw">is</span> model_b)   <span class="cm"># → False — dua objek berbeda di memori</span>
+
+<span class="cm"># Kamu bisa menambahkan atribut ke objek secara langsung (tidak dianjurkan)</span>
+model_a.nama     = <span class="st">"XGBoost"</span>
+model_a.akurasi  = <span class="nm">0.93</span>
+model_b.nama     = <span class="st">"Random Forest"</span>
+model_b.akurasi  = <span class="nm">0.91</span>
+
+<span class="fn">print</span>(model_a.nama)    <span class="cm"># → XGBoost</span>
+<span class="fn">print</span>(model_b.nama)    <span class="cm"># → Random Forest</span>
+<span class="cm"># model_a dan model_b punya data yang sepenuhnya terpisah</span></code></pre>
+        </div>
+
+        <p>
+          Kamu mungkin bertanya: kalau bisa tambah atribut langsung ke objek seperti di atas, kenapa butuh kelas? Jawabannya: kelas memaksa <strong>konsistensi</strong>. Tanpa kelas yang mendefinisikan struktur, setiap objek bisa punya atribut yang berbeda-beda — satu punya <code>nama</code>, yang lain punya <code>name</code>, yang ketiga tidak punya sama sekali. Kelas memastikan semua objek yang dibuat darinya dimulai dengan struktur yang sama dan terdefinisi dengan baik.
+        </p>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Semua Benda di Python adalah Objek</strong>
+            <p>Ini bukan kiasan — setiap nilai di Python, termasuk integer, string, list, fungsi, dan bahkan kelas itu sendiri, adalah objek. Itulah kenapa <code>"halo".upper()</code> bisa dipanggil: string adalah objek dari kelas <code>str</code>, dan <code>upper</code> adalah metode yang didefinisikan di kelas tersebut. Saat kamu menulis <code>[1,2,3].append(4)</code>, kamu sedang memanggil metode <code>append</code> dari objek bertipe <code>list</code>.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">8.2 Atribut dan Metode</h2>
+
+        <p>
+          Kelas menggabungkan dua hal: <strong>atribut</strong> (data yang dimiliki objek) dan <strong>metode</strong> (fungsi yang bisa dilakukan objek). Metode pada dasarnya adalah fungsi biasa yang didefinisikan di dalam kelas, dengan satu perbedaan krusial: parameter pertamanya selalu <code>self</code> — referensi ke objek itu sendiri. Lewat <code>self</code> inilah sebuah metode bisa mengakses dan mengubah atribut objeknya sendiri.
+        </p>
+
+        <p>
+          Konvensi nama <code>self</code> sebenarnya bukan kata kunci Python yang diwajibkan — secara teknis kamu bisa menamai parameter pertama itu apapun. Tapi komunitas Python sudah sepakat untuk selalu menggunakannya, jadi ikuti konvensi ini tanpa terkecuali agar kode mudah dibaca oleh siapapun.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="fn">DatasetML</span>:
+    <span class="st">"""Merepresentasikan sebuah dataset untuk keperluan ML."""</span>
+
+    <span class="cm"># Atribut kelas — dibagi semua instans dari kelas ini</span>
+    versi_format = <span class="st">"1.0"</span>
+
+    <span class="cm"># Metode — fungsi di dalam kelas</span>
+    <span class="cm"># 'self' wajib jadi parameter pertama, merujuk ke objek itu sendiri</span>
+    <span class="kw">def</span> <span class="fn">muat_data</span>(self, data):
+        <span class="st">"""Muat data ke dalam dataset."""</span>
+        self.data = data          <span class="cm"># atribut instans — hanya milik objek ini</span>
+        self.jumlah_baris = <span class="fn">len</span>(data)
+        self.jumlah_kolom = <span class="fn">len</span>(data[<span class="nm">0</span>]) <span class="kw">if</span> data <span class="kw">else</span> <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">info</span>(self):
+        <span class="st">"""Tampilkan ringkasan dataset."""</span>
+        <span class="fn">print</span>(<span class="st">f"Dataset: {self.jumlah_baris} baris × {self.jumlah_kolom} kolom"</span>)
+        <span class="fn">print</span>(<span class="st">f"Format versi: {self.versi_format}"</span>)   <span class="cm"># akses atribut kelas</span>
+
+    <span class="kw">def</span> <span class="fn">kepala</span>(self, n=<span class="nm">5</span>):
+        <span class="st">"""Tampilkan n baris pertama."""</span>
+        <span class="kw">for</span> baris <span class="kw">in</span> self.data[:n]:
+            <span class="fn">print</span>(baris)
+
+<span class="cm"># Membuat objek dan memanggil metodenya</span>
+ds1 = <span class="fn">DatasetML</span>()
+ds1.<span class="fn">muat_data</span>([
+    [<span class="nm">1.2</span>, <span class="nm">3.4</span>, <span class="nm">0</span>],
+    [<span class="nm">2.1</span>, <span class="nm">1.5</span>, <span class="nm">1</span>],
+    [<span class="nm">0.8</span>, <span class="nm">4.2</span>, <span class="nm">0</span>],
+])
+ds1.<span class="fn">info</span>()    <span class="cm"># → Dataset: 3 baris × 3 kolom</span>
+ds1.<span class="fn">kepala</span>(<span class="nm">2</span>)  <span class="cm"># → dua baris pertama</span>
+
+<span class="cm"># ds2 terpisah sepenuhnya dari ds1</span>
+ds2 = <span class="fn">DatasetML</span>()
+ds2.<span class="fn">muat_data</span>([[<span class="nm">5</span>, <span class="nm">6</span>, <span class="nm">7</span>, <span class="nm">1</span>], [<span class="nm">8</span>, <span class="nm">9</span>, <span class="nm">0</span>, <span class="nm">0</span>]])
+ds2.<span class="fn">info</span>()    <span class="cm"># → Dataset: 2 baris × 4 kolom</span></code></pre>
+        </div>
+
+        <h3>Atribut Kelas vs Atribut Instans</h3>
+
+        <p>
+          Ada dua jenis atribut yang perlu kamu bedakan. <strong>Atribut kelas</strong> didefinisikan langsung di badan kelas (di luar metode apapun) dan nilainya dibagi oleh semua objek yang dibuat dari kelas itu. <strong>Atribut instans</strong> dibuat di dalam metode menggunakan <code>self.nama_atribut</code> dan nilainya unik untuk setiap objek. Kalau kamu ubah atribut kelas lewat instans, Python sebenarnya membuat atribut instans baru yang "menutupi" atribut kelas untuk objek itu saja:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="fn">Konfigurasi</span>:
+    <span class="cm"># Atribut kelas — nilai default yang dibagi semua instans</span>
+    learning_rate = <span class="nm">0.001</span>
+    batch_size    = <span class="nm">32</span>
+    epochs        = <span class="nm">100</span>
+
+config_a = <span class="fn">Konfigurasi</span>()
+config_b = <span class="fn">Konfigurasi</span>()
+
+<span class="cm"># Keduanya awalnya berbagi nilai yang sama</span>
+<span class="fn">print</span>(config_a.learning_rate)   <span class="cm"># → 0.001</span>
+<span class="fn">print</span>(config_b.learning_rate)   <span class="cm"># → 0.001</span>
+
+<span class="cm"># Ubah atribut KELAS lewat nama kelas — mempengaruhi semua instans</span>
+Konfigurasi.epochs = <span class="nm">200</span>
+<span class="fn">print</span>(config_a.epochs)   <span class="cm"># → 200</span>
+<span class="fn">print</span>(config_b.epochs)   <span class="cm"># → 200</span>
+
+<span class="cm"># Ubah lewat instans — hanya membuat atribut instans baru untuk config_a</span>
+config_a.learning_rate = <span class="nm">0.01</span>
+<span class="fn">print</span>(config_a.learning_rate)   <span class="cm"># → 0.01  (atribut instans menutupi atribut kelas)</span>
+<span class="fn">print</span>(config_b.learning_rate)   <span class="cm"># → 0.001 (tidak terpengaruh)</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Atribut Kelas yang Mutable Bisa Jadi Jebakan</strong>
+            <p>Sama seperti jebakan mutable default di fungsi (Bab 6), atribut kelas bertipe list atau dictionary dibagi semua instans. Kalau satu instans mengubah isinya (bukan menggantinya), semua instans terpengaruh. Hindari mendefinisikan list atau dictionary sebagai atribut kelas. Buat mereka sebagai atribut instans di dalam <code>__init__</code>.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">8.3 Konstruktor __init__</h2>
+
+        <p>
+          Di contoh sebelumnya, atribut instans baru tersedia setelah memanggil <code>muat_data()</code> — artinya objek yang baru saja dibuat belum punya atribut apapun. Ini masalah: kamu bisa saja lupa memanggil <code>muat_data()</code> dan objeknya berada dalam kondisi yang tidak terdefinisi dengan baik. Solusinya adalah metode khusus <code>__init__</code>, yang secara otomatis dipanggil Python setiap kali objek baru dibuat.
+        </p>
+
+        <p>
+          Metode <code>__init__</code> sering disebut <strong>konstruktor</strong> — tugasnya menginisialisasi objek baru dengan nilai awal yang bermakna. Semua atribut instans seharusnya didefinisikan di sini, bukan tersebar di berbagai metode. Ini membuat struktur kelas langsung terlihat jelas hanya dengan membaca <code>__init__</code>.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="fn">ModelKlasifikasi</span>:
+    <span class="st">"""Model klasifikasi dengan konfigurasi yang lengkap sejak dibuat."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nama, learning_rate=<span class="nm">0.001</span>, max_iter=<span class="nm">100</span>):
+        <span class="st">"""
+        Inisialisasi model baru.
+
+        Parameter:
+            nama          (str)   : nama model
+            learning_rate (float) : laju belajar, default 0.001
+            max_iter      (int)   : maksimum iterasi, default 100
+        """</span>
+        <span class="cm"># Atribut dari parameter — dikustomisasi saat membuat objek</span>
+        self.nama          = nama
+        self.learning_rate = learning_rate
+        self.max_iter      = max_iter
+
+        <span class="cm"># Atribut dengan nilai awal tetap — bukan dari parameter</span>
+        self.sudah_dilatih = <span class="kw">False</span>
+        self.akurasi       = <span class="kw">None</span>
+        self.riwayat_loss  = []     <span class="cm"># list baru untuk setiap instans — aman!</span>
+
+    <span class="kw">def</span> <span class="fn">latih</span>(self, X, y):
+        <span class="st">"""Simulasi pelatihan model."""</span>
+        <span class="fn">print</span>(<span class="st">f"Melatih {self.nama} dengan lr={self.learning_rate}..."</span>)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, self.max_iter <span class="op">+</span> <span class="nm">1</span>):
+            loss = <span class="nm">1.0</span> / i   <span class="cm"># simulasi loss yang menurun</span>
+            self.riwayat_loss.append(<span class="fn">round</span>(loss, <span class="nm">4</span>))
+        self.sudah_dilatih = <span class="kw">True</span>
+        self.akurasi       = <span class="nm">0.90</span> <span class="op">+</span> self.learning_rate   <span class="cm"># simulasi</span>
+        <span class="fn">print</span>(<span class="st">f"Selesai. Akurasi: {self.akurasi:.1%}"</span>)
+
+    <span class="kw">def</span> <span class="fn">prediksi</span>(self, X):
+        <span class="st">"""Lakukan prediksi (hanya bisa setelah dilatih)."""</span>
+        <span class="kw">if</span> <span class="kw">not</span> self.sudah_dilatih:
+            <span class="kw">raise</span> RuntimeError(<span class="st">f"Model '{self.nama}' belum dilatih. Panggil latih() dulu."</span>)
+        <span class="fn">print</span>(<span class="st">f"Memprediksi {len(X)} sampel dengan {self.nama}..."</span>)
+        <span class="kw">return</span> [<span class="nm">1</span> <span class="kw">if</span> x[<span class="nm">0</span>] <span class="op">&gt;</span> <span class="nm">0.5</span> <span class="kw">else</span> <span class="nm">0</span> <span class="kw">for</span> x <span class="kw">in</span> X]   <span class="cm"># simulasi sederhana</span>
+
+    <span class="kw">def</span> <span class="fn">ringkasan</span>(self):
+        <span class="st">"""Tampilkan ringkasan model."""</span>
+        status = <span class="st">"Sudah dilatih"</span> <span class="kw">if</span> self.sudah_dilatih <span class="kw">else</span> <span class="st">"Belum dilatih"</span>
+        <span class="fn">print</span>(<span class="st">f"=== {self.nama} ==="</span>)
+        <span class="fn">print</span>(<span class="st">f"  LR       : {self.learning_rate}"</span>)
+        <span class="fn">print</span>(<span class="st">f"  Max iter : {self.max_iter}"</span>)
+        <span class="fn">print</span>(<span class="st">f"  Status   : {status}"</span>)
+        <span class="kw">if</span> self.akurasi:
+            <span class="fn">print</span>(<span class="st">f"  Akurasi  : {self.akurasi:.1%}"</span>)
+
+<span class="cm"># Buat dua model berbeda dari kelas yang sama</span>
+m1 = <span class="fn">ModelKlasifikasi</span>(<span class="st">"Regresi Logistik"</span>)
+m2 = <span class="fn">ModelKlasifikasi</span>(<span class="st">"SVM"</span>, learning_rate=<span class="nm">0.01</span>, max_iter=<span class="nm">200</span>)
+
+m1.<span class="fn">ringkasan</span>()   <span class="cm"># belum dilatih</span>
+m1.<span class="fn">latih</span>([[<span class="nm">0.3</span>], [<span class="nm">0.7</span>]], [<span class="nm">0</span>, <span class="nm">1</span>])
+m1.<span class="fn">ringkasan</span>()   <span class="cm"># sudah dilatih</span>
+
+<span class="cm"># m2 tidak terpengaruh</span>
+<span class="fn">print</span>(m2.sudah_dilatih)    <span class="cm"># → False</span>
+<span class="fn">print</span>(m2.riwayat_loss)     <span class="cm"># → [] — list kosong milik m2 sendiri</span></code></pre>
+        </div>
+
+        <h3>Metode Dunder Lainnya yang Berguna</h3>
+
+        <p>
+          Python punya banyak metode khusus yang namanya diawali dan diakhiri dua garis bawah — sering disebut <strong>metode dunder</strong> *(double underscore)* atau "magic method". Kamu sudah kenal <code>__init__</code>. Dua lainnya yang sangat berguna untuk membuat objek mudah digunakan adalah <code>__str__</code> (menentukan tampilan teks objek saat dicetak) dan <code>__repr__</code> (tampilan representasi teknis untuk debugging):
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="fn">Vektor</span>:
+    <span class="st">"""Vektor dua dimensi sederhana."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, x, y):
+        self.x = x
+        self.y = y
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="st">"""Tampilan ramah pengguna — dipanggil oleh print()."""</span>
+        <span class="kw">return</span> <span class="st">f"Vektor({self.x}, {self.y})"</span>
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(self):
+        <span class="st">"""Tampilan teknis — berguna untuk debugging di konsol."""</span>
+        <span class="kw">return</span> <span class="st">f"Vektor(x={self.x!r}, y={self.y!r})"</span>
+
+    <span class="kw">def</span> <span class="fn">__add__</span>(self, lain):
+        <span class="st">"""Memungkinkan operasi + antar dua Vektor."""</span>
+        <span class="kw">return</span> <span class="fn">Vektor</span>(self.x <span class="op">+</span> lain.x, self.y <span class="op">+</span> lain.y)
+
+    <span class="kw">def</span> <span class="fn">panjang</span>(self):
+        <span class="st">"""Hitung panjang (magnitudo) vektor."""</span>
+        <span class="kw">return</span> (self.x <span class="op">**</span> <span class="nm">2</span> <span class="op">+</span> self.y <span class="op">**</span> <span class="nm">2</span>) <span class="op">**</span> <span class="nm">0.5</span>
+
+v1 = <span class="fn">Vektor</span>(<span class="nm">3</span>, <span class="nm">4</span>)
+v2 = <span class="fn">Vektor</span>(<span class="nm">1</span>, <span class="nm">2</span>)
+
+<span class="fn">print</span>(v1)          <span class="cm"># → Vektor(3, 4)    ← __str__ dipanggil</span>
+<span class="fn">print</span>(<span class="fn">repr</span>(v1))    <span class="cm"># → Vektor(x=3, y=4) ← __repr__ dipanggil</span>
+v3 = v1 <span class="op">+</span> v2       <span class="cm"># → __add__ dipanggil</span>
+<span class="fn">print</span>(v3)          <span class="cm"># → Vektor(4, 6)</span>
+<span class="fn">print</span>(v1.<span class="fn">panjang</span>()) <span class="cm"># → 5.0</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">8.4 Pewarisan (Inheritance) Dasar</h2>
+
+        <p>
+          Pewarisan adalah mekanisme yang memungkinkan satu kelas "mewarisi" semua atribut dan metode dari kelas lain, lalu menambahkan atau mengubah bagian-bagian tertentu. Kelas yang diwarisi disebut <strong>kelas induk</strong> *(parent class)* atau kelas dasar, sementara kelas yang mewarisi disebut <strong>kelas anak</strong> *(child class)* atau subkelas.
+        </p>
+
+        <p>
+          Ini mencerminkan hubungan "adalah-sebuah" *(is-a)*: seekor Kucing adalah sebuah Hewan. Sebuah RandomForest adalah sebuah ModelEnsemble, yang merupakan sebuah ModelML. Pewarisan menghindari duplikasi kode — semua logika yang berlaku untuk kategori umum ditulis sekali di kelas induk, dan kelas anak hanya perlu menambahkan atau menyesuaikan perbedaannya:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Kelas induk — mendefinisikan perilaku umum semua model</span>
+<span class="kw">class</span> <span class="fn">ModelDasar</span>:
+    <span class="st">"""Kelas dasar untuk semua model ML."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nama):
+        self.nama          = nama
+        self.sudah_dilatih = <span class="kw">False</span>
+
+    <span class="kw">def</span> <span class="fn">periksa_sudah_dilatih</span>(self):
+        <span class="st">"""Lempar error jika model belum dilatih."""</span>
+        <span class="kw">if</span> <span class="kw">not</span> self.sudah_dilatih:
+            <span class="kw">raise</span> RuntimeError(<span class="st">f"'{self.nama}' belum dilatih."</span>)
+
+    <span class="kw">def</span> <span class="fn">simpan</span>(self, path):
+        <span class="st">"""Simulasi menyimpan model ke file."""</span>
+        self.<span class="fn">periksa_sudah_dilatih</span>()
+        <span class="fn">print</span>(<span class="st">f"Model '{self.nama}' disimpan ke {path}"</span>)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        status = <span class="st">"terlatih"</span> <span class="kw">if</span> self.sudah_dilatih <span class="kw">else</span> <span class="st">"belum dilatih"</span>
+        <span class="kw">return</span> <span class="st">f"&lt;{self.__class__.__name__}: {self.nama} ({status})&gt;"</span>
+
+
+<span class="cm"># Kelas anak — mewarisi ModelDasar, tambah fitur spesifik regresi</span>
+<span class="kw">class</span> <span class="fn">ModelRegresi</span>(<span class="fn">ModelDasar</span>):   <span class="cm"># nama kelas induk di dalam kurung</span>
+    <span class="st">"""Model untuk tugas regresi."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nama, learning_rate=<span class="nm">0.01</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(nama)   <span class="cm"># panggil __init__ kelas induk</span>
+        self.learning_rate = learning_rate
+        self.koefisien     = <span class="kw">None</span>
+
+    <span class="kw">def</span> <span class="fn">latih</span>(self, X, y):
+        <span class="st">"""Latih model regresi."""</span>
+        <span class="fn">print</span>(<span class="st">f"Melatih regresi '{self.nama}'..."</span>)
+        self.koefisien     = [<span class="nm">0.5</span>] <span class="op">*</span> <span class="fn">len</span>(X[<span class="nm">0</span>])   <span class="cm"># simulasi koefisien</span>
+        self.sudah_dilatih = <span class="kw">True</span>
+        <span class="fn">print</span>(<span class="st">"Selesai."</span>)
+
+    <span class="kw">def</span> <span class="fn">prediksi</span>(self, X):
+        <span class="st">"""Prediksi nilai kontinu."""</span>
+        self.<span class="fn">periksa_sudah_dilatih</span>()   <span class="cm"># metode warisan dari ModelDasar</span>
+        <span class="kw">return</span> [<span class="fn">sum</span>(xi) <span class="op">*</span> <span class="nm">0.5</span> <span class="kw">for</span> xi <span class="kw">in</span> X]   <span class="cm"># simulasi prediksi</span>
+
+
+<span class="cm"># Kelas anak lain — model klasifikasi</span>
+<span class="kw">class</span> <span class="fn">ModelKlasifikasi</span>(<span class="fn">ModelDasar</span>):
+    <span class="st">"""Model untuk tugas klasifikasi."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nama, n_kelas=<span class="nm">2</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(nama)
+        self.n_kelas = n_kelas
+
+    <span class="kw">def</span> <span class="fn">latih</span>(self, X, y):
+        <span class="fn">print</span>(<span class="st">f"Melatih klasifikasi '{self.nama}' ({self.n_kelas} kelas)..."</span>)
+        self.sudah_dilatih = <span class="kw">True</span>
+        <span class="fn">print</span>(<span class="st">"Selesai."</span>)
+
+    <span class="kw">def</span> <span class="fn">prediksi</span>(self, X):
+        self.<span class="fn">periksa_sudah_dilatih</span>()
+        <span class="kw">return</span> [<span class="nm">0</span> <span class="kw">if</span> <span class="fn">sum</span>(xi) <span class="op">&lt;</span> <span class="nm">1</span> <span class="kw">else</span> <span class="nm">1</span> <span class="kw">for</span> xi <span class="kw">in</span> X]
+
+<span class="cm"># Semua model punya metode 'simpan' dari kelas induk</span>
+reg = <span class="fn">ModelRegresi</span>(<span class="st">"LinearReg"</span>, learning_rate=<span class="nm">0.05</span>)
+clf = <span class="fn">ModelKlasifikasi</span>(<span class="st">"LogisticReg"</span>)
+
+reg.<span class="fn">latih</span>([[<span class="nm">1</span>, <span class="nm">2</span>], [<span class="nm">3</span>, <span class="nm">4</span>]], [<span class="nm">2.1</span>, <span class="nm">3.9</span>])
+reg.<span class="fn">simpan</span>(<span class="st">"model_reg.pkl"</span>)    <span class="cm"># metode dari kelas induk!</span>
+<span class="fn">print</span>(reg)                     <span class="cm"># → &lt;ModelRegresi: LinearReg (terlatih)&gt;</span>
+
+<span class="cm"># Periksa hubungan pewarisan</span>
+<span class="fn">print</span>(<span class="fn">isinstance</span>(reg, ModelRegresi))   <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="fn">isinstance</span>(reg, ModelDasar))     <span class="cm"># → True — reg JUGA adalah ModelDasar!</span>
+<span class="fn">print</span>(<span class="fn">isinstance</span>(reg, ModelKlasifikasi)) <span class="cm"># → False</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>super() — Memanggil Metode Kelas Induk</strong>
+            <p>Fungsi <code>super()</code> memberikan akses ke kelas induk. Paling sering dipakai di <code>__init__</code> kelas anak untuk memanggil <code>__init__</code> kelas induk sebelum menambahkan atribut baru. Tanpa ini, atribut yang didefinisikan di <code>__init__</code> kelas induk tidak akan ada di objek hasil kelas anak. Selalu panggil <code>super().__init__()</code> di baris pertama <code>__init__</code> kelas anak.</p>
+          </div>
+        </div>
+
+        <h3>Penimpaan Metode (Method Overriding)</h3>
+
+        <p>
+          Kelas anak bisa "menimpa" *(override)* metode yang sudah ada di kelas induk dengan mendefinisikan ulang metode dengan nama yang sama. Saat metode itu dipanggil di objek kelas anak, versi kelas anak yang dijalankan, bukan versi kelas induk. Ini yang terjadi di contoh sebelumnya — baik <code>ModelRegresi</code> maupun <code>ModelKlasifikasi</code> mendefinisikan metode <code>latih()</code> mereka sendiri yang berbeda:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — polimorfisme</span>
+          </div>
+          <pre><code><span class="cm"># Polimorfisme: satu nama, banyak perilaku</span>
+<span class="cm"># Semua model punya .latih() dan .prediksi(), tapi cara kerjanya beda</span>
+
+model_list = [
+    <span class="fn">ModelRegresi</span>(<span class="st">"Ridge"</span>),
+    <span class="fn">ModelKlasifikasi</span>(<span class="st">"SVM"</span>),
+    <span class="fn">ModelKlasifikasi</span>(<span class="st">"KNN"</span>, n_kelas=<span class="nm">3</span>),
+]
+
+X_latih = [[<span class="nm">1</span>, <span class="nm">2</span>], [<span class="nm">3</span>, <span class="nm">4</span>], [<span class="nm">0</span>, <span class="nm">1</span>]]
+y_latih = [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>]
+
+<span class="cm"># Kode yang sama bekerja untuk semua jenis model</span>
+<span class="cm"># karena semua mewarisi dari ModelDasar dan punya antarmuka yang sama</span>
+<span class="kw">for</span> model <span class="kw">in</span> model_list:
+    model.<span class="fn">latih</span>(X_latih, y_latih)   <span class="cm"># tiap model punya implementasi sendiri</span>
+    model.<span class="fn">simpan</span>(<span class="st">f"{model.nama}.pkl"</span>)   <span class="cm"># metode warisan, sama untuk semua</span>
+    <span class="fn">print</span>(model)                          <span class="cm"># __str__ dari ModelDasar</span>
+    <span class="fn">print</span>()</code></pre>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">8.5 Kapan OOP Membantu dan Kapan Tidak Perlu</h2>
+
+        <p>
+          OOP adalah alat, bukan tujuan. Salah satu kesalahan yang sering dibuat pemula yang baru belajar OOP adalah mencoba membungkus segalanya dalam kelas, bahkan ketika fungsi biasa sudah lebih dari cukup. Kode yang dipaksakan jadi "OOP" tanpa alasan yang jelas justru menjadi lebih sulit dibaca dan dipahami.
+        </p>
+
+        <p>
+          Pertanyaan yang perlu kamu ajukan sebelum membuat kelas: "Apakah ada <strong>data</strong> yang perlu dibawa bersama, dan <strong>operasi</strong> yang berkaitan erat dengan data itu, yang perlu diwakili sebagai satu kesatuan yang punya <strong>identitas</strong>?" Jika jawabannya ya, kelas mungkin tepat. Jika kamu hanya butuh mengeksekusi satu tugas atau transformasi, fungsi biasa hampir selalu lebih sederhana dan lebih bersih.
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Gunakan Kelas ketika...</th>
+                <th>Gunakan Fungsi ketika...</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ada beberapa item data yang terkait erat dan perlu dibawa bersama</td>
+                <td>Kamu hanya perlu mentransformasi input menjadi output</td>
+              </tr>
+              <tr>
+                <td>Objek perlu punya status *(state)* yang berubah sepanjang waktu</td>
+                <td>Tidak ada state yang perlu dijaga antar pemanggilan</td>
+              </tr>
+              <tr>
+                <td>Kamu akan membuat banyak instans dengan data yang berbeda-beda</td>
+                <td>Hanya satu operasi yang perlu dilakukan, satu kali</td>
+              </tr>
+              <tr>
+                <td>Ada hubungan hierarki yang masuk akal untuk dimodelkan dengan pewarisan</td>
+                <td>Operasinya simpel dan tidak punya variasi yang berarti</td>
+              </tr>
+              <tr>
+                <td>Kamu membangun library atau API yang akan dipakai orang lain</td>
+                <td>Kamu sedang menulis skrip analisis sekali pakai</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Contoh: Kapan Fungsi Lebih Baik dari Kelas</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — fungsi vs kelas yang berlebihan</span>
+          </div>
+          <pre><code><span class="cm"># ── BERLEBIHAN: kelas untuk tugas yang sederhana ───────────────</span>
+<span class="kw">class</span> <span class="fn">PenghitungRata</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, data):
+        self.data = data
+    <span class="kw">def</span> <span class="fn">hitung</span>(self):
+        <span class="kw">return</span> <span class="fn">sum</span>(self.data) / <span class="fn">len</span>(self.data)
+
+p = <span class="fn">PenghitungRata</span>([<span class="nm">85</span>, <span class="nm">90</span>, <span class="nm">78</span>])
+<span class="fn">print</span>(p.<span class="fn">hitung</span>())   <span class="cm"># terlalu banyak kode untuk satu operasi sederhana</span>
+
+<span class="cm"># ── LEBIH BAIK: fungsi biasa ────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">rata_rata</span>(data):
+    <span class="kw">return</span> <span class="fn">sum</span>(data) / <span class="fn">len</span>(data)
+
+<span class="fn">print</span>(<span class="fn">rata_rata</span>([<span class="nm">85</span>, <span class="nm">90</span>, <span class="nm">78</span>]))   <span class="cm"># jelas, langsung, mudah dipahami</span>
+
+<span class="cm"># ── KELAS MASUK AKAL: ketika ada state dan identitas ─────────────</span>
+<span class="kw">class</span> <span class="fn">PencatatEksperimen</span>:
+    <span class="st">"""Catat dan kelola hasil banyak eksperimen ML."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nama_proyek):
+        self.nama_proyek = nama_proyek
+        self.eksperimen  = []   <span class="cm"># state yang tumbuh seiring waktu</span>
+
+    <span class="kw">def</span> <span class="fn">tambah</span>(self, nama, params, skor):
+        <span class="st">"""Catat satu eksperimen baru."""</span>
+        self.eksperimen.append({
+            <span class="st">"nama"</span>: nama, <span class="st">"params"</span>: params, <span class="st">"skor"</span>: skor
+        })
+
+    <span class="kw">def</span> <span class="fn">terbaik</span>(self):
+        <span class="st">"""Kembalikan eksperimen dengan skor tertinggi."""</span>
+        <span class="kw">if</span> <span class="kw">not</span> self.eksperimen:
+            <span class="kw">return</span> <span class="kw">None</span>
+        <span class="kw">return</span> <span class="fn">max</span>(self.eksperimen, key=<span class="kw">lambda</span> e: e[<span class="st">"skor"</span>])
+
+    <span class="kw">def</span> <span class="fn">laporan</span>(self):
+        <span class="st">"""Tampilkan semua eksperimen terurut dari yang terbaik."""</span>
+        <span class="fn">print</span>(<span class="st">f"=== {self.nama_proyek} — {len(self.eksperimen)} eksperimen ==="</span>)
+        urut = <span class="fn">sorted</span>(self.eksperimen, key=<span class="kw">lambda</span> e: e[<span class="st">"skor"</span>], reverse=<span class="kw">True</span>)
+        <span class="kw">for</span> i, e <span class="kw">in</span> <span class="fn">enumerate</span>(urut, <span class="nm">1</span>):
+            <span class="fn">print</span>(<span class="st">f"  #{i} {e['nama']:20} skor={e['skor']:.4f}  params={e['params']}"</span>)
+
+<span class="cm"># Kelas ini masuk akal karena punya state (eksperimen yang terus bertambah)</span>
+<span class="cm"># dan identitas (ini adalah kumpulan eksperimen proyek tertentu)</span>
+pencatat = <span class="fn">PencatatEksperimen</span>(<span class="st">"Prediksi Harga Rumah"</span>)
+pencatat.<span class="fn">tambah</span>(<span class="st">"Ridge (lr=0.001)"</span>,  {<span class="st">"lr"</span>: <span class="nm">0.001</span>}, <span class="nm">0.8812</span>)
+pencatat.<span class="fn">tambah</span>(<span class="st">"Ridge (lr=0.01)"</span>,   {<span class="st">"lr"</span>: <span class="nm">0.01</span>},  <span class="nm">0.9134</span>)
+pencatat.<span class="fn">tambah</span>(<span class="st">"XGBoost (default)"</span>, {<span class="st">"n"</span>: <span class="nm">100</span>},    <span class="nm">0.9441</span>)
+pencatat.<span class="fn">laporan</span>()
+<span class="fn">print</span>(<span class="st">"\nEksperimen terbaik:"</span>, pencatat.<span class="fn">terbaik</span>())</code></pre>
+        </div>
+
+        <h3>OOP di Library ML: Apa yang Sudah Kamu Gunakan Tanpa Sadar</h3>
+
+        <p>
+          Mungkin kamu tidak menyadarinya, tapi kamu sudah berinteraksi dengan OOP sejak awal belajar Python. Setiap kali kamu memanggil <code>"halo".upper()</code>, kamu memanggil metode <code>upper</code> dari objek bertipe <code>str</code>. Setiap kali kamu memanggil <code>[1,2,3].append(4)</code>, kamu memanggil metode dari objek bertipe <code>list</code>. Nanti di Buku 3, kamu akan menggunakan scikit-learn seperti ini:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — preview: OOP di scikit-learn</span>
+          </div>
+          <pre><code><span class="cm"># Ini adalah kode scikit-learn yang akan kamu tulis di Buku 3</span>
+<span class="cm"># Sekarang cukup baca dan pahami polanya</span>
+
+<span class="cm"># from sklearn.linear_model import LogisticRegression</span>
+<span class="cm">#</span>
+<span class="cm"># model = LogisticRegression(max_iter=200, C=1.0)  ← instansiasi dengan __init__</span>
+<span class="cm"># model.fit(X_train, y_train)                       ← memanggil metode .fit()</span>
+<span class="cm"># prediksi = model.predict(X_test)                  ← memanggil metode .predict()</span>
+<span class="cm"># akurasi  = model.score(X_test, y_test)            ← memanggil metode .score()</span>
+<span class="cm"># koef     = model.coef_                            ← mengakses atribut .coef_</span>
+
+<span class="cm"># Pola yang SAMA untuk semua model di scikit-learn:</span>
+<span class="cm"># 1. Buat objek model dengan parameter konfigurasi</span>
+<span class="cm"># 2. Panggil .fit(X_train, y_train) untuk melatih</span>
+<span class="cm"># 3. Panggil .predict(X_test) untuk prediksi</span>
+<span class="cm"># Konsistensi ini mungkin karena semua model mewarisi dari BaseEstimator!</span>
+<span class="fn">print</span>(<span class="st">"Pola OOP yang akan kamu pakai setiap hari di dunia ML."</span>)</code></pre>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>OOP di Dunia ML: Cukup Pahami, Belum Perlu Kuasai</strong>
+            <p>Di level Buku 1 ini, tujuanmu bukan menjadi ahli OOP — tujuannya adalah cukup nyaman membaca dan menggunakan kode berbasis kelas, karena kamu akan banyak membaca kode library ML yang ditulis dengan paradigma ini. Kemampuan menulis kelas yang kompleks dan hierarki pewarisan yang dalam akan datang dengan sendirinya saat kamu membangun lebih banyak proyek.</p>
+          </div>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Menuju Bab 9: Modul dan Paket</strong>
+            <p>Kamu sekarang bisa menulis kode yang terstruktur menggunakan fungsi dan kelas. Tapi proyek yang nyata tidak cukup hanya satu file — kode perlu diorganisir menjadi modul dan paket yang terpisah dan bisa saling diimpor. Di Bab 9 kamu akan belajar cara membuat modul sendiri, menggunakan paket pihak ketiga lewat <code>pip</code>, dan menyusun struktur folder proyek Python yang rapi seperti yang dipakai di industri.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <a href="b01-bab-07.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 7: Penanganan Berkas dan Kesalahan</span>
+      </a>
+
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 8 / 15</div>
+          <div class="dot-progres">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span class="aktif"></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="b01-bab-09.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 9: Modul dan Paket</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 8</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fungsi — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+      --cyan:      #00C8FF;
+      --cyan-dim:  #00628090;
+      --green:     #00FF94;
+      --green-dim: #00804A50;
+      --amber:     #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:    #9D6FFF;
+      --purple-dim:#4B2A9040;
+      --red:       #FF5F6D;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri { display: flex; align-items: center; gap: 0.85rem; }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char { color: var(--green); font-weight: 600; margin-right: 0.2rem; }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif { color: var(--text-primary); font-weight: 500; }
+
+    /* MAIN */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item { display: flex; align-items: center; gap: 0.4rem; }
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* DAFTAR SUBBAB */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before { content: '//'; color: var(--cyan); font-size: 0.8rem; }
+
+    .daftar-subbab ol { list-style: none; padding: 0; display: grid; gap: 0.35rem; }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* TIPOGRAFI KONTEN */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol { padding-left: 1.5rem; margin-bottom: 1.25rem; color: var(--text-secondary); font-size: 0.93rem; }
+    .konten ul { list-style: none; padding-left: 0; }
+    .konten ul li { padding-left: 1.25rem; position: relative; margin-bottom: 0.5rem; }
+    .konten ul li::before { content: '▸'; color: var(--cyan); position: absolute; left: 0; font-size: 0.7rem; top: 0.35rem; }
+    .konten ol li { margin-bottom: 0.5rem; }
+    .konten strong { color: var(--text-primary); font-weight: 600; }
+    .konten a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(0,200,255,0.3); transition: all 0.2s; }
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* BLOK KODE */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik { display: flex; gap: 0.4rem; }
+    .blok-kode-header .titik-titik span { width: 10px; height: 10px; border-radius: 50%; }
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre { padding: 1.25rem 1.5rem; overflow-x: auto; margin: 0; }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* KARTU */
+    .kartu-info, .kartu-peringatan, .kartu-tips, .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info       { background: rgba(0,200,255,0.05);   border: 1px solid rgba(0,200,255,0.2); }
+    .kartu-peringatan { background: rgba(255,184,48,0.05);  border: 1px solid rgba(255,184,48,0.25); }
+    .kartu-tips       { background: rgba(0,255,148,0.05);   border: 1px solid rgba(0,255,148,0.2); }
+    .kartu-catatan    { background: rgba(157,111,255,0.06); border: 1px solid rgba(157,111,255,0.25); }
+
+    .kartu-ikon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .kartu-isi  { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* TABEL */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--font-mono); }
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* NAVIGASI BAB */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover { border-color: rgba(0,200,255,0.4); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+    .indikator-progres { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .nomor-bab-sekarang { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.08em; }
+    .dot-progres { display: flex; gap: 4px; }
+    .dot-progres span { width: 5px; height: 5px; border-radius: 50%; background: var(--border); }
+    .dot-progres span.aktif { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); background: var(--bg-base); padding: 2rem 0; }
+    footer .wadah { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-kiri { display: flex; align-items: center; gap: 0.75rem; }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .footer-kanan { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-muted); text-align: right; }
+    .footer-kanan a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ANIMASI */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* RESPONSIF */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+      .navigasi-bab .wadah { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+      .posisi-tengah { grid-column: 1 / -1; order: -1; }
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-06-fungsi</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian II — Python Dasar</span>
+          <span class="label-nomor-bab">Bab 6 / 15</span>
+        </div>
+        <h1 class="judul-bab">Fungsi<span class="aksen">.</span></h1>
+        <p class="deskripsi-bab">
+          Sejauh ini semua kode kamu berada di satu tempat, mengalir lurus dari atas ke bawah. Segera setelah proyek tumbuh sedikit lebih besar, pendekatan itu mulai menyulitkan — kode yang sama perlu ditulis ulang di banyak tempat, satu perubahan kecil harus diperbaiki di puluhan baris, dan sulit tahu bagian mana yang melakukan apa. Fungsi adalah solusinya: cara membungkus logika ke dalam unit bernama yang bisa dipanggil kapan saja, dari mana saja.
+        </p>
+        <div class="pita-info-bab">
+          <div class="info-item"><span>⏱</span><span class="info-val">~3 jam baca + latihan</span></div>
+          <div class="info-item"><span>📦</span><span class="info-val">Tidak ada library — Python murni</span></div>
+          <div class="info-item"><span>🔗</span><span class="info-val">Prasyarat: Bab 3–5</span></div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li><span class="nomor-subbab">6.1</span><a href="#subbab-1">Mendefinisikan dan memanggil fungsi</a></li>
+          <li><span class="nomor-subbab">6.2</span><a href="#subbab-2">Parameter, argumen, dan nilai default</a></li>
+          <li><span class="nomor-subbab">6.3</span><a href="#subbab-3">Nilai kembalian (return value)</a></li>
+          <li><span class="nomor-subbab">6.4</span><a href="#subbab-4">Ruang lingkup variabel (variable scope)</a></li>
+          <li><span class="nomor-subbab">6.5</span><a href="#subbab-5">Fungsi sebagai objek pertama — pengantar</a></li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">6.1 Mendefinisikan dan Memanggil Fungsi</h2>
+
+        <p>
+          Fungsi adalah blok kode yang diberi nama dan bisa dijalankan kapan saja hanya dengan menyebut namanya. Prinsip di baliknya sangat sederhana: kamu menulis sekumpulan instruksi sekali, lalu memakainya berulang kali. Ini menghilangkan duplikasi kode — salah satu sumber bug dan rasa frustrasi terbesar dalam pemrograman.
+        </p>
+
+        <p>
+          Di Python, fungsi didefinisikan dengan kata kunci <code>def</code>, diikuti nama fungsi, tanda kurung, dan titik dua. Semua kode di dalam fungsi harus diberi indentasi 4 spasi — sama persis dengan aturan indentasi yang sudah kamu pelajari di Bab 5. Mendefinisikan fungsi tidak langsung menjalankannya; fungsi baru berjalan ketika kamu <strong>memanggilnya</strong> — menyebut namanya diikuti tanda kurung.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Mendefinisikan fungsi — belum dijalankan</span>
+<span class="kw">def</span> <span class="fn">sapa</span>():
+    <span class="fn">print</span>(<span class="st">"Halo! Selamat belajar Python."</span>)
+
+<span class="cm"># Memanggil fungsi — baru dijalankan sekarang</span>
+<span class="fn">sapa</span>()   <span class="cm"># → Halo! Selamat belajar Python.</span>
+<span class="fn">sapa</span>()   <span class="cm"># bisa dipanggil berulang kali</span>
+<span class="fn">sapa</span>()
+
+<span class="cm"># Fungsi bisa memanggil fungsi lain</span>
+<span class="kw">def</span> <span class="fn">mulai_sesi_belajar</span>():
+    <span class="fn">sapa</span>()
+    <span class="fn">print</span>(<span class="st">"Sesi belajar dimulai. Semangat!"</span>)
+
+<span class="fn">mulai_sesi_belajar</span>()</code></pre>
+        </div>
+
+        <h3>Docstring — Dokumentasi di Dalam Fungsi</h3>
+
+        <p>
+          Setiap fungsi yang kamu buat sebaiknya punya docstring — teks penjelasan yang ditulis tepat di baris pertama setelah <code>def</code>, dibungkus tanda kutip tiga. Docstring bukan komentar biasa; ia adalah bagian dari fungsi yang bisa diakses secara programatik. Ketika kamu bekerja di tim atau kembali ke kode sendiri setelah beberapa bulan, docstring yang baik bisa menyelamatkanmu dari kebingungan panjang:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="fn">hitung_rata_rata</span>(data):
+    <span class="st">"""
+    Hitung rata-rata dari list angka.
+
+    Parameter:
+        data (list): list angka yang akan dihitung rata-ratanya
+
+    Kembalian:
+        float: nilai rata-rata, atau None jika list kosong
+    """</span>
+    <span class="kw">if</span> <span class="kw">not</span> data:
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">return</span> <span class="fn">sum</span>(data) / <span class="fn">len</span>(data)
+
+<span class="cm"># Mengakses docstring fungsi</span>
+<span class="fn">print</span>(hitung_rata_rata.<span class="fn">__doc__</span>)
+
+<span class="cm"># Atau gunakan help()</span>
+<span class="fn">help</span>(hitung_rata_rata)</code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Prinsip DRY — Don't Repeat Yourself</strong>
+            <p>Prinsip paling fundamental dalam rekayasa perangkat lunak adalah DRY: jangan tulis kode yang sama lebih dari sekali. Kalau kamu mendapati diri menyalin-tempel blok kode yang sama ke dua atau lebih tempat, itu tanda yang sangat jelas bahwa kode itu seharusnya menjadi fungsi. Duplikasi kode adalah sumber bug — kalau ada kesalahan, kamu harus memperbaikinya di semua tempat, dan mudah sekali melewatkan satu.</p>
+          </div>
+        </div>
+
+        <h3>Kapan Membuat Fungsi?</h3>
+
+        <p>
+          Ada tiga tanda bahwa sesuatu seharusnya jadi fungsi. Pertama, kamu menulis blok kode yang sama (atau sangat mirip) lebih dari sekali. Kedua, sebuah bagian kode melakukan satu tugas yang bisa diberi nama yang jelas — seperti "hitung_akurasi" atau "bersihkan_teks". Ketiga, kamu ingin bisa menguji bagian kode itu secara terpisah dari bagian lainnya. Fungsi yang baik melakukan <em>satu</em> hal dengan baik, bukan banyak hal sekaligus.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — sebelum vs sesudah refactoring</span>
+          </div>
+          <pre><code><span class="cm"># ── SEBELUM: kode berulang, susah diubah ──────────────────</span>
+nilai_kelas_a = [<span class="nm">85</span>, <span class="nm">90</span>, <span class="nm">78</span>, <span class="nm">92</span>]
+total_a       = <span class="fn">sum</span>(nilai_kelas_a)
+rata_a        = total_a / <span class="fn">len</span>(nilai_kelas_a)
+<span class="fn">print</span>(<span class="st">f"Kelas A — Rata-rata: {rata_a:.1f}, Tertinggi: {max(nilai_kelas_a)}"</span>)
+
+nilai_kelas_b = [<span class="nm">70</span>, <span class="nm">85</span>, <span class="nm">88</span>, <span class="nm">76</span>]
+total_b       = <span class="fn">sum</span>(nilai_kelas_b)
+rata_b        = total_b / <span class="fn">len</span>(nilai_kelas_b)
+<span class="fn">print</span>(<span class="st">f"Kelas B — Rata-rata: {rata_b:.1f}, Tertinggi: {max(nilai_kelas_b)}"</span>)
+
+<span class="cm"># ── SESUDAH: fungsi yang bisa dipakai ulang ───────────────</span>
+<span class="kw">def</span> <span class="fn">laporan_nilai</span>(nama_kelas, nilai):
+    <span class="st">"""Cetak laporan ringkas untuk satu kelas."""</span>
+    rata   = <span class="fn">sum</span>(nilai) / <span class="fn">len</span>(nilai)
+    tinggi = <span class="fn">max</span>(nilai)
+    <span class="fn">print</span>(<span class="st">f"Kelas {nama_kelas} — Rata-rata: {rata:.1f}, Tertinggi: {tinggi}"</span>)
+
+<span class="fn">laporan_nilai</span>(<span class="st">"A"</span>, [<span class="nm">85</span>, <span class="nm">90</span>, <span class="nm">78</span>, <span class="nm">92</span>])
+<span class="fn">laporan_nilai</span>(<span class="st">"B"</span>, [<span class="nm">70</span>, <span class="nm">85</span>, <span class="nm">88</span>, <span class="nm">76</span>])
+<span class="fn">laporan_nilai</span>(<span class="st">"C"</span>, [<span class="nm">95</span>, <span class="nm">88</span>, <span class="nm">91</span>, <span class="nm">87</span>])  <span class="cm"># tambah kelas baru = satu baris saja</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">6.2 Parameter, Argumen, dan Nilai Default</h2>
+
+        <p>
+          Fungsi yang lebih berguna bisa menerima <strong>input</strong> dari luar — data yang ingin kamu olah atau konfigurasi yang ingin kamu terapkan. Di sinilah parameter masuk. Parameter adalah nama-nama yang kamu deklarasikan di dalam tanda kurung saat mendefinisikan fungsi, sementara argumen adalah nilai nyata yang kamu kirimkan saat memanggil fungsi tersebut.
+        </p>
+
+        <p>
+          Perbedaan ini murni terminologi — dalam percakapan sehari-hari keduanya sering dipakai bergantian, dan itu tidak masalah. Yang penting kamu paham konsepnya: parameter adalah tempat penampungnya, argumen adalah isinya.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># nama dan usia adalah PARAMETER</span>
+<span class="kw">def</span> <span class="fn">perkenalan</span>(nama, usia):
+    <span class="fn">print</span>(<span class="st">f"Nama: {nama}, Usia: {usia} tahun"</span>)
+
+<span class="cm"># "Rina" dan 25 adalah ARGUMEN</span>
+<span class="fn">perkenalan</span>(<span class="st">"Rina"</span>, <span class="nm">25</span>)   <span class="cm"># → Nama: Rina, Usia: 25 tahun</span>
+<span class="fn">perkenalan</span>(<span class="st">"Dodi"</span>, <span class="nm">30</span>)   <span class="cm"># → Nama: Dodi, Usia: 30 tahun</span>
+
+<span class="cm"># Argumen posisional vs argumen kata kunci</span>
+<span class="fn">perkenalan</span>(<span class="st">"Sari"</span>, <span class="nm">22</span>)              <span class="cm"># posisional — urutan penting</span>
+<span class="fn">perkenalan</span>(nama=<span class="st">"Sari"</span>, usia=<span class="nm">22</span>)    <span class="cm"># kata kunci — urutan boleh dibalik</span>
+<span class="fn">perkenalan</span>(usia=<span class="nm">22</span>, nama=<span class="st">"Sari"</span>)    <span class="cm"># hasil sama persis</span></code></pre>
+        </div>
+
+        <h3>Nilai Default (Default Parameter Value)</h3>
+
+        <p>
+          Kamu bisa memberi nilai default untuk parameter — nilai yang dipakai jika argumen untuk parameter itu tidak diberikan saat pemanggilan. Ini sangat berguna untuk membuat fungsi yang fleksibel: bisa dipakai dengan cara sederhana tanpa banyak argumen, tapi juga bisa dikustomisasi sepenuhnya jika perlu. Dalam kecerdasan buatan, nilai default sangat sering muncul untuk hiperparameter model:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Nilai default: learning_rate dan epochs punya nilai bawaan</span>
+<span class="kw">def</span> <span class="fn">inisialisasi_model</span>(nama_model, learning_rate=<span class="nm">0.001</span>, epochs=<span class="nm">100</span>, verbose=<span class="kw">True</span>):
+    <span class="st">"""Inisialisasi konfigurasi pelatihan model."""</span>
+    <span class="kw">if</span> verbose:
+        <span class="fn">print</span>(<span class="st">f"Model     : {nama_model}"</span>)
+        <span class="fn">print</span>(<span class="st">f"LR        : {learning_rate}"</span>)
+        <span class="fn">print</span>(<span class="st">f"Epochs    : {epochs}"</span>)
+    <span class="kw">return</span> {<span class="st">"model"</span>: nama_model, <span class="st">"lr"</span>: learning_rate, <span class="st">"epochs"</span>: epochs}
+
+<span class="cm"># Pakai semua default</span>
+<span class="fn">inisialisasi_model</span>(<span class="st">"ResNet50"</span>)
+
+<span class="cm"># Override sebagian</span>
+<span class="fn">inisialisasi_model</span>(<span class="st">"ResNet50"</span>, learning_rate=<span class="nm">0.01</span>)
+
+<span class="cm"># Override semua</span>
+<span class="fn">inisialisasi_model</span>(<span class="st">"EfficientNet"</span>, <span class="nm">0.0001</span>, <span class="nm">50</span>, verbose=<span class="kw">False</span>)</code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Jangan Pakai List atau Dict Sebagai Nilai Default</strong>
+            <p>Ini adalah jebakan klasik Python yang menggigit banyak pemula. Menulis <code>def fungsi(data=[])</code> tampak tidak berbahaya, tapi list default itu <em>dibagi</em> di semua pemanggilan — bukan dibuat ulang setiap kali dipanggil. Kalau kamu memodifikasi list itu di dalam fungsi, modifikasi itu akan bertahan ke pemanggilan berikutnya. Solusinya: gunakan <code>None</code> sebagai default, lalu buat list baru di dalam fungsi jika nilainya <code>None</code>.</p>
+          </div>
+        </div>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — jebakan mutable default</span>
+          </div>
+          <pre><code><span class="cm"># ── SALAH: list sebagai default — bug tersembunyi ────────</span>
+<span class="kw">def</span> <span class="fn">tambah_item_salah</span>(item, keranjang=[]):
+    keranjang.append(item)
+    <span class="kw">return</span> keranjang
+
+<span class="fn">print</span>(<span class="fn">tambah_item_salah</span>(<span class="st">"apel"</span>))     <span class="cm"># → ['apel']</span>
+<span class="fn">print</span>(<span class="fn">tambah_item_salah</span>(<span class="st">"mangga"</span>))   <span class="cm"># → ['apel', 'mangga']  ← harusnya ['mangga']!</span>
+
+<span class="cm"># ── BENAR: gunakan None sebagai default ──────────────────</span>
+<span class="kw">def</span> <span class="fn">tambah_item_benar</span>(item, keranjang=<span class="kw">None</span>):
+    <span class="kw">if</span> keranjang <span class="kw">is</span> <span class="kw">None</span>:
+        keranjang = []   <span class="cm"># list baru setiap kali dipanggil tanpa argumen</span>
+    keranjang.append(item)
+    <span class="kw">return</span> keranjang
+
+<span class="fn">print</span>(<span class="fn">tambah_item_benar</span>(<span class="st">"apel"</span>))     <span class="cm"># → ['apel']</span>
+<span class="fn">print</span>(<span class="fn">tambah_item_benar</span>(<span class="st">"mangga"</span>))   <span class="cm"># → ['mangga']  ← benar!</span></code></pre>
+        </div>
+
+        <h3>*args dan **kwargs — Parameter Fleksibel</h3>
+
+        <p>
+          Terkadang kamu tidak tahu sebelumnya berapa banyak argumen yang akan diterima fungsimu. Python punya dua mekanisme untuk ini. <code>*args</code> mengumpulkan semua argumen posisional ekstra menjadi sebuah tuple, sementara <code>**kwargs</code> mengumpulkan semua argumen kata kunci ekstra menjadi sebuah dictionary. Keduanya akan sering kamu lihat dalam kode library ML:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># *args — jumlah argumen posisional tidak terbatas</span>
+<span class="kw">def</span> <span class="fn">jumlahkan</span>(*angka):
+    <span class="st">"""Jumlahkan semua angka yang diberikan."""</span>
+    <span class="fn">print</span>(<span class="st">f"Menerima {len(angka)} angka: {angka}"</span>)
+    <span class="kw">return</span> <span class="fn">sum</span>(angka)
+
+<span class="fn">print</span>(<span class="fn">jumlahkan</span>(<span class="nm">1</span>, <span class="nm">2</span>))              <span class="cm"># → 3</span>
+<span class="fn">print</span>(<span class="fn">jumlahkan</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>))    <span class="cm"># → 15</span>
+
+<span class="cm"># **kwargs — jumlah argumen kata kunci tidak terbatas</span>
+<span class="kw">def</span> <span class="fn">cetak_config</span>(**pengaturan):
+    <span class="st">"""Cetak semua pengaturan yang diberikan."""</span>
+    <span class="fn">print</span>(<span class="st">"=== Konfigurasi Model ==="</span>)
+    <span class="kw">for</span> kunci, nilai <span class="kw">in</span> pengaturan.items():
+        <span class="fn">print</span>(<span class="st">f"  {kunci}: {nilai}"</span>)
+
+<span class="fn">cetak_config</span>(model=<span class="st">"XGBoost"</span>, lr=<span class="nm">0.05</span>, depth=<span class="nm">6</span>, subsample=<span class="nm">0.8</span>)</code></pre>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">6.3 Nilai Kembalian (Return Value)</h2>
+
+        <p>
+          Fungsi bisa melakukan dua hal: menghasilkan <strong>efek samping</strong> (seperti mencetak ke layar atau menyimpan file) atau menghasilkan sebuah <strong>nilai kembalian</strong> yang bisa dipakai oleh kode lain. Kata kunci <code>return</code> dipakai untuk mengembalikan nilai dari fungsi ke tempat fungsi itu dipanggil. Setelah bertemu <code>return</code>, fungsi langsung berhenti — baris kode setelahnya tidak dijalankan.
+        </p>
+
+        <p>
+          Fungsi tanpa pernyataan <code>return</code>, atau yang hanya menulis <code>return</code> tanpa nilai, secara implisit mengembalikan <code>None</code>. Ini penting dipahami karena bug yang sering muncul adalah memakai hasil fungsi yang sebenarnya mengembalikan <code>None</code>.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Fungsi dengan return value</span>
+<span class="kw">def</span> <span class="fn">celsius_ke_fahrenheit</span>(c):
+    <span class="st">"""Konversi suhu dari Celsius ke Fahrenheit."""</span>
+    <span class="kw">return</span> (c <span class="op">*</span> <span class="nm">9</span> / <span class="nm">5</span>) <span class="op">+</span> <span class="nm">32</span>
+
+suhu_f = <span class="fn">celsius_ke_fahrenheit</span>(<span class="nm">100</span>)
+<span class="fn">print</span>(<span class="st">f"100°C = {suhu_f}°F"</span>)   <span class="cm"># → 100°C = 212.0°F</span>
+
+<span class="cm"># Nilai kembalian bisa langsung dipakai dalam ekspresi</span>
+<span class="fn">print</span>(<span class="fn">celsius_ke_fahrenheit</span>(<span class="nm">37</span>) <span class="op">&gt;</span> <span class="nm">98</span>)   <span class="cm"># → True</span>
+
+<span class="cm"># Return awal — hentikan fungsi jika kondisi tidak terpenuhi</span>
+<span class="kw">def</span> <span class="fn">bagi_aman</span>(a, b):
+    <span class="st">"""Bagi a dengan b, kembalikan None jika b adalah nol."""</span>
+    <span class="kw">if</span> b <span class="op">==</span> <span class="nm">0</span>:
+        <span class="fn">print</span>(<span class="st">"Peringatan: pembagi tidak boleh nol"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>   <span class="cm"># keluar lebih awal</span>
+    <span class="kw">return</span> a / b
+
+<span class="fn">print</span>(<span class="fn">bagi_aman</span>(<span class="nm">10</span>, <span class="nm">2</span>))   <span class="cm"># → 5.0</span>
+<span class="fn">print</span>(<span class="fn">bagi_aman</span>(<span class="nm">10</span>, <span class="nm">0</span>))   <span class="cm"># → Peringatan: ... lalu None</span></code></pre>
+        </div>
+
+        <h3>Mengembalikan Banyak Nilai Sekaligus</h3>
+
+        <p>
+          Python memungkinkan sebuah fungsi mengembalikan lebih dari satu nilai sekaligus — sebenarnya yang terjadi adalah fungsi mengembalikan sebuah tuple, yang kemudian bisa langsung dibongkar ke beberapa variabel. Ini pola yang sangat umum dalam kode ML, terutama untuk fungsi evaluasi model yang biasanya mengembalikan beberapa metrik sekaligus:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="fn">statistik_dasar</span>(data):
+    <span class="st">"""Hitung statistik dasar dari list angka."""</span>
+    n      = <span class="fn">len</span>(data)
+    rata   = <span class="fn">sum</span>(data) / n
+    minimum = <span class="fn">min</span>(data)
+    maksimum = <span class="fn">max</span>(data)
+    <span class="cm"># varian sederhana</span>
+    varian = <span class="fn">sum</span>((x <span class="op">-</span> rata) <span class="op">**</span> <span class="nm">2</span> <span class="kw">for</span> x <span class="kw">in</span> data) / n
+    std    = varian <span class="op">**</span> <span class="nm">0.5</span>
+    <span class="kw">return</span> rata, minimum, maksimum, std   <span class="cm"># mengembalikan tuple</span>
+
+nilai = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>, <span class="nm">70</span>, <span class="nm">91</span>]
+
+<span class="cm"># Terima sebagai tuple</span>
+hasil = <span class="fn">statistik_dasar</span>(nilai)
+<span class="fn">print</span>(hasil)   <span class="cm"># → (85.57..., 70, 95, 7.68...)</span>
+
+<span class="cm"># Atau langsung bongkar ke variabel — cara yang lebih rapi</span>
+rata, minimum, maksimum, std = <span class="fn">statistik_dasar</span>(nilai)
+<span class="fn">print</span>(<span class="st">f"Rata-rata: {rata:.1f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Rentang  : {minimum} – {maksimum}"</span>)
+<span class="fn">print</span>(<span class="st">f"Std Dev  : {std:.2f}"</span>)
+
+<span class="cm"># Pola serupa untuk fungsi evaluasi model</span>
+<span class="kw">def</span> <span class="fn">evaluasi_klasifikasi</span>(y_asli, y_prediksi):
+    <span class="st">"""Hitung metrik evaluasi klasifikasi biner."""</span>
+    n         = <span class="fn">len</span>(y_asli)
+    benar     = <span class="fn">sum</span>(<span class="nm">1</span> <span class="kw">for</span> a, p <span class="kw">in</span> <span class="fn">zip</span>(y_asli, y_prediksi) <span class="kw">if</span> a <span class="op">==</span> p)
+    akurasi   = benar / n
+    tp        = <span class="fn">sum</span>(<span class="nm">1</span> <span class="kw">for</span> a, p <span class="kw">in</span> <span class="fn">zip</span>(y_asli, y_prediksi) <span class="kw">if</span> a <span class="op">==</span> <span class="nm">1</span> <span class="kw">and</span> p <span class="op">==</span> <span class="nm">1</span>)
+    fp        = <span class="fn">sum</span>(<span class="nm">1</span> <span class="kw">for</span> a, p <span class="kw">in</span> <span class="fn">zip</span>(y_asli, y_prediksi) <span class="kw">if</span> a <span class="op">==</span> <span class="nm">0</span> <span class="kw">and</span> p <span class="op">==</span> <span class="nm">1</span>)
+    presisi   = tp / (tp <span class="op">+</span> fp) <span class="kw">if</span> (tp <span class="op">+</span> fp) <span class="op">&gt;</span> <span class="nm">0</span> <span class="kw">else</span> <span class="nm">0</span>
+    <span class="kw">return</span> akurasi, presisi
+
+y_asli      = [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>]
+y_prediksi  = [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>]
+akurasi, presisi = <span class="fn">evaluasi_klasifikasi</span>(y_asli, y_prediksi)
+<span class="fn">print</span>(<span class="st">f"Akurasi: {akurasi:.1%}, Presisi: {presisi:.1%}"</span>)
+<span class="cm"># → Akurasi: 83.3%, Presisi: 100.0%</span></code></pre>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Fungsi yang Baik Selalu Mengembalikan Nilai yang Konsisten</strong>
+            <p>Hindari fungsi yang di satu jalur mengembalikan nilai angka, dan di jalur lain tidak mengembalikan apapun (implisit <code>None</code>). Kode yang memanggil fungsimu tidak akan tahu harus berharap apa. Kalau fungsi mengembalikan angka, ia <em>selalu</em> harus mengembalikan angka — atau secara eksplisit mengembalikan <code>None</code> dan mendokumentasikannya di docstring.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">6.4 Ruang Lingkup Variabel (Variable Scope)</h2>
+
+        <p>
+          Tidak semua variabel bisa diakses dari semua tempat dalam kode. <strong>Ruang lingkup</strong> *(scope)* menentukan di mana sebuah variabel "hidup" dan dari mana ia bisa diakses. Python mengikuti aturan LEGB — Python pertama mencari variabel di lingkup <strong>L</strong>okal, lalu <strong>E</strong>nclosing, lalu <strong>G</strong>lobal, dan terakhir <strong>B</strong>awaan *(built-in)*.
+        </p>
+
+        <p>
+          Yang paling penting untuk kamu pahami sekarang adalah perbedaan antara variabel lokal dan variabel global. Variabel yang dibuat di dalam fungsi adalah variabel <strong>lokal</strong> — ia hanya ada selama fungsi itu berjalan dan tidak bisa diakses dari luar. Variabel yang dibuat di luar fungsi adalah variabel <strong>global</strong> — ia bisa dibaca dari dalam fungsi, tapi tidak bisa diubah dari dalam fungsi tanpa kata kunci khusus.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Variabel lokal — hanya ada di dalam fungsi</span>
+<span class="kw">def</span> <span class="fn">hitung</span>():
+    hasil = <span class="nm">42</span>   <span class="cm"># variabel lokal</span>
+    <span class="fn">print</span>(hasil)  <span class="cm"># → 42</span>
+
+<span class="fn">hitung</span>()
+<span class="cm"># print(hasil)  # → NameError: 'hasil' tidak dikenal di sini</span>
+
+<span class="cm"># Variabel global bisa DIBACA dari dalam fungsi</span>
+NAMA_MODEL = <span class="st">"ResNet50"</span>   <span class="cm"># variabel global (konvensi: HURUF_BESAR)</span>
+
+<span class="kw">def</span> <span class="fn">info_model</span>():
+    <span class="fn">print</span>(<span class="st">f"Model yang dipakai: {NAMA_MODEL}"</span>)   <span class="cm"># membaca global — OK</span>
+
+<span class="fn">info_model</span>()   <span class="cm"># → Model yang dipakai: ResNet50</span>
+
+<span class="cm"># Variabel global TIDAK BISA diubah langsung dari dalam fungsi</span>
+jumlah = <span class="nm">0</span>
+
+<span class="kw">def</span> <span class="fn">tambah_satu_salah</span>():
+    jumlah = jumlah <span class="op">+</span> <span class="nm">1</span>   <span class="cm"># UnboundLocalError! Python anggap ini variabel lokal baru</span>
+
+<span class="cm"># Solusinya ada dua:</span>
+<span class="cm"># 1. Gunakan kata kunci 'global' (tidak dianjurkan untuk kode serius)</span>
+<span class="kw">def</span> <span class="fn">tambah_satu_global</span>():
+    <span class="kw">global</span> jumlah
+    jumlah <span class="op">+=</span> <span class="nm">1</span>
+
+<span class="cm"># 2. Cara yang lebih baik: kembalikan nilai baru, jangan ubah global</span>
+<span class="kw">def</span> <span class="fn">tambah_satu_bersih</span>(n):
+    <span class="kw">return</span> n <span class="op">+</span> <span class="nm">1</span>   <span class="cm"># terima input, kembalikan output — tidak sentuh global</span>
+
+jumlah = <span class="fn">tambah_satu_bersih</span>(jumlah)
+<span class="fn">print</span>(jumlah)   <span class="cm"># → 1</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Hindari Variabel Global yang Diubah-Ubah</strong>
+            <p>Fungsi yang membaca dan mengubah variabel global membuat kode sangat sulit dilacak — kamu tidak bisa tahu kondisi program hanya dari membaca fungsinya saja. Fungsi yang baik adalah fungsi <strong>murni</strong> *(pure function)*: semua input datang dari parameter, semua output melalui return value. Tidak ada ketergantungan tersembunyi pada kondisi luar. Kode ML yang terstruktur dengan baik hampir selalu mengikuti prinsip ini.</p>
+          </div>
+        </div>
+
+        <h3>Scope dalam Fungsi Bersarang</h3>
+
+        <p>
+          Python juga mendukung fungsi yang didefinisikan di dalam fungsi lain — disebut fungsi bersarang *(nested function)*. Fungsi dalam bisa mengakses variabel dari fungsi luar melalui lingkup yang disebut <em>enclosing scope</em>. Ini adalah dasar dari konsep <em>closure</em> yang akan kamu lihat lebih dalam di bab-bab mendatang. Untuk sekarang, cukup ketahui bahwa ini ada:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Fungsi bersarang — fungsi dalam bisa baca variabel fungsi luar</span>
+<span class="kw">def</span> <span class="fn">buat_penambah</span>(n):
+    <span class="st">"""Buat fungsi yang menambahkan n ke input apapun."""</span>
+    <span class="kw">def</span> <span class="fn">penambah</span>(x):
+        <span class="kw">return</span> x <span class="op">+</span> n    <span class="cm"># 'n' dari fungsi luar — enclosing scope</span>
+    <span class="kw">return</span> penambah    <span class="cm"># kembalikan fungsi itu sendiri!</span>
+
+tambah_10 = <span class="fn">buat_penambah</span>(<span class="nm">10</span>)
+tambah_5  = <span class="fn">buat_penambah</span>(<span class="nm">5</span>)
+
+<span class="fn">print</span>(<span class="fn">tambah_10</span>(<span class="nm">3</span>))   <span class="cm"># → 13</span>
+<span class="fn">print</span>(<span class="fn">tambah_5</span>(<span class="nm">3</span>))    <span class="cm"># → 8</span>
+<span class="fn">print</span>(<span class="fn">tambah_10</span>(<span class="nm">7</span>))   <span class="cm"># → 17</span>
+
+<span class="cm"># tambah_10 dan tambah_5 adalah 'closure' — fungsi yang membawa</span>
+<span class="cm"># serta nilai dari enclosing scope ke manapun ia pergi</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">6.5 Fungsi sebagai Objek Pertama — Pengantar</h2>
+
+        <p>
+          Ini adalah konsep yang mungkin terasa sedikit aneh di awal, tapi sangat penting untuk pemrograman Python tingkat lanjut. Di Python, <strong>fungsi adalah objek</strong> — sama seperti integer, string, atau list. Artinya: fungsi bisa disimpan dalam variabel, dimasukkan ke dalam list, dioper sebagai argumen ke fungsi lain, atau dikembalikan dari fungsi lain. Bahasa yang mendukung ini disebut mendukung fungsi sebagai "objek kelas pertama" *(first-class citizen)*.
+        </p>
+
+        <p>
+          Kamu sebenarnya sudah melihat ini di bab sebelumnya — fungsi bawaan Python seperti <code>sorted()</code> bisa menerima argumen <code>key</code> yang nilainya adalah fungsi lain. Di dunia kecerdasan buatan, konsep ini muncul setiap hari: callback pelatihan, fungsi aktivasi yang dioper ke lapisan neural network, pipeline transformasi data, dan sebagainya.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Fungsi bisa disimpan dalam variabel</span>
+<span class="kw">def</span> <span class="fn">salam</span>(nama):
+    <span class="kw">return</span> <span class="st">f"Halo, {nama}!"</span>
+
+ucapan = salam    <span class="cm"># tanpa tanda kurung — ini menyimpan fungsinya, bukan memanggilnya</span>
+<span class="fn">print</span>(<span class="fn">ucapan</span>(<span class="st">"Rina"</span>))   <span class="cm"># → Halo, Rina!</span>
+<span class="fn">print</span>(<span class="fn">type</span>(ucapan))      <span class="cm"># → &lt;class 'function'&gt;</span>
+
+<span class="cm"># Fungsi bisa dimasukkan ke dalam list</span>
+<span class="kw">def</span> <span class="fn">kuadrat</span>(x):   <span class="kw">return</span> x <span class="op">**</span> <span class="nm">2</span>
+<span class="kw">def</span> <span class="fn">kubik</span>(x):     <span class="kw">return</span> x <span class="op">**</span> <span class="nm">3</span>
+<span class="kw">def</span> <span class="fn">akar</span>(x):      <span class="kw">return</span> x <span class="op">**</span> <span class="nm">0.5</span>
+
+transformasi = [kuadrat, kubik, akar]   <span class="cm"># list berisi fungsi!</span>
+<span class="kw">for</span> f <span class="kw">in</span> transformasi:
+    <span class="fn">print</span>(<span class="st">f"{f.__name__}(4) = {f(4)}"</span>)
+<span class="cm"># → kuadrat(4) = 16</span>
+<span class="cm"># → kubik(4) = 64</span>
+<span class="cm"># → akar(4) = 2.0</span></code></pre>
+        </div>
+
+        <h3>Mengoper Fungsi sebagai Argumen</h3>
+
+        <p>
+          Ini salah satu penggunaan yang paling sering kamu lihat. Fungsi yang menerima fungsi lain sebagai argumen disebut fungsi tingkat tinggi *(higher-order function)*. Contoh klasiknya adalah fungsi bawaan <code>sorted()</code>, <code>map()</code>, dan <code>filter()</code>:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># sorted() menerima fungsi sebagai argumen 'key'</span>
+model_results = [
+    {<span class="st">"nama"</span>: <span class="st">"XGBoost"</span>,         <span class="st">"akurasi"</span>: <span class="nm">0.93</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Random Forest"</span>,     <span class="st">"akurasi"</span>: <span class="nm">0.91</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Regresi Logistik"</span>,   <span class="st">"akurasi"</span>: <span class="nm">0.82</span>},
+]
+
+<span class="cm"># Fungsi untuk mengambil nilai yang dipakai sebagai kunci urutan</span>
+<span class="kw">def</span> <span class="fn">ambil_akurasi</span>(item):
+    <span class="kw">return</span> item[<span class="st">"akurasi"</span>]
+
+urut_terbaik = <span class="fn">sorted</span>(model_results, key=ambil_akurasi, reverse=<span class="kw">True</span>)
+<span class="kw">for</span> m <span class="kw">in</span> urut_terbaik:
+    <span class="fn">print</span>(<span class="st">f"{m['akurasi']:.1%} — {m['nama']}"</span>)
+<span class="cm"># → 93.0% — XGBoost</span>
+<span class="cm"># → 91.0% — Random Forest</span>
+<span class="cm"># → 82.0% — Regresi Logistik</span>
+
+<span class="cm"># Fungsi kustom yang menerima fungsi lain sebagai argumen</span>
+<span class="kw">def</span> <span class="fn">terapkan_ke_semua</span>(data, fungsi_transformasi):
+    <span class="st">"""Terapkan fungsi ke setiap elemen dalam data."""</span>
+    <span class="kw">return</span> [fungsi_transformasi(x) <span class="kw">for</span> x <span class="kw">in</span> data]
+
+nilai = [<span class="nm">4</span>, <span class="nm">9</span>, <span class="nm">16</span>, <span class="nm">25</span>]
+<span class="fn">print</span>(<span class="fn">terapkan_ke_semua</span>(nilai, akar))     <span class="cm"># → [2.0, 3.0, 4.0, 5.0]</span>
+<span class="fn">print</span>(<span class="fn">terapkan_ke_semua</span>(nilai, kuadrat))  <span class="cm"># → [16, 81, 256, 625]</span></code></pre>
+        </div>
+
+        <h3>Lambda — Fungsi Anonim Satu Baris</h3>
+
+        <p>
+          Lambda adalah cara membuat fungsi kecil sekali pakai tanpa nama, langsung di tempat ia dibutuhkan. Sintaksinya adalah <code>lambda parameter: ekspresi</code>. Lambda berguna ketika fungsi yang dibutuhkan sangat sederhana — hanya satu ekspresi — dan tidak perlu punya nama karena hanya akan dipakai sekali:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Fungsi biasa vs lambda — hasil identik</span>
+<span class="kw">def</span> <span class="fn">kali_dua</span>(x):
+    <span class="kw">return</span> x <span class="op">*</span> <span class="nm">2</span>
+
+kali_dua_lambda = <span class="kw">lambda</span> x: x <span class="op">*</span> <span class="nm">2</span>
+
+<span class="fn">print</span>(<span class="fn">kali_dua</span>(<span class="nm">5</span>))         <span class="cm"># → 10</span>
+<span class="fn">print</span>(<span class="fn">kali_dua_lambda</span>(<span class="nm">5</span>))  <span class="cm"># → 10</span>
+
+<span class="cm"># Lambda paling berguna langsung sebagai argumen fungsi lain</span>
+data = [<span class="st">"apel"</span>, <span class="st">"mangga"</span>, <span class="st">"jeruk"</span>, <span class="st">"pisang"</span>]
+
+<span class="cm"># Urutkan berdasarkan panjang nama buah</span>
+urut_panjang = <span class="fn">sorted</span>(data, key=<span class="kw">lambda</span> x: <span class="fn">len</span>(x))
+<span class="fn">print</span>(urut_panjang)   <span class="cm"># → ['apel', 'jeruk', 'mangga', 'pisang']</span>
+
+<span class="cm"># Urutkan model berdasarkan akurasi — lebih ringkas dari sebelumnya</span>
+urut_terbaik_2 = <span class="fn">sorted</span>(model_results, key=<span class="kw">lambda</span> m: m[<span class="st">"akurasi"</span>], reverse=<span class="kw">True</span>)
+
+<span class="cm"># Lambda dengan beberapa parameter</span>
+hitung_skor = <span class="kw">lambda</span> presisi, ingatan: <span class="nm">2</span> <span class="op">*</span> (presisi <span class="op">*</span> ingatan) / (presisi <span class="op">+</span> ingatan)
+<span class="fn">print</span>(<span class="st">f"F1-score: {hitung_skor(0.85, 0.78):.3f}"</span>)
+<span class="cm"># → F1-score: 0.813</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Lambda Hanya untuk Ekspresi Sederhana</strong>
+            <p>Lambda hanya bisa berisi satu ekspresi — tidak bisa berisi pernyataan seperti <code>if-else</code> yang berdiri sendiri, <code>for</code> loop, atau <code>return</code>. Kalau logikanya lebih kompleks dari satu ekspresi, buat fungsi biasa dengan <code>def</code>. Kode yang mudah dibaca lebih berharga daripada kode yang terlihat pintar tapi sulit dipahami.</p>
+          </div>
+        </div>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Konsep</th>
+                <th>Bentuk</th>
+                <th>Kapan Dipakai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fungsi biasa</td>
+                <td><code>def nama(param): ...</code></td>
+                <td>Logika apapun, perlu didokumentasikan, dipanggil berulang</td>
+              </tr>
+              <tr>
+                <td>Fungsi dengan default</td>
+                <td><code>def f(x, n=10): ...</code></td>
+                <td>Argumen opsional dengan nilai bawaan yang masuk akal</td>
+              </tr>
+              <tr>
+                <td>*args</td>
+                <td><code>def f(*args): ...</code></td>
+                <td>Jumlah argumen posisional tidak diketahui sebelumnya</td>
+              </tr>
+              <tr>
+                <td>**kwargs</td>
+                <td><code>def f(**kwargs): ...</code></td>
+                <td>Jumlah argumen kata kunci tidak diketahui sebelumnya</td>
+              </tr>
+              <tr>
+                <td>Lambda</td>
+                <td><code>lambda x: ekspresi</code></td>
+                <td>Fungsi sekali pakai sederhana, biasanya sebagai argumen</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Menuju Bab 7: Penanganan Berkas dan Kesalahan</strong>
+            <p>Kamu sekarang punya alat untuk menulis kode yang terstruktur dan bisa dipakai ulang. Langkah berikutnya adalah membuat program yang bisa berinteraksi dengan dunia luar — membaca dan menulis file, serta menangani situasi yang tidak terduga dengan anggun. Di Bab 7 kamu akan belajar cara bekerja dengan file teks dan CSV, memahami pesan error Python, dan menulis kode yang tidak langsung mati saat bertemu data yang aneh.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <a href="b01-bab-05.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 5: Alur Kendali Program</span>
+      </a>
+
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 6 / 15</div>
+          <div class="dot-progres">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span class="aktif"></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="b01-bab-07.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 7: Penanganan Berkas dan Kesalahan</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 6</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

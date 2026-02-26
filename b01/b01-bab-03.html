@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blok Bangunan Python — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===========================
+       VARIABEL & RESET
+    =========================== */
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+
+      --cyan:    #00C8FF;
+      --cyan-dim: #00628090;
+      --green:   #00FF94;
+      --green-dim: #00804A50;
+      --amber:   #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:  #9D6FFF;
+      --purple-dim: #4B2A9040;
+      --red:     #FF5F6D;
+
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===========================
+       HEADER
+    =========================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* ===========================
+       BREADCRUMB
+    =========================== */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char {
+      color: var(--green);
+      font-weight: 600;
+      margin-right: 0.2rem;
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ===========================
+       KONTEN UTAMA
+    =========================== */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* ===========================
+       DAFTAR SUBBAB
+    =========================== */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before {
+      content: '//';
+      color: var(--cyan);
+      font-size: 0.8rem;
+    }
+
+    .daftar-subbab ol {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* ===========================
+       TIPOGRAFI KONTEN
+    =========================== */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+    }
+
+    .konten ul { list-style: none; padding-left: 0; }
+
+    .konten ul li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .konten ul li::before {
+      content: '▸';
+      color: var(--cyan);
+      position: absolute;
+      left: 0;
+      font-size: 0.7rem;
+      top: 0.35rem;
+    }
+
+    .konten ol li { margin-bottom: 0.5rem; }
+
+    .konten strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .konten a {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,200,255,0.3);
+      transition: all 0.2s;
+    }
+
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* ===========================
+       BLOK KODE
+    =========================== */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .blok-kode-header .titik-titik span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* ===========================
+       KARTU
+    =========================== */
+    .kartu-info,
+    .kartu-peringatan,
+    .kartu-tips,
+    .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info {
+      background: rgba(0,200,255,0.05);
+      border: 1px solid rgba(0,200,255,0.2);
+    }
+
+    .kartu-peringatan {
+      background: rgba(255,184,48,0.05);
+      border: 1px solid rgba(255,184,48,0.25);
+    }
+
+    .kartu-tips {
+      background: rgba(0,255,148,0.05);
+      border: 1px solid rgba(0,255,148,0.2);
+    }
+
+    .kartu-catatan {
+      background: rgba(157,111,255,0.06);
+      border: 1px solid rgba(157,111,255,0.25);
+    }
+
+    .kartu-ikon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .kartu-isi { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* ===========================
+       TABEL
+    =========================== */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.7rem 1rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* ===========================
+       NAVIGASI BAB
+    =========================== */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover {
+      border-color: rgba(0,200,255,0.4);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+
+    .indikator-progres {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nomor-bab-sekarang {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .dot-progres { display: flex; gap: 4px; }
+
+    .dot-progres span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot-progres span.aktif {
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--bg-base);
+      padding: 2rem 0;
+    }
+
+    footer .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .footer-kanan {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .footer-kanan a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ===========================
+       ANIMASI MASUK
+    =========================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* ===========================
+       RESPONSIF
+    =========================== */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+
+      .navigasi-bab .wadah {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .posisi-tengah {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-03-blok-bangunan-python</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian II — Python Dasar</span>
+          <span class="label-nomor-bab">Bab 3 / 15</span>
+        </div>
+
+        <h1 class="judul-bab">
+          Blok Bangunan Python<span class="aksen">.</span>
+        </h1>
+
+        <p class="deskripsi-bab">
+          Setiap bangunan megah dimulai dari batu bata. Dalam Python, "batu bata" itu adalah variabel, tipe data, dan operasi dasar. Bab ini memperkenalkan konsep-konsep paling fundamental yang akan kamu gunakan di setiap baris kode yang pernah kamu tulis sepanjang karir — jadi kuasai ini dengan benar.
+        </p>
+
+        <div class="pita-info-bab">
+          <div class="info-item">
+            <span>⏱</span>
+            <span class="info-val">~2–3 jam baca + latihan</span>
+          </div>
+          <div class="info-item">
+            <span>📦</span>
+            <span class="info-val">Tidak ada library — Python murni</span>
+          </div>
+          <div class="info-item">
+            <span>🔗</span>
+            <span class="info-val">Prasyarat: Bab 2 (lingkungan kerja siap)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li>
+            <span class="nomor-subbab">3.1</span>
+            <a href="#subbab-1">Variabel dan tipe data dasar</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">3.2</span>
+            <a href="#subbab-2">String dan operasi pada teks</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">3.3</span>
+            <a href="#subbab-3">Angka: integer, float, dan operasi matematika</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">3.4</span>
+            <a href="#subbab-4">Nilai boolean dan logika dasar</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">3.5</span>
+            <a href="#subbab-5">Konversi antar tipe data</a>
+          </li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">3.1 Variabel dan Tipe Data Dasar</h2>
+
+        <p>
+          Bayangkan variabel seperti sebuah kotak berlabel. Kamu bisa menaruh sesuatu ke dalam kotak itu, memberinya nama, lalu memanggil isi kotak itu kapanpun kamu mau lewat namanya. Dalam Python, membuat variabel semudah menuliskan nama, tanda sama dengan, lalu nilai yang ingin kamu simpan. Tidak perlu deklarasi tipe, tidak perlu kata kunci khusus — langsung saja.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Membuat variabel — sesederhana ini</span>
+nama       = <span class="st">"Sari"</span>
+usia       = <span class="nm">22</span>
+tinggi     = <span class="nm">165.5</span>
+sudah_lulus = <span class="kw">True</span>
+
+<span class="cm"># Memanggil variabel</span>
+<span class="fn">print</span>(nama)        <span class="cm"># → Sari</span>
+<span class="fn">print</span>(usia)        <span class="cm"># → 22</span>
+<span class="fn">print</span>(tinggi)      <span class="cm"># → 165.5</span>
+<span class="fn">print</span>(sudah_lulus) <span class="cm"># → True</span></code></pre>
+        </div>
+
+        <p>
+          Python adalah bahasa yang bertipe dinamis *(dynamically typed)*. Ini berarti kamu tidak perlu memberitahu Python bahwa <code>nama</code> adalah teks atau <code>usia</code> adalah angka — Python cukup pintar untuk menebaknya sendiri dari nilai yang kamu berikan. Ini membuat penulisan kode jadi lebih cepat, tapi juga menuntut kamu lebih hati-hati karena kesalahan tipe data baru terdeteksi saat kode dijalankan, bukan saat ditulis.
+        </p>
+
+        <p>
+          Kamu bisa memeriksa tipe sebuah variabel menggunakan fungsi bawaan <code>type()</code>. Ini sangat berguna saat men-debug kode yang bermasalah:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="fn">print</span>(<span class="fn">type</span>(nama))        <span class="cm"># → &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(usia))        <span class="cm"># → &lt;class 'int'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(tinggi))      <span class="cm"># → &lt;class 'float'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(sudah_lulus)) <span class="cm"># → &lt;class 'bool'&gt;</span></code></pre>
+        </div>
+
+        <p>
+          Ada empat tipe data dasar yang baru saja kamu lihat: <code>str</code> untuk teks *(string)*, <code>int</code> untuk bilangan bulat *(integer)*, <code>float</code> untuk bilangan desimal, dan <code>bool</code> untuk nilai benar/salah *(boolean)*. Keempat ini adalah yang paling sering kamu temui sehari-hari, dan masing-masing akan dibahas lebih dalam di subbab-subbab berikutnya.
+        </p>
+
+        <h3>Aturan Penamaan Variabel</h3>
+
+        <p>
+          Nama variabel di Python punya beberapa aturan yang harus diikuti, plus konvensi yang disepakati industri. Aturan wajib: nama hanya boleh mengandung huruf, angka, dan garis bawah <code>_</code>; tidak boleh dimulai dengan angka; dan tidak boleh menggunakan kata kunci bawaan Python seperti <code>if</code>, <code>for</code>, <code>print</code>, dll.
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Variabel</th>
+                <th>Valid?</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>nama_pengguna</code></td>
+                <td>✅ Ya</td>
+                <td>Standar — gunakan garis bawah untuk pemisah kata</td>
+              </tr>
+              <tr>
+                <td><code>NamaPengguna</code></td>
+                <td>✅ Ya</td>
+                <td>Valid, tapi di Python dipakai khusus untuk nama kelas</td>
+              </tr>
+              <tr>
+                <td><code>jumlah2</code></td>
+                <td>✅ Ya</td>
+                <td>Angka boleh, tapi bukan di awal</td>
+              </tr>
+              <tr>
+                <td><code>2jumlah</code></td>
+                <td>❌ Tidak</td>
+                <td>Tidak boleh dimulai dengan angka</td>
+              </tr>
+              <tr>
+                <td><code>nama-pengguna</code></td>
+                <td>❌ Tidak</td>
+                <td>Tanda hubung dianggap operasi pengurangan</td>
+              </tr>
+              <tr>
+                <td><code>for</code></td>
+                <td>❌ Tidak</td>
+                <td>Kata kunci bawaan Python tidak bisa dipakai</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Konvensi standar Python — yang dikenal sebagai gaya <strong>snake_case</strong> — adalah menggunakan huruf kecil semua dengan garis bawah sebagai pemisah kata: <code>nama_pengguna</code>, <code>total_harga</code>, <code>jumlah_data_latih</code>. Gunakan nama yang deskriptif dan jelas maknanya, bukan singkatan yang membingungkan. Variabel bernama <code>x</code> atau <code>tmp</code> mungkin kamu mengerti sekarang, tapi tiga bulan kemudian saat kamu membaca ulang kodenya, kamu akan bingung sendiri.
+        </p>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Namai Variabel Seperti Menjelaskan ke Orang Lain</strong>
+            <p>Tes sederhana: bisakah seseorang yang belum pernah melihat kode kamu memahami apa yang disimpan dalam variabel itu hanya dari namanya? Kalau jawabannya tidak, ganti namanya. <code>tinggi_badan_cm</code> jauh lebih baik dari <code>tb</code> atau <code>h</code>.</p>
+          </div>
+        </div>
+
+        <h3>Variabel Bisa Diubah Nilainya</h3>
+
+        <p>
+          Tidak seperti beberapa bahasa pemrograman lain, variabel di Python bisa diubah nilainya kapan saja — bahkan ke tipe data yang berbeda. Ini adalah konsekuensi dari sifat dinamis Python yang disebutkan tadi:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>skor = <span class="nm">85</span>
+<span class="fn">print</span>(skor, <span class="fn">type</span>(skor))  <span class="cm"># → 85 &lt;class 'int'&gt;</span>
+
+skor = <span class="nm">92.5</span>
+<span class="fn">print</span>(skor, <span class="fn">type</span>(skor))  <span class="cm"># → 92.5 &lt;class 'float'&gt;</span>
+
+skor = <span class="st">"sempurna"</span>
+<span class="fn">print</span>(skor, <span class="fn">type</span>(skor))  <span class="cm"># → sempurna &lt;class 'str'&gt;</span>
+
+<span class="cm"># Python tidak komplain — ini fitur, bukan bug</span>
+<span class="cm"># Tapi dalam praktik, hindari mengubah tipe variabel</span>
+<span class="cm"># karena membuat kode susah dipahami</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">3.2 String dan Operasi pada Teks</h2>
+
+        <p>
+          String adalah tipe data untuk menyimpan teks — apapun yang diapit oleh tanda kutip, baik kutip tunggal <code>'</code> maupun kutip ganda <code>"</code>, adalah string. Di dunia kecerdasan buatan, string sangat penting karena kita sering bekerja dengan data teks: nama pengguna, komentar, transaksi, atau bahkan dokumen panjang yang diproses oleh model bahasa.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Berbagai cara membuat string</span>
+kalimat_satu = <span class="st">'Ini string dengan kutip tunggal'</span>
+kalimat_dua  = <span class="st">"Ini string dengan kutip ganda"</span>
+
+<span class="cm"># String multi-baris menggunakan tiga kutip</span>
+paragraf = <span class="st">"""Ini adalah string
+yang bisa memanjang
+ke beberapa baris."""</span>
+
+<span class="cm"># Keduanya tipe yang sama</span>
+<span class="fn">print</span>(<span class="fn">type</span>(kalimat_satu))  <span class="cm"># → &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(kalimat_dua))   <span class="cm"># → &lt;class 'str'&gt;</span></code></pre>
+        </div>
+
+        <h3>Operasi Dasar pada String</h3>
+
+        <p>
+          Python memberikan banyak cara untuk memanipulasi string. Yang paling sering dipakai adalah penggabungan *(concatenation)*, pengulangan, dan pengukuran panjang:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>depan = <span class="st">"Budi"</span>
+belakang = <span class="st">"Santoso"</span>
+
+<span class="cm"># Penggabungan string dengan operator +</span>
+nama_lengkap = depan <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> belakang
+<span class="fn">print</span>(nama_lengkap)  <span class="cm"># → Budi Santoso</span>
+
+<span class="cm"># Pengulangan string dengan operator *</span>
+garis = <span class="st">"-"</span> <span class="op">*</span> <span class="nm">30</span>
+<span class="fn">print</span>(garis)  <span class="cm"># → ------------------------------</span>
+
+<span class="cm"># Panjang string dengan fungsi len()</span>
+<span class="fn">print</span>(<span class="fn">len</span>(nama_lengkap))  <span class="cm"># → 12</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="st">"python"</span>))      <span class="cm"># → 6</span></code></pre>
+        </div>
+
+        <h3>f-String: Cara Terbaik Membuat Teks Dinamis</h3>
+
+        <p>
+          Salah satu fitur Python yang paling berguna dan paling sering kamu gunakan adalah <strong>f-string</strong> — cara menyisipkan nilai variabel langsung ke dalam teks tanpa perlu penggabungan yang panjang. Cukup tambahkan huruf <code>f</code> sebelum tanda kutip, lalu gunakan kurung kurawal <code>{}</code> untuk menyisipkan ekspresi:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>nama  = <span class="st">"Dina"</span>
+usia  = <span class="nm">24</span>
+kota  = <span class="st">"Bandung"</span>
+nilai = <span class="nm">87.6</span>
+
+<span class="cm"># Cara lama — repot dengan penggabungan</span>
+pesan_lama = <span class="st">"Halo, "</span> <span class="op">+</span> nama <span class="op">+</span> <span class="st">"! Usiamu "</span> <span class="op">+</span> <span class="fn">str</span>(usia) <span class="op">+</span> <span class="st">" tahun."</span>
+
+<span class="cm"># Cara modern — f-string, jauh lebih bersih</span>
+pesan_baru = <span class="st">f"Halo, {nama}! Usiamu {usia} tahun dan tinggal di {kota}."</span>
+<span class="fn">print</span>(pesan_baru)
+<span class="cm"># → Halo, Dina! Usiamu 24 tahun dan tinggal di Bandung.</span>
+
+<span class="cm"># Bisa juga menyisipkan ekspresi langsung</span>
+<span class="fn">print</span>(<span class="st">f"Nilai kamu: {nilai:.1f}"</span>)  <span class="cm"># → Nilai kamu: 87.6</span>
+<span class="fn">print</span>(<span class="st">f"Dua kali usia: {usia * 2}"</span>) <span class="cm"># → Dua kali usia: 48</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Tentang Format Angka di f-String</strong>
+            <p>Notasi <code>{nilai:.1f}</code> berarti "tampilkan variabel <code>nilai</code> sebagai desimal dengan 1 angka di belakang koma". Kamu bisa ubah angkanya: <code>:.2f</code> untuk 2 desimal, <code>:.0f</code> untuk tanpa desimal. Ini sangat berguna saat menampilkan hasil perhitungan atau metrik model.</p>
+          </div>
+        </div>
+
+        <h3>Metode Bawaan String yang Penting</h3>
+
+        <p>
+          String di Python punya banyak metode bawaan yang bisa langsung dipanggil. Metode adalah fungsi yang "melekat" pada sebuah objek — cara memanggilnya adalah <code>variabel.metode()</code>. Berikut yang paling sering digunakan:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>teks = <span class="st">"  Belajar Python itu Menyenangkan!  "</span>
+
+<span class="cm"># Mengubah huruf besar/kecil</span>
+<span class="fn">print</span>(teks.upper())    <span class="cm"># → "  BELAJAR PYTHON ITU MENYENANGKAN!  "</span>
+<span class="fn">print</span>(teks.lower())    <span class="cm"># → "  belajar python itu menyenangkan!  "</span>
+<span class="fn">print</span>(teks.title())    <span class="cm"># → "  Belajar Python Itu Menyenangkan!  "</span>
+
+<span class="cm"># Menghapus spasi di awal dan akhir</span>
+<span class="fn">print</span>(teks.strip())    <span class="cm"># → "Belajar Python itu Menyenangkan!"</span>
+
+<span class="cm"># Memeriksa isi string</span>
+<span class="fn">print</span>(teks.startswith(<span class="st">"  Belajar"</span>))  <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="st">"Python"</span> <span class="kw">in</span> teks)             <span class="cm"># → True</span>
+
+<span class="cm"># Mengganti bagian teks</span>
+baru = teks.replace(<span class="st">"Python"</span>, <span class="st">"Coding"</span>)
+<span class="fn">print</span>(baru)  <span class="cm"># → "  Belajar Coding itu Menyenangkan!  "</span>
+
+<span class="cm"># Memecah string menjadi daftar kata</span>
+kalimat = <span class="st">"satu dua tiga empat"</span>
+kata_kata = kalimat.split()
+<span class="fn">print</span>(kata_kata)  <span class="cm"># → ['satu', 'dua', 'tiga', 'empat']</span>
+
+<span class="cm"># Memecah berdasarkan karakter tertentu</span>
+tanggal = <span class="st">"2024-12-25"</span>
+bagian  = tanggal.split(<span class="st">"-"</span>)
+<span class="fn">print</span>(bagian)  <span class="cm"># → ['2024', '12', '25']</span></code></pre>
+        </div>
+
+        <h3>Pengindeksan dan Pengirisan String</h3>
+
+        <p>
+          Kamu bisa mengakses karakter individual dalam sebuah string menggunakan indeks — posisi karakter dalam teks, dimulai dari 0 untuk karakter pertama. Python juga mendukung indeks negatif: -1 untuk karakter terakhir, -2 untuk yang kedua dari belakang, dan seterusnya. Untuk mengambil sebagian teks, gunakan teknik pengirisan *(slicing)* dengan sintaksis <code>[mulai:akhir]</code>:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>bahasa = <span class="st">"Python"</span>
+<span class="cm">#          P  y  t  h  o  n</span>
+<span class="cm"># indeks:  0  1  2  3  4  5</span>
+<span class="cm"># negatif:-6 -5 -4 -3 -2 -1</span>
+
+<span class="cm"># Akses karakter tunggal</span>
+<span class="fn">print</span>(bahasa[<span class="nm">0</span>])   <span class="cm"># → P</span>
+<span class="fn">print</span>(bahasa[<span class="nm">3</span>])   <span class="cm"># → h</span>
+<span class="fn">print</span>(bahasa[<span class="op">-</span><span class="nm">1</span>])  <span class="cm"># → n (karakter terakhir)</span>
+
+<span class="cm"># Pengirisan [mulai:akhir] — akhir tidak ikut</span>
+<span class="fn">print</span>(bahasa[<span class="nm">0</span>:<span class="nm">3</span>])  <span class="cm"># → Pyt</span>
+<span class="fn">print</span>(bahasa[<span class="nm">2</span>:])   <span class="cm"># → thon (dari indeks 2 sampai akhir)</span>
+<span class="fn">print</span>(bahasa[:<span class="nm">4</span>])   <span class="cm"># → Pyth (dari awal sampai indeks 3)</span>
+<span class="fn">print</span>(bahasa[::<span class="op">-</span><span class="nm">1</span>]) <span class="cm"># → nohtyP (dibalik)</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>String Tidak Bisa Diubah Sebagian</strong>
+            <p>String di Python bersifat tidak bisa diubah *(immutable)* — kamu tidak bisa mengubah karakter individual dengan <code>bahasa[0] = "J"</code>. Kalau mau mengubah isi string, kamu harus membuat string baru dari yang lama, misalnya dengan <code>.replace()</code> atau f-string. Ini berbeda dari tipe data seperti list yang akan kita pelajari di bab berikutnya.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">3.3 Angka: Integer, Float, dan Operasi Matematika</h2>
+
+        <p>
+          Python punya dua tipe data angka utama yang perlu kamu bedakan: <strong>integer</strong> (<code>int</code>) untuk bilangan bulat tanpa koma seperti 1, 42, atau -100, dan <strong>float</strong> (<code>float</code>) untuk bilangan desimal seperti 3.14, 0.001, atau -7.5. Pembedaan ini penting karena perilaku matematikanya bisa berbeda dalam beberapa situasi.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Integer — bilangan bulat</span>
+populasi  = <span class="nm">270000000</span>
+suhu_min  = <span class="op">-</span><span class="nm">10</span>
+nol       = <span class="nm">0</span>
+
+<span class="cm"># Float — bilangan desimal</span>
+pi       = <span class="nm">3.14159</span>
+gravitasi = <span class="nm">9.8</span>
+persen    = <span class="nm">0.85</span>
+
+<span class="cm"># Python mendukung angka besar tanpa batas (dengan tanda _ untuk keterbacaan)</span>
+besar = <span class="nm">1_000_000_000</span>  <span class="cm"># sama dengan 1000000000, lebih mudah dibaca</span>
+<span class="fn">print</span>(besar)  <span class="cm"># → 1000000000</span></code></pre>
+        </div>
+
+        <h3>Operator Matematika di Python</h3>
+
+        <p>
+          Python mendukung semua operator aritmatika standar, plus beberapa yang mungkin belum kamu kenal. Semua ini akan sangat sering kamu gunakan saat bekerja dengan data dan model kecerdasan buatan:
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th>Nama</th>
+                <th>Contoh</th>
+                <th>Hasil</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>+</code></td>
+                <td>Penjumlahan</td>
+                <td><code>10 + 3</code></td>
+                <td><code>13</code></td>
+              </tr>
+              <tr>
+                <td><code>-</code></td>
+                <td>Pengurangan</td>
+                <td><code>10 - 3</code></td>
+                <td><code>7</code></td>
+              </tr>
+              <tr>
+                <td><code>*</code></td>
+                <td>Perkalian</td>
+                <td><code>10 * 3</code></td>
+                <td><code>30</code></td>
+              </tr>
+              <tr>
+                <td><code>/</code></td>
+                <td>Pembagian (selalu float)</td>
+                <td><code>10 / 3</code></td>
+                <td><code>3.3333...</code></td>
+              </tr>
+              <tr>
+                <td><code>//</code></td>
+                <td>Pembagian bulat</td>
+                <td><code>10 // 3</code></td>
+                <td><code>3</code></td>
+              </tr>
+              <tr>
+                <td><code>%</code></td>
+                <td>Sisa bagi (modulo)</td>
+                <td><code>10 % 3</code></td>
+                <td><code>1</code></td>
+              </tr>
+              <tr>
+                <td><code>**</code></td>
+                <td>Pangkat</td>
+                <td><code>10 ** 3</code></td>
+                <td><code>1000</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Dari tabel di atas, ada dua operator yang mungkin asing bagimu. Operator <code>//</code> adalah pembagian bulat — hasilnya selalu dibulatkan ke bawah, membuang bagian desimal. Operator <code>%</code> adalah modulo — menghasilkan sisa dari pembagian. Keduanya sangat sering muncul dalam algoritma pemrograman: modulo misalnya berguna untuk mengecek apakah sebuah angka genap atau ganjil (<code>angka % 2 == 0</code> berarti genap).
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Contoh penggunaan operator yang lebih kompleks</span>
+nilai_ujian  = [<span class="nm">85</span>, <span class="nm">90</span>, <span class="nm">78</span>, <span class="nm">92</span>, <span class="nm">88</span>]
+jumlah_nilai = <span class="nm">85</span> <span class="op">+</span> <span class="nm">90</span> <span class="op">+</span> <span class="nm">78</span> <span class="op">+</span> <span class="nm">92</span> <span class="op">+</span> <span class="nm">88</span>
+rata_rata    = jumlah_nilai <span class="op">/</span> <span class="nm">5</span>
+<span class="fn">print</span>(<span class="st">f"Rata-rata: {rata_rata:.1f}"</span>)  <span class="cm"># → Rata-rata: 86.6</span>
+
+<span class="cm"># Cek apakah angka genap atau ganjil</span>
+angka = <span class="nm">17</span>
+<span class="kw">if</span> angka <span class="op">%</span> <span class="nm">2</span> <span class="op">==</span> <span class="nm">0</span>:
+    <span class="fn">print</span>(<span class="st">f"{angka} adalah genap"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">f"{angka} adalah ganjil"</span>)  <span class="cm"># → 17 adalah ganjil</span>
+
+<span class="cm"># Pangkat — sering dipakai dalam matematika ML</span>
+kuadrat = <span class="nm">5</span> <span class="op">**</span> <span class="nm">2</span>   <span class="cm"># → 25</span>
+akar_dua = <span class="nm">16</span> <span class="op">**</span> <span class="nm">0.5</span>  <span class="cm"># → 4.0 (akar kuadrat via pangkat 0.5)</span>
+<span class="fn">print</span>(kuadrat, akar_dua)</code></pre>
+        </div>
+
+        <h3>Operator Penugasan Campuran</h3>
+
+        <p>
+          Sangat sering dalam pemrograman kamu perlu mengubah nilai variabel berdasarkan nilainya sendiri — misalnya menambahkan 1 ke penghitung, atau mengalikan sesuatu dengan konstanta. Python punya cara singkat untuk ini yang menghemat banyak pengetikan:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>penghitung = <span class="nm">10</span>
+
+penghitung <span class="op">+=</span> <span class="nm">5</span>   <span class="cm"># sama dengan: penghitung = penghitung + 5</span>
+<span class="fn">print</span>(penghitung)   <span class="cm"># → 15</span>
+
+penghitung <span class="op">-=</span> <span class="nm">3</span>   <span class="cm"># sama dengan: penghitung = penghitung - 3</span>
+<span class="fn">print</span>(penghitung)   <span class="cm"># → 12</span>
+
+penghitung <span class="op">*=</span> <span class="nm">2</span>   <span class="cm"># sama dengan: penghitung = penghitung * 2</span>
+<span class="fn">print</span>(penghitung)   <span class="cm"># → 24</span>
+
+penghitung <span class="op">//=</span> <span class="nm">4</span>  <span class="cm"># sama dengan: penghitung = penghitung // 4</span>
+<span class="fn">print</span>(penghitung)   <span class="cm"># → 6</span></code></pre>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Float dan Presisi Angka</strong>
+            <p>Float di komputer disimpan dalam format biner, yang kadang menyebabkan hasil yang sedikit mengejutkan: <code>0.1 + 0.2</code> di Python menghasilkan <code>0.30000000000000004</code>, bukan persis <code>0.3</code>. Ini bukan bug Python — ini sifat mendasar cara komputer menyimpan angka desimal. Untuk perhitungan keuangan atau saat presisi sangat penting, gunakan modul <code>decimal</code> bawaan Python.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">3.4 Nilai Boolean dan Logika Dasar</h2>
+
+        <p>
+          Boolean adalah tipe data paling sederhana dalam pemrograman: hanya ada dua kemungkinan nilai, <code>True</code> (benar) atau <code>False</code> (salah). Meski tampak simpel, boolean adalah tulang punggung dari semua logika pengambilan keputusan dalam program — setiap kondisi <code>if</code>, setiap perulangan bersyarat, dan setiap filter data pada akhirnya bergantung pada nilai boolean.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Boolean langsung</span>
+lulus       = <span class="kw">True</span>
+sudah_bayar = <span class="kw">False</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(lulus))  <span class="cm"># → &lt;class 'bool'&gt;</span>
+
+<span class="cm"># Boolean dari perbandingan — ini yang paling sering terjadi</span>
+nilai = <span class="nm">75</span>
+<span class="fn">print</span>(nilai <span class="op">&gt;=</span> <span class="nm">60</span>)   <span class="cm"># → True</span>
+<span class="fn">print</span>(nilai <span class="op">==</span> <span class="nm">100</span>)  <span class="cm"># → False</span>
+<span class="fn">print</span>(nilai <span class="op">!=</span> <span class="nm">75</span>)   <span class="cm"># → False (75 memang sama dengan 75)</span></code></pre>
+        </div>
+
+        <h3>Operator Perbandingan</h3>
+
+        <p>
+          Operator perbandingan menghasilkan nilai boolean — selalu <code>True</code> atau <code>False</code>. Ini yang paling sering kamu gunakan untuk membuat keputusan dalam kode:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>a = <span class="nm">10</span>
+b = <span class="nm">20</span>
+
+<span class="fn">print</span>(a <span class="op">==</span> b)   <span class="cm"># → False  (sama dengan)</span>
+<span class="fn">print</span>(a <span class="op">!=</span> b)   <span class="cm"># → True   (tidak sama dengan)</span>
+<span class="fn">print</span>(a <span class="op">&lt;</span> b)    <span class="cm"># → True   (kurang dari)</span>
+<span class="fn">print</span>(a <span class="op">&gt;</span> b)    <span class="cm"># → False  (lebih dari)</span>
+<span class="fn">print</span>(a <span class="op">&lt;=</span> b)   <span class="cm"># → True   (kurang dari atau sama dengan)</span>
+<span class="fn">print</span>(a <span class="op">&gt;=</span> b)   <span class="cm"># → False  (lebih dari atau sama dengan)</span>
+
+<span class="cm"># Perbandingan juga bisa berantai — ini fitur keren Python</span>
+nilai = <span class="nm">75</span>
+<span class="fn">print</span>(<span class="nm">60</span> <span class="op">&lt;=</span> nilai <span class="op">&lt;</span> <span class="nm">80</span>)  <span class="cm"># → True (apakah nilai antara 60 dan 79?)</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Jangan Bingung <code>=</code> dan <code>==</code></strong>
+            <p>Ini adalah kesalahan paling klasik bagi pemula. Satu tanda sama dengan <code>=</code> adalah untuk memberi nilai ke variabel (penugasan). Dua tanda sama dengan <code>==</code> adalah untuk membandingkan apakah dua nilai sama (perbandingan). Menulis <code>if nilai = 75:</code> akan langsung menghasilkan error. Yang benar adalah <code>if nilai == 75:</code>.</p>
+          </div>
+        </div>
+
+        <h3>Operator Logika: and, or, not</h3>
+
+        <p>
+          Seringkali kamu butuh menggabungkan lebih dari satu kondisi. Python menyediakan tiga operator logika untuk ini: <code>and</code> (dan — kedua kondisi harus benar), <code>or</code> (atau — cukup salah satu yang benar), dan <code>not</code> (bukan — membalik nilai boolean):
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>nilai       = <span class="nm">75</span>
+sudah_hadir = <span class="kw">True</span>
+sudah_bayar = <span class="kw">False</span>
+
+<span class="cm"># and — kedua kondisi harus True</span>
+bisa_lulus = (nilai <span class="op">&gt;=</span> <span class="nm">60</span>) <span class="kw">and</span> sudah_hadir
+<span class="fn">print</span>(<span class="st">f"Bisa lulus: {bisa_lulus}"</span>)   <span class="cm"># → True</span>
+
+<span class="cm"># or — cukup satu kondisi yang True</span>
+perlu_tindak = (nilai <span class="op">&lt;</span> <span class="nm">60</span>) <span class="kw">or</span> (<span class="kw">not</span> sudah_bayar)
+<span class="fn">print</span>(<span class="st">f"Perlu tindak: {perlu_tindak}"</span>)  <span class="cm"># → True (karena belum bayar)</span>
+
+<span class="cm"># not — membalik nilai boolean</span>
+<span class="fn">print</span>(<span class="kw">not</span> sudah_bayar)  <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="kw">not</span> sudah_hadir)  <span class="cm"># → False</span>
+
+<span class="cm"># Menggabungkan beberapa kondisi</span>
+lolos_semua = (nilai <span class="op">&gt;=</span> <span class="nm">60</span>) <span class="kw">and</span> sudah_hadir <span class="kw">and</span> sudah_bayar
+<span class="fn">print</span>(<span class="st">f"Lolos semua: {lolos_semua}"</span>)   <span class="cm"># → False (belum bayar)</span></code></pre>
+        </div>
+
+        <h3>Nilai yang Dianggap False</h3>
+
+        <p>
+          Di Python, selain nilai <code>False</code> itu sendiri, ada beberapa nilai lain yang dianggap "salah" ketika digunakan dalam konteks boolean. Memahami ini penting karena sering muncul dalam kondisi <code>if</code>:
+        </p>
+
+        <ul>
+          <li><code>0</code> dan <code>0.0</code> — angka nol dianggap False</li>
+          <li><code>""</code> — string kosong dianggap False</li>
+          <li><code>[]</code>, <code>{}</code>, <code>()</code> — koleksi kosong dianggap False</li>
+          <li><code>None</code> — nilai khusus Python yang berarti "tidak ada nilai" dianggap False</li>
+        </ul>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Semua ini dianggap False dalam konteks boolean</span>
+<span class="fn">print</span>(<span class="fn">bool</span>(<span class="nm">0</span>))        <span class="cm"># → False</span>
+<span class="fn">print</span>(<span class="fn">bool</span>(<span class="st">""</span>))       <span class="cm"># → False</span>
+<span class="fn">print</span>(<span class="fn">bool</span>([]))       <span class="cm"># → False</span>
+<span class="fn">print</span>(<span class="fn">bool</span>(<span class="kw">None</span>))     <span class="cm"># → False</span>
+
+<span class="cm"># Semua ini dianggap True</span>
+<span class="fn">print</span>(<span class="fn">bool</span>(<span class="nm">1</span>))        <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="fn">bool</span>(<span class="st">"halo"</span>))  <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="fn">bool</span>([<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>])) <span class="cm"># → True</span>
+
+<span class="cm"># Praktis dipakai untuk mengecek apakah daftar tidak kosong</span>
+data = [<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>]
+<span class="kw">if</span> data:
+    <span class="fn">print</span>(<span class="st">"Data ada isinya!"</span>)  <span class="cm"># → ini yang akan tercetak</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">3.5 Konversi Antar Tipe Data</h2>
+
+        <p>
+          Dalam praktik pemrograman sehari-hari, kamu akan sangat sering berurusan dengan data yang punya tipe yang tidak sesuai dengan apa yang kamu butuhkan. Misalnya, kamu membaca angka dari file teks — hasilnya adalah string, bukan integer. Atau kamu ingin menampilkan angka float dengan hanya beberapa desimal. Di sinilah konversi tipe data *(type conversion)* menjadi sangat berguna.
+        </p>
+
+        <p>
+          Python menyediakan fungsi bawaan untuk mengkonversi antara tipe data: <code>int()</code>, <code>float()</code>, <code>str()</code>, dan <code>bool()</code>. Proses ini disebut konversi eksplisit *(explicit conversion)* atau kadang disebut pengecoran tipe *(type casting)*:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># str → int (sangat sering terjadi saat baca input pengguna)</span>
+umur_teks = <span class="st">"24"</span>
+umur_angka = <span class="fn">int</span>(umur_teks)
+<span class="fn">print</span>(umur_angka <span class="op">+</span> <span class="nm">1</span>)  <span class="cm"># → 25 (bisa dihitung sekarang)</span>
+
+<span class="cm"># str → float</span>
+harga_teks  = <span class="st">"19.99"</span>
+harga_angka = <span class="fn">float</span>(harga_teks)
+<span class="fn">print</span>(harga_angka <span class="op">*</span> <span class="nm">2</span>)  <span class="cm"># → 39.98</span>
+
+<span class="cm"># int → float dan sebaliknya</span>
+bilangan_bulat  = <span class="nm">7</span>
+bilangan_desimal = <span class="fn">float</span>(bilangan_bulat)
+<span class="fn">print</span>(bilangan_desimal)  <span class="cm"># → 7.0</span>
+
+kembali_bulat = <span class="fn">int</span>(<span class="nm">3.99</span>)
+<span class="fn">print</span>(kembali_bulat)     <span class="cm"># → 3 (dibuang, BUKAN dibulatkan)</span>
+
+<span class="cm"># int/float → str (saat perlu menggabungkan angka dengan teks)</span>
+skor      = <span class="nm">95</span>
+pesan     = <span class="st">"Skor kamu: "</span> <span class="op">+</span> <span class="fn">str</span>(skor)
+<span class="fn">print</span>(pesan)  <span class="cm"># → Skor kamu: 95</span>
+
+<span class="cm"># Cara lebih baik: pakai f-string (tidak perlu konversi manual)</span>
+pesan_fstring = <span class="st">f"Skor kamu: {skor}"</span>
+<span class="fn">print</span>(pesan_fstring)  <span class="cm"># → Skor kamu: 95</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Konversi Bisa Gagal — Selalu Waspada</strong>
+            <p>Tidak semua konversi bisa berhasil. Mencoba <code>int("halo")</code> atau <code>float("abc")</code> akan menghasilkan error <code>ValueError</code>. Dalam program nyata, kamu perlu menangani kemungkinan ini — biasanya dengan blok <code>try-except</code> yang akan dibahas di Bab 7. Selalu validasi data sebelum mengkonversinya, terutama data yang datang dari pengguna atau file eksternal.</p>
+          </div>
+        </div>
+
+        <h3>Konversi Implisit</h3>
+
+        <p>
+          Selain konversi eksplisit yang kamu lakukan sendiri, Python kadang melakukan konversi secara otomatis di balik layar. Ini disebut konversi implisit *(implicit conversion)*. Contoh paling umum adalah saat kamu mengoperasikan integer dan float bersama-sama — Python otomatis mengubah integer menjadi float untuk menjaga presisi hasil:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Python otomatis mempromosikan int ke float saat perlu</span>
+hasil = <span class="nm">5</span> <span class="op">+</span> <span class="nm">2.0</span>
+<span class="fn">print</span>(hasil)         <span class="cm"># → 7.0 (bukan 7)</span>
+<span class="fn">print</span>(<span class="fn">type</span>(hasil))   <span class="cm"># → &lt;class 'float'&gt;</span>
+
+<span class="cm"># Pembagian biasa selalu menghasilkan float</span>
+<span class="fn">print</span>(<span class="nm">10</span> <span class="op">/</span> <span class="nm">2</span>)  <span class="cm"># → 5.0  (float, bukan 5)</span>
+<span class="fn">print</span>(<span class="nm">10</span> <span class="op">//</span> <span class="nm">2</span>) <span class="cm"># → 5   (int, karena pembagian bulat)</span>
+
+<span class="cm"># Tapi Python TIDAK otomatis mengkonversi string ke angka</span>
+<span class="cm"># Baris berikut akan error:</span>
+<span class="cm"># print("5" + 3)  # → TypeError!</span>
+<span class="cm"># Harus eksplisit:</span>
+<span class="fn">print</span>(<span class="fn">int</span>(<span class="st">"5"</span>) <span class="op">+</span> <span class="nm">3</span>)   <span class="cm"># → 8</span>
+<span class="fn">print</span>(<span class="st">"5"</span> <span class="op">+</span> <span class="fn">str</span>(<span class="nm">3</span>))   <span class="cm"># → "53" (penggabungan string!)</span></code></pre>
+        </div>
+
+        <h3>Fungsi input() dan Konversi Tipe</h3>
+
+        <p>
+          Satu situasi sangat umum yang hampir selalu membutuhkan konversi tipe adalah pengambilan masukan dari pengguna lewat fungsi <code>input()</code>. Apapun yang pengguna ketik, <code>input()</code> selalu mengembalikannya sebagai string — bahkan jika yang diketik adalah angka. Kamu harus selalu mengkonversinya sesuai kebutuhan:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># input() selalu mengembalikan string</span>
+nama_input  = <span class="fn">input</span>(<span class="st">"Siapa namamu? "</span>)
+<span class="cm"># → pengguna mengetik: Rani</span>
+<span class="fn">print</span>(<span class="st">f"Halo, {nama_input}!"</span>)  <span class="cm"># → Halo, Rani!</span>
+
+<span class="cm"># Untuk angka, harus dikonversi dulu</span>
+usia_teks  = <span class="fn">input</span>(<span class="st">"Berapa usiamu? "</span>)
+<span class="cm"># → pengguna mengetik: 22</span>
+usia_angka = <span class="fn">int</span>(usia_teks)  <span class="cm"># konversi ke int</span>
+tahun_lahir = <span class="nm">2024</span> <span class="op">-</span> usia_angka
+<span class="fn">print</span>(<span class="st">f"Kamu lahir sekitar tahun {tahun_lahir}."</span>)
+<span class="cm"># → Kamu lahir sekitar tahun 2002.</span>
+
+<span class="cm"># Cara ringkas: konversi langsung saat input</span>
+tinggi = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Tinggi badanmu (cm)? "</span>))
+<span class="fn">print</span>(<span class="st">f"Tinggi: {tinggi:.1f} cm"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Rangkuman Konversi Tipe yang Sering Dipakai</strong>
+            <p>Hafal empat ini dan kamu sudah siap: <code>int(x)</code> untuk mengubah ke bilangan bulat — bagian desimal dibuang. <code>float(x)</code> untuk mengubah ke bilangan desimal. <code>str(x)</code> untuk mengubah ke teks — hampir semua tipe bisa diubah ke string. <code>bool(x)</code> untuk mengubah ke True atau False — ingat, 0, string kosong, dan None dianggap False.</p>
+          </div>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Siap ke Bab Berikutnya</strong>
+            <p>Kamu sudah menguasai blok bangunan paling dasar Python: variabel, string, angka, boolean, dan konversi tipe. Di Bab 4, kita naik satu level — belajar tentang struktur data yang bisa menampung banyak nilai sekaligus: list, tuple, dictionary, dan set. Ini adalah fondasi untuk bekerja dengan kumpulan data, yang nantinya jadi inti dari semua pekerjaan analisis data dan pembelajaran mesin.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <!-- TOMBOL SEBELUMNYA -->
+      <a href="b01-bab-02.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 2: Menyiapkan Lingkungan Kerja</span>
+      </a>
+
+      <!-- POSISI SEKARANG -->
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 3 / 15</div>
+          <div class="dot-progres">
+            <span></span>
+            <span></span>
+            <span class="aktif"></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOMBOL SELANJUTNYA -->
+      <a href="b01-bab-04.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 4: Struktur Data</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 3</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

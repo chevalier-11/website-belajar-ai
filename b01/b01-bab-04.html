@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Struktur Data — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===========================
+       VARIABEL & RESET
+    =========================== */
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+
+      --cyan:      #00C8FF;
+      --cyan-dim:  #00628090;
+      --green:     #00FF94;
+      --green-dim: #00804A50;
+      --amber:     #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:    #9D6FFF;
+      --purple-dim:#4B2A9040;
+      --red:       #FF5F6D;
+
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===========================
+       HEADER
+    =========================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* ===========================
+       BREADCRUMB
+    =========================== */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char {
+      color: var(--green);
+      font-weight: 600;
+      margin-right: 0.2rem;
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ===========================
+       KONTEN UTAMA
+    =========================== */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* ===========================
+       DAFTAR SUBBAB
+    =========================== */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before {
+      content: '//';
+      color: var(--cyan);
+      font-size: 0.8rem;
+    }
+
+    .daftar-subbab ol {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* ===========================
+       TIPOGRAFI KONTEN
+    =========================== */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+    }
+
+    .konten ul { list-style: none; padding-left: 0; }
+
+    .konten ul li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .konten ul li::before {
+      content: '▸';
+      color: var(--cyan);
+      position: absolute;
+      left: 0;
+      font-size: 0.7rem;
+      top: 0.35rem;
+    }
+
+    .konten ol li { margin-bottom: 0.5rem; }
+
+    .konten strong { color: var(--text-primary); font-weight: 600; }
+
+    .konten a {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,200,255,0.3);
+      transition: all 0.2s;
+    }
+
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* ===========================
+       BLOK KODE
+    =========================== */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik { display: flex; gap: 0.4rem; }
+
+    .blok-kode-header .titik-titik span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* ===========================
+       KARTU
+    =========================== */
+    .kartu-info,
+    .kartu-peringatan,
+    .kartu-tips,
+    .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info      { background: rgba(0,200,255,0.05);   border: 1px solid rgba(0,200,255,0.2); }
+    .kartu-peringatan{ background: rgba(255,184,48,0.05);  border: 1px solid rgba(255,184,48,0.25); }
+    .kartu-tips      { background: rgba(0,255,148,0.05);   border: 1px solid rgba(0,255,148,0.2); }
+    .kartu-catatan   { background: rgba(157,111,255,0.06); border: 1px solid rgba(157,111,255,0.25); }
+
+    .kartu-ikon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .kartu-isi  { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* ===========================
+       TABEL
+    =========================== */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.7rem 1rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* ===========================
+       NAVIGASI BAB
+    =========================== */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover {
+      border-color: rgba(0,200,255,0.4);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+
+    .indikator-progres {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nomor-bab-sekarang {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .dot-progres { display: flex; gap: 4px; }
+
+    .dot-progres span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot-progres span.aktif {
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--bg-base);
+      padding: 2rem 0;
+    }
+
+    footer .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-kiri { display: flex; align-items: center; gap: 0.75rem; }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .footer-kanan {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .footer-kanan a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ===========================
+       ANIMASI MASUK
+    =========================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* ===========================
+       RESPONSIF
+    =========================== */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+
+      .navigasi-bab .wadah {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .posisi-tengah { grid-column: 1 / -1; order: -1; }
+
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-04-struktur-data</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian II — Python Dasar</span>
+          <span class="label-nomor-bab">Bab 4 / 15</span>
+        </div>
+
+        <h1 class="judul-bab">
+          Struktur Data<span class="aksen">.</span>
+        </h1>
+
+        <p class="deskripsi-bab">
+          Di bab sebelumnya kamu belajar menyimpan satu nilai dalam satu variabel. Tapi di dunia nyata, data jarang datang sendirian — kamu berurusan dengan ratusan nama, ribuan angka, atau pasangan kunci-nilai yang kompleks. Bab ini memperkenalkan empat wadah data utama Python yang akan menjadi tulang punggung semua kode analisis data dan pembelajaran mesin yang kamu tulis.
+        </p>
+
+        <div class="pita-info-bab">
+          <div class="info-item">
+            <span>⏱</span>
+            <span class="info-val">~3 jam baca + latihan</span>
+          </div>
+          <div class="info-item">
+            <span>📦</span>
+            <span class="info-val">Tidak ada library — Python murni</span>
+          </div>
+          <div class="info-item">
+            <span>🔗</span>
+            <span class="info-val">Prasyarat: Bab 3 (tipe data dasar)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li>
+            <span class="nomor-subbab">4.1</span>
+            <a href="#subbab-1">List: membuat, mengakses, dan memodifikasi</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">4.2</span>
+            <a href="#subbab-2">Tuple: kapan pakai tuple bukan list</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">4.3</span>
+            <a href="#subbab-3">Dictionary: pasangan kunci-nilai</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">4.4</span>
+            <a href="#subbab-4">Set: koleksi unik tanpa urutan</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">4.5</span>
+            <a href="#subbab-5">Memilih struktur data yang tepat</a>
+          </li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">4.1 List: Membuat, Mengakses, dan Memodifikasi</h2>
+
+        <p>
+          List adalah struktur data yang paling sering kamu gunakan di Python. Bayangkan list seperti sebuah rak dengan banyak laci bernomor — kamu bisa menaruh barang apapun di setiap laci, mengambilnya lewat nomornya, menambah laci baru di bagian belakang, atau mencabut laci mana saja. Dalam Python, list dibuat dengan kurung siku <code>[]</code> dan elemen-elemennya dipisahkan oleh koma.
+        </p>
+
+        <p>
+          Hal yang membuat list Python sangat fleksibel adalah ia bisa menampung nilai dengan tipe yang berbeda-beda dalam satu list yang sama — campuran angka, teks, boolean, bahkan list lain di dalamnya. Tapi dalam praktik kecerdasan buatan, kamu biasanya akan bekerja dengan list yang isinya bertipe seragam, misalnya list angka semua atau list teks semua.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Membuat list</span>
+nilai_ujian  = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>]
+nama_kota    = [<span class="st">"Jakarta"</span>, <span class="st">"Bandung"</span>, <span class="st">"Surabaya"</span>]
+list_kosong  = []
+list_campuran = [<span class="st">"Rina"</span>, <span class="nm">22</span>, <span class="kw">True</span>, <span class="nm">3.14</span>]  <span class="cm"># bisa, tapi jarang ideal</span>
+
+<span class="cm"># Panjang list</span>
+<span class="fn">print</span>(<span class="fn">len</span>(nilai_ujian))   <span class="cm"># → 5</span>
+<span class="fn">print</span>(<span class="fn">len</span>(nama_kota))    <span class="cm"># → 3</span>
+<span class="fn">print</span>(<span class="fn">len</span>(list_kosong))  <span class="cm"># → 0</span></code></pre>
+        </div>
+
+        <h3>Mengakses Elemen List</h3>
+
+        <p>
+          Sama seperti string, list menggunakan indeks berbasis nol untuk mengakses elemennya. Indeks pertama adalah 0, dan indeks negatif bisa dipakai untuk mengakses dari belakang. Pengirisan *(slicing)* juga bekerja sama persis dengan string:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>buah = [<span class="st">"apel"</span>, <span class="st">"mangga"</span>, <span class="st">"jeruk"</span>, <span class="st">"pisang"</span>, <span class="st">"melon"</span>]
+<span class="cm">#        [0]       [1]       [2]      [3]       [4]</span>
+<span class="cm">#        [-5]      [-4]      [-3]     [-2]      [-1]</span>
+
+<span class="cm"># Akses elemen tunggal</span>
+<span class="fn">print</span>(buah[<span class="nm">0</span>])    <span class="cm"># → apel</span>
+<span class="fn">print</span>(buah[<span class="nm">2</span>])    <span class="cm"># → jeruk</span>
+<span class="fn">print</span>(buah[<span class="op">-</span><span class="nm">1</span>])   <span class="cm"># → melon (terakhir)</span>
+<span class="fn">print</span>(buah[<span class="op">-</span><span class="nm">2</span>])   <span class="cm"># → pisang</span>
+
+<span class="cm"># Pengirisan (slicing)</span>
+<span class="fn">print</span>(buah[<span class="nm">1</span>:<span class="nm">4</span>])   <span class="cm"># → ['mangga', 'jeruk', 'pisang']</span>
+<span class="fn">print</span>(buah[:<span class="nm">3</span>])    <span class="cm"># → ['apel', 'mangga', 'jeruk']</span>
+<span class="fn">print</span>(buah[<span class="nm">2</span>:])    <span class="cm"># → ['jeruk', 'pisang', 'melon']</span>
+<span class="fn">print</span>(buah[::<span class="op">-</span><span class="nm">1</span>])  <span class="cm"># → ['melon', 'pisang', 'jeruk', 'mangga', 'apel']</span></code></pre>
+        </div>
+
+        <h3>Memodifikasi List</h3>
+
+        <p>
+          Berbeda dari string, list bersifat bisa diubah *(mutable)*. Kamu bisa mengubah nilai elemen tertentu, menambah elemen baru, menghapus elemen, dan masih banyak lagi. Ini yang menjadikan list sangat cocok untuk data yang perlu dimanipulasi:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>angka = [<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>, <span class="nm">40</span>, <span class="nm">50</span>]
+
+<span class="cm"># Mengubah nilai di indeks tertentu</span>
+angka[<span class="nm">2</span>] = <span class="nm">99</span>
+<span class="fn">print</span>(angka)  <span class="cm"># → [10, 20, 99, 40, 50]</span>
+
+<span class="cm"># Menambah elemen di akhir</span>
+angka.append(<span class="nm">60</span>)
+<span class="fn">print</span>(angka)  <span class="cm"># → [10, 20, 99, 40, 50, 60]</span>
+
+<span class="cm"># Menambah banyak elemen sekaligus</span>
+angka.extend([<span class="nm">70</span>, <span class="nm">80</span>])
+<span class="fn">print</span>(angka)  <span class="cm"># → [10, 20, 99, 40, 50, 60, 70, 80]</span>
+
+<span class="cm"># Menyisipkan elemen di posisi tertentu</span>
+angka.insert(<span class="nm">1</span>, <span class="nm">15</span>)  <span class="cm"># sisipkan 15 di indeks 1</span>
+<span class="fn">print</span>(angka[:<span class="nm">4</span>])     <span class="cm"># → [10, 15, 20, 99, ...]</span>
+
+<span class="cm"># Menghapus elemen berdasarkan nilai</span>
+angka.remove(<span class="nm">99</span>)
+<span class="fn">print</span>(angka[:<span class="nm">5</span>])  <span class="cm"># → [10, 15, 20, 40, 50]</span>
+
+<span class="cm"># Menghapus dan mengambil elemen terakhir (atau indeks tertentu)</span>
+terakhir = angka.pop()     <span class="cm"># ambil dan hapus elemen terakhir</span>
+kedua    = angka.pop(<span class="nm">1</span>)   <span class="cm"># ambil dan hapus elemen di indeks 1</span>
+<span class="fn">print</span>(<span class="st">f"Diambil: {terakhir}, {kedua}"</span>)</code></pre>
+        </div>
+
+        <h3>Operasi dan Metode List Lainnya</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>nilai = [<span class="nm">88</span>, <span class="nm">72</span>, <span class="nm">95</span>, <span class="nm">61</span>, <span class="nm">85</span>, <span class="nm">90</span>]
+
+<span class="cm"># Pengurutan — .sort() mengubah list asli</span>
+nilai.sort()
+<span class="fn">print</span>(nilai)  <span class="cm"># → [61, 72, 85, 88, 90, 95]</span>
+
+nilai.sort(reverse=<span class="kw">True</span>)
+<span class="fn">print</span>(nilai)  <span class="cm"># → [95, 90, 88, 85, 72, 61]</span>
+
+<span class="cm"># sorted() membuat list baru tanpa mengubah yang asli</span>
+nilai_asli  = [<span class="nm">88</span>, <span class="nm">72</span>, <span class="nm">95</span>, <span class="nm">61</span>]
+nilai_urut  = <span class="fn">sorted</span>(nilai_asli)
+<span class="fn">print</span>(nilai_asli)  <span class="cm"># → [88, 72, 95, 61]  — tidak berubah</span>
+<span class="fn">print</span>(nilai_urut)  <span class="cm"># → [61, 72, 88, 95]  — list baru</span>
+
+<span class="cm"># Agregasi dasar — sangat sering dipakai di ML</span>
+<span class="fn">print</span>(<span class="fn">sum</span>(nilai_asli))    <span class="cm"># → 316</span>
+<span class="fn">print</span>(<span class="fn">min</span>(nilai_asli))    <span class="cm"># → 61</span>
+<span class="fn">print</span>(<span class="fn">max</span>(nilai_asli))    <span class="cm"># → 95</span>
+
+<span class="cm"># Cek keanggotaan dengan 'in'</span>
+<span class="fn">print</span>(<span class="nm">72</span> <span class="kw">in</span> nilai_asli)   <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="nm">100</span> <span class="kw">in</span> nilai_asli)  <span class="cm"># → False</span>
+
+<span class="cm"># Posisi elemen</span>
+<span class="fn">print</span>(nilai_asli.index(<span class="nm">95</span>))  <span class="cm"># → 2 (indeks elemen 95)</span>
+<span class="fn">print</span>(nilai_asli.count(<span class="nm">88</span>))  <span class="cm"># → 1 (berapa kali 88 muncul)</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>List di Dunia Kecerdasan Buatan</strong>
+            <p>Dalam proyek ML nyata, kamu akan menyimpan label kelas dalam list, menyimpan hasil prediksi model dalam list, menyimpan nilai loss selama pelatihan dalam list untuk kemudian divisualisasikan, dan membangun batch data sebagai list of list. List adalah wadah data yang paling fundamental — kuasai ini dengan benar sebelum lanjut.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">4.2 Tuple: Kapan Pakai Tuple, Bukan List</h2>
+
+        <p>
+          Tuple sangat mirip dengan list — keduanya adalah urutan elemen yang bisa diakses lewat indeks, keduanya bisa menampung tipe data apapun, dan keduanya mendukung pengirisan. Perbedaan utamanya ada satu: <strong>tuple tidak bisa diubah setelah dibuat</strong>. Inilah yang disebut sifat tidak bisa diubah *(immutable)*.
+        </p>
+
+        <p>
+          Tuple dibuat dengan kurung biasa <code>()</code> — atau bahkan tanpa kurung sama sekali, cukup pisahkan nilai dengan koma. Ini sering bikin pemula kebingungan, jadi perhatikan contoh berikut:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Membuat tuple</span>
+koordinat    = (<span class="nm">-6.2088</span>, <span class="nm">106.8456</span>)   <span class="cm"># latitude, longitude Jakarta</span>
+dimensi_citra = (<span class="nm">224</span>, <span class="nm">224</span>, <span class="nm">3</span>)          <span class="cm"># tinggi, lebar, channel warna</span>
+satu_elemen  = (<span class="nm">42</span>,)                   <span class="cm"># perlu koma! tanpa koma bukan tuple</span>
+tanpa_kurung  = <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>              <span class="cm"># ini juga tuple yang valid</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(koordinat))    <span class="cm"># → &lt;class 'tuple'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(tanpa_kurung)) <span class="cm"># → &lt;class 'tuple'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>((<span class="nm">42</span>)))         <span class="cm"># → &lt;class 'int'&gt; — ini bukan tuple!</span>
+
+<span class="cm"># Akses elemen — sama seperti list</span>
+<span class="fn">print</span>(koordinat[<span class="nm">0</span>])  <span class="cm"># → -6.2088</span>
+<span class="fn">print</span>(koordinat[<span class="nm">1</span>])  <span class="cm"># → 106.8456</span>
+
+<span class="cm"># Mencoba mengubah tuple — akan error!</span>
+<span class="cm"># koordinat[0] = 0.0  # → TypeError: 'tuple' object does not support item assignment</span></code></pre>
+        </div>
+
+        <h3>Membongkar Tuple (Tuple Unpacking)</h3>
+
+        <p>
+          Salah satu fitur tuple yang paling elegan adalah kemampuannya untuk "dibongkar" — nilainya bisa langsung ditugaskan ke beberapa variabel sekaligus dalam satu baris. Ini disebut tuple unpacking dan sangat sering muncul dalam kode Python profesional:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Tuple unpacking dasar</span>
+koordinat = (<span class="nm">-6.2088</span>, <span class="nm">106.8456</span>)
+lat, lon  = koordinat
+<span class="fn">print</span>(<span class="st">f"Latitude: {lat}, Longitude: {lon}"</span>)
+<span class="cm"># → Latitude: -6.2088, Longitude: 106.8456</span>
+
+<span class="cm"># Sangat berguna saat fungsi mengembalikan banyak nilai</span>
+<span class="kw">def</span> <span class="fn">statistik</span>(data):
+    <span class="kw">return</span> <span class="fn">min</span>(data), <span class="fn">max</span>(data), <span class="fn">sum</span>(data) / <span class="fn">len</span>(data)
+
+nilai = [<span class="nm">85</span>, <span class="nm">90</span>, <span class="nm">78</span>, <span class="nm">92</span>]
+minimum, maksimum, rata = <span class="fn">statistik</span>(nilai)
+<span class="fn">print</span>(<span class="st">f"Min: {minimum}, Max: {maksimum}, Rata: {rata:.1f}"</span>)
+<span class="cm"># → Min: 78, Max: 92, Rata: 86.2</span>
+
+<span class="cm"># Menukar nilai dua variabel — idiom khas Python</span>
+a, b = <span class="nm">10</span>, <span class="nm">20</span>
+a, b = b, a   <span class="cm"># swap tanpa variabel sementara!</span>
+<span class="fn">print</span>(a, b)   <span class="cm"># → 20 10</span></code></pre>
+        </div>
+
+        <h3>Kapan Pakai Tuple, Bukan List?</h3>
+
+        <p>
+          Ada tiga situasi utama di mana tuple lebih tepat dari list. Pertama, ketika data tidak boleh berubah secara semantik — koordinat GPS, dimensi gambar, rentang tanggal, atau konstanta konfigurasi. Memilih tuple menyatakan niat kamu dengan jelas: "data ini tidak seharusnya diubah." Kedua, ketika kamu ingin menggunakan koleksi sebagai kunci dictionary — list tidak bisa digunakan sebagai kunci karena bisa berubah, tapi tuple bisa. Ketiga, tuple sedikit lebih hemat memori dan lebih cepat dari list untuk data yang sifatnya statis.
+        </p>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Aturan Praktis List vs Tuple</strong>
+            <p>Gunakan <strong>list</strong> ketika koleksi data kamu mungkin berubah — elemen perlu ditambah, dihapus, atau diurutkan ulang. Gunakan <strong>tuple</strong> ketika koleksi merepresentasikan sesuatu yang sifatnya tetap — koordinat, dimensi, pasangan nilai yang bermakna secara bersama. Kalau ragu, mulai dengan list. Ubah ke tuple jika kamu sadar data itu tidak boleh dimodifikasi.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">4.3 Dictionary: Pasangan Kunci-Nilai</h2>
+
+        <p>
+          Dictionary adalah struktur data yang menyimpan data dalam bentuk pasangan kunci-nilai *(key-value pairs)*. Bayangkan seperti kamus sungguhan: kamu mencari sebuah kata (kunci), dan kamus memberitahumu artinya (nilai). Atau bayangkan kartu identitas: ada kunci seperti "nama", "usia", "kota" — dan masing-masing punya nilai yang sesuai.
+        </p>
+
+        <p>
+          Dictionary sangat cocok digunakan ketika kamu ingin mengakses data berdasarkan nama yang bermakna, bukan berdasarkan posisi. Ini membuatnya jauh lebih mudah dibaca dan digunakan dibanding list untuk data yang punya label. Di dunia kecerdasan buatan, dictionary sering muncul sebagai format data JSON, sebagai representasi satu baris dataset, atau sebagai tempat menyimpan hiperparameter model.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Membuat dictionary dengan kurung kurawal {}</span>
+mahasiswa = {
+    <span class="st">"nama"</span>     : <span class="st">"Rizky Pratama"</span>,
+    <span class="st">"nim"</span>      : <span class="st">"2021001234"</span>,
+    <span class="st">"jurusan"</span>  : <span class="st">"Teknik Informatika"</span>,
+    <span class="st">"ipk"</span>      : <span class="nm">3.75</span>,
+    <span class="st">"aktif"</span>    : <span class="kw">True</span>
+}
+
+<span class="cm"># Akses nilai berdasarkan kunci</span>
+<span class="fn">print</span>(mahasiswa[<span class="st">"nama"</span>])     <span class="cm"># → Rizky Pratama</span>
+<span class="fn">print</span>(mahasiswa[<span class="st">"ipk"</span>])      <span class="cm"># → 3.75</span>
+
+<span class="cm"># Cara aman: .get() tidak error kalau kunci tidak ada</span>
+<span class="fn">print</span>(mahasiswa.get(<span class="st">"email"</span>))           <span class="cm"># → None (tidak error)</span>
+<span class="fn">print</span>(mahasiswa.get(<span class="st">"email"</span>, <span class="st">"N/A"</span>))  <span class="cm"># → N/A (nilai default)</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Akses Kunci yang Tidak Ada = Error</strong>
+            <p>Mengakses kunci yang tidak ada dengan kurung siku <code>dict["kunci_tidak_ada"]</code> akan langsung menghasilkan <code>KeyError</code>. Selalu gunakan <code>dict.get("kunci")</code> atau periksa dulu dengan <code>"kunci" in dict</code> ketika kamu tidak yakin apakah kunci tersebut ada. Ini adalah sumber bug yang sangat umum bagi pemula.</p>
+          </div>
+        </div>
+
+        <h3>Menambah, Mengubah, dan Menghapus Entri</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>profil = {<span class="st">"nama"</span>: <span class="st">"Sari"</span>, <span class="st">"usia"</span>: <span class="nm">23</span>}
+
+<span class="cm"># Menambah kunci baru</span>
+profil[<span class="st">"kota"</span>]  = <span class="st">"Yogyakarta"</span>
+profil[<span class="st">"hobi"</span>]  = [<span class="st">"membaca"</span>, <span class="st">"coding"</span>]  <span class="cm"># nilai bisa berupa list!</span>
+<span class="fn">print</span>(profil)
+
+<span class="cm"># Mengubah nilai yang sudah ada</span>
+profil[<span class="st">"usia"</span>] = <span class="nm">24</span>
+<span class="fn">print</span>(profil[<span class="st">"usia"</span>])  <span class="cm"># → 24</span>
+
+<span class="cm"># Menghapus entri</span>
+<span class="kw">del</span> profil[<span class="st">"hobi"</span>]
+nilai_terhapus = profil.pop(<span class="st">"kota"</span>)  <span class="cm"># hapus dan kembalikan nilainya</span>
+<span class="fn">print</span>(<span class="st">f"Kota dihapus: {nilai_terhapus}"</span>)  <span class="cm"># → Kota dihapus: Yogyakarta</span>
+
+<span class="cm"># Cek keberadaan kunci</span>
+<span class="fn">print</span>(<span class="st">"nama"</span> <span class="kw">in</span> profil)   <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="st">"email"</span> <span class="kw">in</span> profil)  <span class="cm"># → False</span></code></pre>
+        </div>
+
+        <h3>Iterasi pada Dictionary</h3>
+
+        <p>
+          Kamu bisa mengiterasi dictionary dengan tiga cara berbeda tergantung apa yang kamu butuhkan — hanya kuncinya, hanya nilainya, atau keduanya sekaligus. Cara ketiga adalah yang paling sering dipakai dalam praktik:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>hiperparameter = {
+    <span class="st">"learning_rate"</span> : <span class="nm">0.001</span>,
+    <span class="st">"batch_size"</span>    : <span class="nm">32</span>,
+    <span class="st">"epochs"</span>        : <span class="nm">50</span>,
+    <span class="st">"dropout"</span>       : <span class="nm">0.3</span>
+}
+
+<span class="cm"># Iterasi kunci saja</span>
+<span class="kw">for</span> kunci <span class="kw">in</span> hiperparameter.keys():
+    <span class="fn">print</span>(kunci)
+
+<span class="cm"># Iterasi nilai saja</span>
+<span class="kw">for</span> nilai <span class="kw">in</span> hiperparameter.values():
+    <span class="fn">print</span>(nilai)
+
+<span class="cm"># Iterasi kunci dan nilai sekaligus — paling sering dipakai</span>
+<span class="kw">for</span> kunci, nilai <span class="kw">in</span> hiperparameter.items():
+    <span class="fn">print</span>(<span class="st">f"{kunci}: {nilai}"</span>)
+<span class="cm"># → learning_rate: 0.001</span>
+<span class="cm"># → batch_size: 32</span>
+<span class="cm"># → epochs: 50</span>
+<span class="cm"># → dropout: 0.3</span>
+
+<span class="cm"># Menggabungkan dua dictionary (Python 3.9+)</span>
+default  = {<span class="st">"epochs"</span>: <span class="nm">10</span>, <span class="st">"lr"</span>: <span class="nm">0.01</span>}
+kustom   = {<span class="st">"epochs"</span>: <span class="nm">50</span>, <span class="st">"momentum"</span>: <span class="nm">0.9</span>}
+gabungan = default <span class="op">|</span> kustom   <span class="cm"># kustom menimpa nilai yang sama di default</span>
+<span class="fn">print</span>(gabungan)
+<span class="cm"># → {'epochs': 50, 'lr': 0.01, 'momentum': 0.9}</span></code></pre>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Dictionary dan Format JSON</strong>
+            <p>Dictionary Python dan format JSON sangat mirip — keduanya menggunakan pasangan kunci-nilai. Ini bukan kebetulan: ketika kamu bekerja dengan API web, database NoSQL, atau konfigurasi model, data hampir selalu datang dalam format JSON yang langsung bisa dikonversi ke dictionary Python. Modul <code>json</code> bawaan Python membuat konversi bolak-balik antara keduanya sangat mudah.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">4.4 Set: Koleksi Unik Tanpa Urutan</h2>
+
+        <p>
+          Set adalah koleksi yang tidak memiliki urutan dan tidak menyimpan duplikat. Setiap nilai hanya bisa muncul satu kali dalam sebuah set, tidak peduli berapa kali kamu mencoba menambahkannya. Set dibuat dengan kurung kurawal <code>{}</code> seperti dictionary, tapi tanpa pasangan kunci-nilai — atau bisa juga dengan fungsi <code>set()</code>.
+        </p>
+
+        <p>
+          Set sangat berguna untuk dua hal utama: menghilangkan duplikat dari sekumpulan data, dan melakukan operasi himpunan matematika seperti irisan *(intersection)*, gabungan *(union)*, dan selisih *(difference)*. Di bidang kecerdasan buatan, set sering dipakai untuk membandingkan dua kumpulan label atau fitur.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Membuat set</span>
+buah_a = {<span class="st">"apel"</span>, <span class="st">"mangga"</span>, <span class="st">"jeruk"</span>, <span class="st">"apel"</span>}  <span class="cm"># "apel" duplikat diabaikan</span>
+<span class="fn">print</span>(buah_a)  <span class="cm"># → {'apel', 'mangga', 'jeruk'} — urutan tidak terjamin</span>
+
+<span class="cm"># Cara paling umum: hapus duplikat dari list</span>
+nilai_mentah  = [<span class="nm">5</span>, <span class="nm">3</span>, <span class="nm">8</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">9</span>, <span class="nm">1</span>, <span class="nm">8</span>]
+nilai_unik    = <span class="fn">set</span>(nilai_mentah)
+<span class="fn">print</span>(nilai_unik)          <span class="cm"># → {1, 3, 5, 8, 9}</span>
+<span class="fn">print</span>(<span class="fn">len</span>(nilai_unik))     <span class="cm"># → 5</span>
+
+<span class="cm"># Kembalikan ke list jika perlu urutan</span>
+nilai_bersih = <span class="fn">sorted</span>(nilai_unik)
+<span class="fn">print</span>(nilai_bersih)  <span class="cm"># → [1, 3, 5, 8, 9]</span>
+
+<span class="cm"># Menambah dan menghapus elemen</span>
+buah_a.add(<span class="st">"pisang"</span>)
+buah_a.discard(<span class="st">"mangga"</span>)  <span class="cm"># discard tidak error meski elemen tidak ada</span>
+<span class="fn">print</span>(buah_a)</code></pre>
+        </div>
+
+        <h3>Operasi Himpunan</h3>
+
+        <p>
+          Kekuatan sejati set ada di operasi himpunan matematis. Ini sangat berguna ketika kamu perlu membandingkan dua kelompok data, misalnya memeriksa fitur mana yang ada di data latih tapi tidak ada di data uji, atau menemukan label yang bermasalah:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code>fitur_latih = {<span class="st">"umur"</span>, <span class="st">"gaji"</span>, <span class="st">"pendidikan"</span>, <span class="st">"kota"</span>}
+fitur_uji   = {<span class="st">"umur"</span>, <span class="st">"gaji"</span>, <span class="st">"status"</span>}
+
+<span class="cm"># Gabungan — semua fitur dari keduanya</span>
+<span class="fn">print</span>(fitur_latih <span class="op">|</span> fitur_uji)
+<span class="cm"># → {'umur', 'gaji', 'pendidikan', 'kota', 'status'}</span>
+
+<span class="cm"># Irisan — fitur yang ada di keduanya</span>
+<span class="fn">print</span>(fitur_latih <span class="op">&</span> fitur_uji)
+<span class="cm"># → {'umur', 'gaji'}</span>
+
+<span class="cm"># Selisih — fitur di latih yang tidak ada di uji</span>
+<span class="fn">print</span>(fitur_latih <span class="op">-</span> fitur_uji)
+<span class="cm"># → {'pendidikan', 'kota'}  ← fitur ini hilang di data uji!</span>
+
+<span class="cm"># Selisih simetris — fitur yang hanya ada di salah satu</span>
+<span class="fn">print</span>(fitur_latih <span class="op">^</span> fitur_uji)
+<span class="cm"># → {'pendidikan', 'kota', 'status'}</span>
+
+<span class="cm"># Cek keanggotaan — jauh lebih cepat dari list untuk data besar</span>
+<span class="fn">print</span>(<span class="st">"kota"</span> <span class="kw">in</span> fitur_latih)   <span class="cm"># → True</span>
+<span class="fn">print</span>(<span class="st">"status"</span> <span class="kw">in</span> fitur_latih) <span class="cm"># → False</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">⚡</span>
+          <div class="kartu-isi">
+            <strong>Set Jauh Lebih Cepat untuk Pengecekan Keanggotaan</strong>
+            <p>Ketika kamu perlu memeriksa apakah sebuah nilai ada dalam koleksi besar (ribuan atau jutaan elemen), gunakan set bukan list. Pengecekan <code>x in set</code> bekerja hampir seketika terlepas dari ukuran set, sementara <code>x in list</code> harus menelusuri satu per satu dari awal — semakin besar listnya, semakin lama. Ini perbedaan yang sangat signifikan dalam aplikasi nyata.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">4.5 Memilih Struktur Data yang Tepat</h2>
+
+        <p>
+          Setelah mengenal keempat struktur data utama Python, pertanyaan yang sering muncul adalah: kapan saya harus pakai yang mana? Ini adalah keputusan yang sangat penting karena pilihan struktur data yang tepat tidak hanya membuat kode lebih mudah dibaca, tapi juga bisa membuat program berjalan jauh lebih cepat.
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Struktur</th>
+                <th>Bisa Diubah?</th>
+                <th>Berurutan?</th>
+                <th>Duplikat?</th>
+                <th>Kapan Pakai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>List</strong> <code>[]</code></td>
+                <td>✅ Ya</td>
+                <td>✅ Ya</td>
+                <td>✅ Ya</td>
+                <td>Koleksi data yang perlu diubah atau diurutkan</td>
+              </tr>
+              <tr>
+                <td><strong>Tuple</strong> <code>()</code></td>
+                <td>❌ Tidak</td>
+                <td>✅ Ya</td>
+                <td>✅ Ya</td>
+                <td>Data tetap: koordinat, dimensi, konfigurasi</td>
+              </tr>
+              <tr>
+                <td><strong>Dictionary</strong> <code>{k:v}</code></td>
+                <td>✅ Ya</td>
+                <td>✅ Ya*</td>
+                <td>Kunci: ❌ / Nilai: ✅</td>
+                <td>Data berlabel, pencarian cepat berdasarkan nama</td>
+              </tr>
+              <tr>
+                <td><strong>Set</strong> <code>{}</code></td>
+                <td>✅ Ya</td>
+                <td>❌ Tidak</td>
+                <td>❌ Tidak</td>
+                <td>Menghilangkan duplikat, operasi himpunan</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          *Dictionary mempertahankan urutan penyisipan sejak Python 3.7 ke atas.
+        </p>
+
+        <h3>Skenario Nyata dan Pilihan yang Tepat</h3>
+
+        <p>
+          Mari kita lihat beberapa skenario konkret yang akan sering kamu hadapi dan pilihan struktur data yang paling masuk akal untuk masing-masing:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python — skenario nyata</span>
+          </div>
+          <pre><code><span class="cm"># SKENARIO 1: Menyimpan riwayat nilai loss selama pelatihan model</span>
+<span class="cm"># → Pakai LIST karena perlu append setiap epoch dan mungkin di-plot</span>
+riwayat_loss = []
+<span class="kw">for</span> epoch <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+    loss = <span class="nm">1.0</span> / (epoch <span class="op">+</span> <span class="nm">1</span>)  <span class="cm"># simulasi loss turun</span>
+    riwayat_loss.append(loss)
+
+<span class="cm"># SKENARIO 2: Menyimpan dimensi input gambar untuk model CNN</span>
+<span class="cm"># → Pakai TUPLE karena nilai ini tidak boleh berubah</span>
+ukuran_input = (<span class="nm">224</span>, <span class="nm">224</span>, <span class="nm">3</span>)
+tinggi, lebar, channel = ukuran_input
+
+<span class="cm"># SKENARIO 3: Menyimpan konfigurasi model</span>
+<span class="cm"># → Pakai DICTIONARY karena setiap parameter punya nama</span>
+konfigurasi = {
+    <span class="st">"model"</span>         : <span class="st">"ResNet50"</span>,
+    <span class="st">"learning_rate"</span> : <span class="nm">0.001</span>,
+    <span class="st">"batch_size"</span>    : <span class="nm">32</span>,
+    <span class="st">"epochs"</span>        : <span class="nm">100</span>,
+    <span class="st">"optimizer"</span>     : <span class="st">"Adam"</span>
+}
+
+<span class="cm"># SKENARIO 4: Daftar label kelas yang valid dalam dataset</span>
+<span class="cm"># → Pakai SET karena hanya perlu cek keanggotaan, tidak ada duplikat</span>
+label_valid  = {<span class="st">"kucing"</span>, <span class="st">"anjing"</span>, <span class="st">"burung"</span>, <span class="st">"ikan"</span>}
+label_prediksi = <span class="st">"kucing"</span>
+<span class="kw">if</span> label_prediksi <span class="kw">in</span> label_valid:
+    <span class="fn">print</span>(<span class="st">"Label valid!"</span>)</code></pre>
+        </div>
+
+        <h3>Struktur Data Bersarang</h3>
+
+        <p>
+          Dalam praktik nyata, kamu sangat sering menggabungkan struktur data ini satu sama lain — list berisi dictionary, dictionary berisi list, dan seterusnya. Ini disebut struktur data bersarang *(nested)* dan sangat umum dipakai untuk merepresentasikan data yang kompleks seperti dataset atau respons API:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python — struktur data bersarang</span>
+          </div>
+          <pre><code><span class="cm"># Dataset sederhana: list of dictionaries</span>
+<span class="cm"># Ini persis seperti format data yang akan kamu temui di proyek nyata</span>
+dataset = [
+    {<span class="st">"nama"</span>: <span class="st">"Andi"</span>,  <span class="st">"usia"</span>: <span class="nm">25</span>, <span class="st">"gaji"</span>: <span class="nm">8000000</span>,  <span class="st">"lulus"</span>: <span class="kw">True</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Budi"</span>,  <span class="st">"usia"</span>: <span class="nm">30</span>, <span class="st">"gaji"</span>: <span class="nm">12000000</span>, <span class="st">"lulus"</span>: <span class="kw">True</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Citra"</span>, <span class="st">"usia"</span>: <span class="nm">22</span>, <span class="st">"gaji"</span>: <span class="nm">6000000</span>,  <span class="st">"lulus"</span>: <span class="kw">False</span>},
+]
+
+<span class="cm"># Akses data bersarang</span>
+<span class="fn">print</span>(dataset[<span class="nm">0</span>][<span class="st">"nama"</span>])   <span class="cm"># → Andi</span>
+<span class="fn">print</span>(dataset[<span class="nm">1</span>][<span class="st">"gaji"</span>])   <span class="cm"># → 12000000</span>
+
+<span class="cm"># Iterasi untuk mengolah setiap baris data</span>
+<span class="kw">for</span> orang <span class="kw">in</span> dataset:
+    status = <span class="st">"✅"</span> <span class="kw">if</span> orang[<span class="st">"lulus"</span>] <span class="kw">else</span> <span class="st">"❌"</span>
+    <span class="fn">print</span>(<span class="st">f"{status} {orang['nama']:8} | Usia: {orang['usia']} | Gaji: {orang['gaji']:,}"</span>)
+<span class="cm"># → ✅ Andi     | Usia: 25 | Gaji: 8,000,000</span>
+<span class="cm"># → ✅ Budi     | Usia: 30 | Gaji: 12,000,000</span>
+<span class="cm"># → ❌ Citra    | Usia: 22 | Gaji: 6,000,000</span>
+
+<span class="cm"># Ambil semua nama dari dataset — list comprehension (preview Bab 5)</span>
+semua_nama = [orang[<span class="st">"nama"</span>] <span class="kw">for</span> orang <span class="kw">in</span> dataset]
+<span class="fn">print</span>(semua_nama)  <span class="cm"># → ['Andi', 'Budi', 'Citra']</span>
+
+<span class="cm"># Hitung rata-rata gaji</span>
+semua_gaji  = [orang[<span class="st">"gaji"</span>] <span class="kw">for</span> orang <span class="kw">in</span> dataset]
+rata_gaji   = <span class="fn">sum</span>(semua_gaji) / <span class="fn">len</span>(semua_gaji)
+<span class="fn">print</span>(<span class="st">f"Rata-rata gaji: Rp {rata_gaji:,.0f}"</span>)
+<span class="cm"># → Rata-rata gaji: Rp 8,666,667</span></code></pre>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Latihan Wajib Sebelum Lanjut</strong>
+            <p>Sebelum ke Bab 5, coba buat sendiri ini di Python: (1) List berisi 5 angka acak, lalu urutkan dan tampilkan rata-ratanya. (2) Dictionary yang merepresentasikan profil dirimu sendiri dengan minimal 5 kunci. (3) Dua set yang berisi nama teman berbeda, lalu cari siapa yang ada di keduanya menggunakan operasi irisan. (4) List of dictionaries berisi minimal 3 "produk" dengan kunci nama, harga, dan stok — lalu tampilkan produk yang stoknya lebih dari 0.</p>
+          </div>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Pratinjau Bab Berikutnya</strong>
+            <p>Di Bab 5, kita akan belajar cara membuat program yang bisa mengambil keputusan dan melakukan pengulangan — percabangan dengan <code>if/elif/else</code> dan perulangan dengan <code>for</code> dan <code>while</code>. Kamu juga akan belajar tentang list comprehension, cara menulis filter dan transformasi data dalam satu baris kode yang elegan. Struktur data yang baru kamu pelajari akan langsung dipakai di sana.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <!-- TOMBOL SEBELUMNYA -->
+      <a href="b01-bab-03.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 3: Blok Bangunan Python</span>
+      </a>
+
+      <!-- POSISI SEKARANG -->
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 4 / 15</div>
+          <div class="dot-progres">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="aktif"></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOMBOL SELANJUTNYA -->
+      <a href="b01-bab-05.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 5: Alur Kendali Program</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 4</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

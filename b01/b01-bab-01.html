@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kenapa Python dan Kenapa Sekarang — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===========================
+       VARIABEL & RESET
+    =========================== */
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+
+      --cyan:    #00C8FF;
+      --cyan-dim: #00628090;
+      --green:   #00FF94;
+      --green-dim: #00804A50;
+      --amber:   #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:  #9D6FFF;
+      --purple-dim: #4B2A9040;
+      --red:     #FF5F6D;
+
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===========================
+       HEADER
+    =========================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .header-ikon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* ===========================
+       BREADCRUMB
+    =========================== */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char {
+      color: var(--green);
+      font-weight: 600;
+      margin-right: 0.2rem;
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ===========================
+       KONTEN UTAMA
+    =========================== */
+    main {
+      padding: 2.5rem 0 4rem;
+    }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pita-info-bab .info-item .info-val {
+      color: var(--text-secondary);
+    }
+
+    /* ===========================
+       DAFTAR SUBBAB
+    =========================== */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before {
+      content: '//';
+      color: var(--cyan);
+      font-size: 0.8rem;
+    }
+
+    .daftar-subbab ol {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* ===========================
+       TIPOGRAFI KONTEN
+    =========================== */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+    }
+
+    .konten ul { list-style: none; padding-left: 0; }
+
+    .konten ul li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .konten ul li::before {
+      content: '▸';
+      color: var(--cyan);
+      position: absolute;
+      left: 0;
+      font-size: 0.7rem;
+      top: 0.35rem;
+    }
+
+    .konten ol li { margin-bottom: 0.5rem; }
+
+    .konten strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .konten a {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,200,255,0.3);
+      transition: all 0.2s;
+    }
+
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* ===========================
+       BLOK KODE
+    =========================== */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .blok-kode-header .titik-titik span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* ===========================
+       KARTU
+    =========================== */
+    .kartu-info,
+    .kartu-peringatan,
+    .kartu-tips,
+    .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info {
+      background: rgba(0,200,255,0.05);
+      border: 1px solid rgba(0,200,255,0.2);
+    }
+
+    .kartu-peringatan {
+      background: rgba(255,184,48,0.05);
+      border: 1px solid rgba(255,184,48,0.25);
+    }
+
+    .kartu-tips {
+      background: rgba(0,255,148,0.05);
+      border: 1px solid rgba(0,255,148,0.2);
+    }
+
+    .kartu-catatan {
+      background: rgba(157,111,255,0.06);
+      border: 1px solid rgba(157,111,255,0.25);
+    }
+
+    .kartu-ikon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .kartu-isi { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong     { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p {
+      margin: 0 !important;
+      line-height: 1.65;
+    }
+
+    .kartu-info .kartu-isi p     { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* ===========================
+       TABEL
+    =========================== */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.7rem 1rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* ===========================
+       NAVIGASI BAB
+    =========================== */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover {
+      border-color: rgba(0,200,255,0.4);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .tombol-navigasi-nonaktif {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+
+    .indikator-progres {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nomor-bab-sekarang {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .dot-progres {
+      display: flex;
+      gap: 4px;
+    }
+
+    .dot-progres span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot-progres span.aktif {
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--bg-base);
+      padding: 2rem 0;
+    }
+
+    footer .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .footer-kanan {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .footer-kanan a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ===========================
+       ANIMASI MASUK
+    =========================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* ===========================
+       RESPONSIF
+    =========================== */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+
+      .navigasi-bab .wadah {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .posisi-tengah {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-01-kenapa-python</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian I — Berkenalan dengan Dunia Pemrograman</span>
+          <span class="label-nomor-bab">Bab 1 / 15</span>
+        </div>
+
+        <h1 class="judul-bab">
+          Kenapa Python dan Kenapa Sekarang<span class="aksen">.</span>
+        </h1>
+
+        <p class="deskripsi-bab">
+          Sebelum nulis satu baris kode pun, penting banget untuk tahu kenapa kamu ada di sini dan ke mana kamu mau pergi. Bab ini bukan tentang teknis — ini tentang gambaran besar, tentang kenapa Python jadi pilihan yang masuk akal, dan tentang bagaimana seri ini akan membawamu dari nol ke siap kerja.
+        </p>
+
+        <div class="pita-info-bab">
+          <div class="info-item">
+            <span>⏱</span>
+            <span class="info-val">~1 jam baca</span>
+          </div>
+          <div class="info-item">
+            <span>📦</span>
+            <span class="info-val">Tidak ada library — konsep murni</span>
+          </div>
+          <div class="info-item">
+            <span>🔗</span>
+            <span class="info-val">Prasyarat: Tidak ada</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li>
+            <span class="nomor-subbab">1.1</span>
+            <a href="#subbab-1">Posisi Python di dunia kecerdasan buatan saat ini</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">1.2</span>
+            <a href="#subbab-2">Jalur industri vs. jalur riset: mana yang cocok untukmu</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">1.3</span>
+            <a href="#subbab-3">Gambaran besar perjalanan 12–18 bulan ke depan</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">1.4</span>
+            <a href="#subbab-4">Cara menggunakan buku ini dengan efektif</a>
+          </li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">1.1 Posisi Python di Dunia Kecerdasan Buatan Saat Ini</h2>
+
+        <p>
+          Kalau kamu tanya ke siapapun yang bekerja di bidang kecerdasan buatan *(artificial intelligence)* atau pembelajaran mesin *(machine learning)* hari ini, hampir pasti jawabannya sama: Python adalah bahasa kerja utama mereka. Bukan karena Python sempurna — jauh dari itu. Tapi karena ekosistem alat bantu, pustaka *(library)*, dan komunitasnya sudah tumbuh begitu besar hingga susah untuk diabaikan.
+        </p>
+
+        <p>
+          Coba bayangkan ini. Kamu mau memasak rendang untuk pertama kali. Ada dua pilihan dapur: dapur pertama punya semua bumbu siap pakai, kompor yang bagus, dan jutaan resep lengkap tersedia di internet. Dapur kedua lebih efisien secara teoritis, tapi bumbunya harus kamu bikin sendiri dari nol, dan komunitas pemasaknya jauh lebih kecil. Kebanyakan orang akan pilih dapur pertama — bukan karena dapur kedua buruk, tapi karena waktu dan energimu terlalu berharga untuk dihabiskan mencari-cari bahan dasar.
+        </p>
+
+        <p>
+          Python adalah "dapur pertama" itu. Pustaka seperti <code>NumPy</code>, <code>Pandas</code>, <code>scikit-learn</code>, <code>PyTorch</code>, dan <code>Hugging Face Transformers</code> semuanya dibangun dan dioptimalkan untuk Python. Perusahaan teknologi besar seperti Google, Meta, OpenAI, dan Anthropic semuanya menggunakan Python sebagai tulang punggung pengembangan kecerdasan buatan mereka. Lowongan kerja untuk posisi insinyur kecerdasan buatan hampir selalu menyebutkan Python sebagai syarat utama.
+        </p>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Fakta Industri</strong>
+            <p>Berdasarkan survei tahunan Stack Overflow dan laporan industri, Python secara konsisten menempati posisi teratas sebagai bahasa yang paling banyak dipakai untuk proyek kecerdasan buatan dan ilmu data *(data science)*. Selisihnya dengan bahasa lain sangat jauh.</p>
+          </div>
+        </div>
+
+        <p>
+          Tapi bukan hanya soal popularitas. Python dirancang dengan filosofi yang mengutamakan keterbacaan kode. Artinya, kode Python yang ditulis dengan baik terasa hampir seperti membaca kalimat bahasa Inggris biasa. Ini penting banget ketika kamu baru belajar — kamu bisa fokus pada logika dan konsep, bukan berjuang dengan sintaksis *(syntax)* yang rumit.
+        </p>
+
+        <p>
+          Sebagai perbandingan cepat, lihat dua blok kode berikut — keduanya melakukan hal yang sama persis, yaitu menghitung rata-rata dari sebuah daftar angka:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Python — mudah dibaca seperti kalimat biasa</span>
+angka = [<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>, <span class="nm">40</span>, <span class="nm">50</span>]
+rata_rata = <span class="fn">sum</span>(angka) / <span class="fn">len</span>(angka)
+<span class="fn">print</span>(<span class="st">f"Rata-rata: {rata_rata}"</span>)
+<span class="cm"># Output: Rata-rata: 30.0</span></code></pre>
+        </div>
+
+        <p>
+          Kode di atas bisa kamu baca hampir seperti instruksi biasa: "buat daftar angka, hitung jumlahnya dibagi panjang daftarnya, lalu tampilkan hasilnya." Tidak ada simbol aneh, tidak ada deklarasi tipe data yang panjang. Kamu langsung ke intinya. Ini adalah salah satu alasan utama kenapa Python jadi pilihan pertama untuk belajar pemrograman sekaligus menjadi alat profesional di industri.
+        </p>
+
+        <p>
+          Satu hal lagi yang perlu kamu tahu: Python itu lambat secara komputasi dibanding bahasa seperti C++ atau Rust. Tapi ini bukan masalah besar dalam praktik kecerdasan buatan. Kenapa? Karena bagian yang "berat" secara komputasi — seperti perkalian matriks atau pelatihan jaringan saraf tiruan *(neural network)* — sudah dikerjakan oleh pustaka yang ditulis dalam C atau CUDA (bahasa untuk kartu grafis). Python cuma jadi "perekat" yang menghubungkan semuanya. Kamu mendapat kemudahan Python tanpa kehilangan performa.
+        </p>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">1.2 Jalur Industri vs. Jalur Riset: Mana yang Cocok Untukmu</h2>
+
+        <p>
+          Ada dua jalur besar dalam dunia kecerdasan buatan, dan penting untuk kamu pahami perbedaannya sejak awal karena ini akan menentukan apa yang perlu kamu pelajari, seberapa dalam kamu harus masuk ke matematika, dan pekerjaan seperti apa yang bisa kamu kejar.
+        </p>
+
+        <p>
+          <strong>Jalur riset</strong> adalah jalur akademik. Orang-orang di jalur ini biasanya bekerja di universitas atau di divisi riset perusahaan teknologi besar. Mereka mengembangkan algoritma baru, membuktikan teori matematika, menulis makalah ilmiah *(paper)*, dan mendorong batas-batas kemampuan kecerdasan buatan. Jalur ini membutuhkan latar belakang matematika yang sangat kuat — kalkulus lanjutan, statistik probabilistik mendalam, aljabar linear tingkat tinggi — dan biasanya memerlukan gelar S2 atau S3.
+        </p>
+
+        <p>
+          <strong>Jalur industri</strong> adalah jalur yang berbeda. Orang-orang di jalur ini — yang biasa disebut insinyur kecerdasan buatan *(AI Engineer)*, insinyur pembelajaran mesin *(ML Engineer)*, atau ilmuwan data *(data scientist)* — tugasnya bukan menciptakan algoritma baru, melainkan menggunakan algoritma yang sudah ada untuk memecahkan masalah bisnis nyata. Mereka membangun sistem yang bisa berjalan di produksi, dipercaya oleh pengguna, dan menghasilkan nilai nyata bagi perusahaan.
+        </p>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">🎯</span>
+          <div class="kartu-isi">
+            <strong>Seri Ini untuk Jalur Industri</strong>
+            <p>Seluruh seri ini dirancang khusus untuk jalur industri. Kamu akan belajar cara menggunakan alat dan teknik yang sudah terbukti untuk membangun aplikasi kecerdasan buatan yang nyata — bukan untuk membuktikan teorema matematika.</p>
+          </div>
+        </div>
+
+        <p>
+          Ini bukan berarti jalur industri lebih mudah atau kurang prestis. Justru sebaliknya — kebanyakan dampak nyata kecerdasan buatan di kehidupan sehari-hari lahir dari pekerjaan insinyur industri, bukan peneliti. Ketika kamu memesan ojek dan algoritmanya memilih rute terpendek, ketika kamu membuka aplikasi belanja dan sistem rekomendasinya menampilkan produk yang kamu suka, ketika asisten suara di ponselmu mengerti pertanyaanmu — itu semua adalah karya insinyur kecerdasan buatan jalur industri.
+        </p>
+
+        <p>
+          Perbedaan praktis antara keduanya bisa dilihat dari pertanyaan yang mereka coba jawab:
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Aspek</th>
+                <th>Jalur Riset</th>
+                <th>Jalur Industri</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pertanyaan utama</td>
+                <td>Bagaimana cara membuat algoritma baru yang lebih baik?</td>
+                <td>Bagaimana cara memecahkan masalah bisnis ini dengan cepat dan andal?</td>
+              </tr>
+              <tr>
+                <td>Hasil kerja</td>
+                <td>Makalah ilmiah, teori, algoritma baru</td>
+                <td>Aplikasi, sistem, fitur produk yang bisa dipakai</td>
+              </tr>
+              <tr>
+                <td>Matematika</td>
+                <td>Sangat mendalam — bukti formal diperlukan</td>
+                <td>Cukup untuk memahami dan menggunakan — intuisi lebih penting</td>
+              </tr>
+              <tr>
+                <td>Latar belakang</td>
+                <td>Biasanya butuh S2/S3</td>
+                <td>Bisa dimulai dari belajar mandiri yang terstruktur</td>
+              </tr>
+              <tr>
+                <td>Alat yang dipakai</td>
+                <td>Sering membangun dari awal</td>
+                <td>Menggunakan pustaka dan kerangka kerja *(framework)* yang ada</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Yang menarik, batas antara keduanya makin kabur seiring berkembangnya industri. Banyak insinyur industri yang hebat juga memahami teori dengan cukup dalam, dan banyak peneliti yang sangat memperhatikan implementasi praktis. Tapi kalau kamu baru mulai, memilih fokus yang tepat sejak awal akan membuat perjalananmu jauh lebih efisien.
+        </p>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Cara Memilih Jalur</strong>
+            <p>Tanya dirimu sendiri: apakah kamu lebih tertarik membangun produk yang dipakai orang banyak, atau lebih tertarik memahami dan mendorong batas-batas ilmu pengetahuan? Kalau jawabanmu "membangun produk", jalur industri adalah tempat yang tepat. Kamu bisa memulai perjalananmu sekarang, tanpa gelar S2 dan tanpa latar belakang matematika yang kuat.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">1.3 Gambaran Besar Perjalanan 12–18 Bulan ke Depan</h2>
+
+        <p>
+          Salah satu penyebab terbesar orang menyerah saat belajar pemrograman adalah karena mereka tidak tahu ke mana arah yang mereka tuju. Mereka belajar satu topik, lalu tidak tahu apakah harus lanjut ke mana. Atau mereka terlalu bersemangat di awal dan langsung mencoba belajar hal-hal yang terlalu lanjutan, lalu frustrasi karena tidak paham. Bagian ini akan memberikan peta jalan yang jelas supaya kamu tahu selalu ada di mana dan ke mana langkah selanjutnya.
+        </p>
+
+        <p>
+          Seri ini terdiri dari enam buku yang disusun secara berurutan. Setiap buku membangun di atas fondasi buku sebelumnya — kamu tidak bisa melompat ke buku tiga tanpa menguasai buku satu dan dua, karena konsep dan kode di buku-buku awal akan terus dipakai. Berikut gambaran umum perjalanannya:
+        </p>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">🗺️</span>
+          <div class="kartu-isi">
+            <strong>Peta Perjalanan 6 Buku</strong>
+            <p><strong>Buku 1 (Bulan 1):</strong> Python dasar hingga menengah + Git. Ini pondasimu. Tanpa ini, semua yang ada di buku-buku berikutnya akan terasa membingungkan. — <strong>Buku 2 (Bulan 2–3):</strong> Matematika praktis + NumPy + Pandas + Visualisasi. Kamu akan belajar bekerja dengan data sungguhan untuk pertama kali. — <strong>Buku 3 (Bulan 4–6):</strong> Pembelajaran mesin klasik dengan scikit-learn. Di sini kamu mulai melatih model pertamamu. — <strong>Buku 4 (Bulan 7–9):</strong> Pembelajaran mendalam *(deep learning)* dengan PyTorch, termasuk CNN dan Transformer. — <strong>Buku 5 (Bulan 10–12):</strong> Model bahasa besar *(LLM)*, RAG, dan deploy ke produksi. Ini adalah keterampilan paling dicari industri sekarang. — <strong>Buku 6 (Bulan 13–15):</strong> Portofolio, LinkedIn, strategi melamar kerja.</p>
+          </div>
+        </div>
+
+        <p>
+          Durasi 12–18 bulan itu bukan angka yang dibuat-buat. Ini estimasi realistis berdasarkan asumsi kamu belajar 2–3 jam per hari, 5 hari dalam seminggu, secara konsisten. Kalau kamu punya lebih banyak waktu, kamu bisa menyelesaikannya lebih cepat. Kalau waktu belajarmu lebih terbatas, mungkin perlu lebih lama — dan itu tidak masalah.
+        </p>
+
+        <p>
+          Yang terpenting bukan seberapa cepat kamu selesai, tapi seberapa solid pemahaman yang kamu bangun di setiap tahap. Satu konsep yang dipahami dengan benar jauh lebih berharga dari sepuluh konsep yang hanya dihapal tanpa dimengerti. Di industri, pewawancara kerja bisa dengan mudah membedakan kandidat yang benar-benar paham dengan yang hanya pernah mendengar istilah-istilah teknis.
+        </p>
+
+        <p>
+          Ada dua benang merah yang akan kamu temukan sepanjang perjalanan ini. Pertama adalah <strong>proyek nyata</strong> — setiap buku punya satu proyek latihan yang langsung bisa kamu tampilkan di portofoliomu. Proyek-proyek ini saling membangun, dan di Buku 6 kamu akan mengumpulkan semuanya menjadi satu portofolio yang solid. Kedua adalah <strong>konsistensi</strong> — setiap buku membahas cara tetap termotivasi, cara menghadapi topik yang berat, dan cara menghindari jebakan-jebakan umum yang biasanya menghentikan orang di tengah jalan.
+        </p>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Jebakan Umum: Tutorial Hell</strong>
+            <p>Banyak orang terjebak dalam siklus menonton tutorial tanpa henti tanpa pernah benar-benar mencoba sendiri. Mereka merasa sedang belajar, padahal sebenarnya hanya menonton orang lain belajar. Di seri ini, setiap bab punya latihan dan setiap buku punya proyek yang harus kamu kerjakan sendiri. Jangan skip bagian praktik.</p>
+          </div>
+        </div>
+
+        <p>
+          Satu hal yang realistis untuk kamu tahu sejak awal: perjalanan ini tidak akan selalu mulus. Akan ada momen ketika kamu merasa tidak mengerti apa-apa, ketika kode yang sudah kamu tulis berjam-jam tetap tidak mau berjalan, atau ketika kamu membaca penjelasan suatu konsep berkali-kali tapi tetap tidak "masuk". Ini normal. Ini dialami oleh semua orang yang belajar pemrograman, termasuk mereka yang sekarang sudah bekerja sebagai insinyur senior. Yang membedakan mereka yang berhasil bukan kecerdasan bawaan, tapi kemauan untuk tetap duduk dan mencoba lagi.
+        </p>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">1.4 Cara Menggunakan Buku Ini dengan Efektif</h2>
+
+        <p>
+          Membaca buku teknis berbeda dari membaca novel. Kamu tidak bisa bersantai dan mengalir begitu saja dari halaman ke halaman. Tapi juga bukan berarti kamu harus menderita — ada cara-cara konkret yang terbukti membuat proses belajar lebih efektif dan lebih menyenangkan. Bagian ini membahasnya.
+        </p>
+
+        <h3>Aktif, Bukan Pasif</h3>
+        <p>
+          Prinsip nomor satu: jangan hanya membaca. Setiap kali ada contoh kode, ketik sendiri di komputermu. Bukan copy-paste — ketik. Proses mengetik kode memaksa tanganmu, matamu, dan otakmu untuk memproses setiap karakter. Kamu akan lebih sering menemukan kesalahan kecil yang tidak kamu sadari sebelumnya, dan dari kesalahan itulah sebagian besar pembelajaran terjadi.
+        </p>
+
+        <p>
+          Coba modifikasi kode yang ada setelah kamu mengetiknya. Ubah angkanya, ganti variabelnya, tambahkan satu baris, hapus satu baris, dan lihat apa yang terjadi. Eksperimen kecil seperti ini adalah cara tercepat untuk benar-benar memahami bagaimana sesuatu bekerja, jauh lebih efektif daripada sekadar membaca penjelasannya.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Contoh: jangan hanya baca, coba modifikasi ini</span>
+<span class="cm"># Versi asli</span>
+nama = <span class="st">"Andi"</span>
+<span class="fn">print</span>(<span class="st">f"Halo, {nama}!"</span>)
+
+<span class="cm"># Coba ganti namanya, tambah kalimat, atau ubah formatnya</span>
+<span class="cm"># Apa yang terjadi kalau kamu hapus tanda kurung kurawal?</span>
+<span class="cm"># Apa yang terjadi kalau nama diisi angka, bukan teks?</span>
+nama = <span class="st">"Budi"</span>
+umur = <span class="nm">22</span>
+<span class="fn">print</span>(<span class="st">f"Halo, {nama}! Kamu berumur {umur} tahun."</span>)</code></pre>
+        </div>
+
+        <h3>Satu Bab, Satu Sesi</h3>
+        <p>
+          Idealnya, selesaikan satu bab dalam satu sesi belajar tanpa diselingi hari lain di tengah-tengah. Ini bukan aturan kaku, tapi konsep-konsep dalam satu bab biasanya saling berkaitan, dan memecahnya menjadi beberapa sesi pendek sering membuat kamu harus "memanaskan ulang" di setiap awal sesi. Kalau bab tertentu terlalu panjang untuk satu sesi, tandai di mana kamu berhenti dan mulai sesi berikutnya dengan mengulang sebentar bagian sebelumnya.
+        </p>
+
+        <h3>Jangan Lewatkan Latihan dan Proyek</h3>
+        <p>
+          Di akhir setiap bab ada latihan kecil, dan di akhir setiap buku ada satu proyek besar. Ini bukan opsional — ini adalah bagian terpenting dari seluruh proses belajar. Kamu bisa membaca teori sampai hafal di luar kepala, tapi sampai kamu mencoba menerapkannya sendiri untuk memecahkan masalah yang belum pernah kamu lihat sebelumnya, pemahaman itu belum benar-benar "milikmu".
+        </p>
+
+        <p>
+          Proyek-proyek di setiap buku juga punya manfaat tambahan: mereka akan menjadi isi portofoliomu. Ketika kamu melamar kerja nanti, perusahaan tidak hanya melihat sertifikat atau nilai ujian — mereka ingin melihat apa yang bisa kamu bangun. Proyek yang kamu kerjakan sendiri dan kamu upload ke GitHub adalah bukti paling kuat yang bisa kamu tunjukkan.
+        </p>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Tips: Buat Jurnal Belajar</strong>
+            <p>Setiap kali kamu belajar sesuatu yang baru, tuliskan dengan kata-katamu sendiri di sebuah catatan — bisa di Notion, file teks biasa, atau bahkan buku tulis fisik. Proses menjelaskan ulang apa yang baru kamu pelajari memaksa otakmu memproses informasi lebih dalam, dan catatanmu akan sangat berguna saat kamu perlu mengulang konsep tertentu beberapa bulan kemudian.</p>
+          </div>
+        </div>
+
+        <h3>Manfaatkan Komunitas</h3>
+        <p>
+          Belajar mandiri tidak harus berarti belajar sendirian. Ada banyak komunitas online tempat kamu bisa bertanya, berbagi progres, atau sekadar berinteraksi dengan orang yang sedang menempuh perjalanan yang sama. Forum seperti Reddit (khususnya subreddit r/learnpython dan r/MachineLearning), Discord server komunitas Python Indonesia, atau grup Telegram belajar pemrograman adalah tempat yang sangat membantu ketika kamu mentok.
+        </p>
+
+        <p>
+          Jangan ragu untuk bertanya ketika kamu tidak paham. Tidak ada pertanyaan yang terlalu bodoh. Yang sering terjadi adalah orang yang baru belajar merasa malu untuk bertanya karena takut terlihat tidak kompeten — padahal justru orang yang mau bertanya adalah yang belajar paling cepat. Semua orang pernah di posisi kamu sekarang.
+        </p>
+
+        <h3>Tentang Kecepatan Belajar</h3>
+        <p>
+          Terakhir, satu hal yang perlu kamu lepaskan: perbandingan dengan orang lain. Mungkin kamu akan menemukan orang yang bisa menyelesaikan buku ini dalam dua minggu, atau orang yang butuh dua bulan untuk bab-bab awal. Keduanya tidak ada yang salah. Kecepatan belajar setiap orang berbeda, dan yang lebih penting dari kecepatan adalah kedalaman pemahaman.
+        </p>
+
+        <p>
+          Seri ini dirancang bukan sebagai perlombaan. Tidak ada hadiah untuk yang paling cepat selesai, dan tidak ada hukuman untuk yang butuh lebih banyak waktu. Yang ada hanyalah kamu, kode yang kamu tulis, dan pemahaman yang perlahan-lahan kamu bangun. Fokus pada itu, dan perjalanan 12–18 bulan ini akan jauh lebih bermakna dari yang kamu bayangkan.
+        </p>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Catatan untuk Bab Berikutnya</strong>
+            <p>Bab 2 akan langsung praktis: kita menyiapkan semua yang kamu butuhkan untuk mulai menulis kode — instalasi Python, terminal, VS Code, dan lingkungan virtual *(virtual environment)*. Pastikan kamu punya akses ke laptop atau komputer sebelum melanjutkan. Tidak perlu spesifikasi tinggi — laptop standar sudah lebih dari cukup untuk seluruh Buku 1 dan Buku 2.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <!-- TOMBOL SEBELUMNYA — nonaktif karena ini bab pertama -->
+      <div class="tombol-navigasi-nonaktif">
+        <span class="arah">← bab sebelumnya</span>
+        <span class="judul-bab-nav">Ini adalah bab pertama</span>
+      </div>
+
+      <!-- POSISI SEKARANG -->
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 1 / 15</div>
+          <div class="dot-progres">
+            <span class="aktif"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOMBOL SELANJUTNYA -->
+      <a href="b01-bab-02.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 2: Menyiapkan Lingkungan Kerja</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 1</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penanganan Berkas dan Kesalahan — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+      --cyan:      #00C8FF;
+      --cyan-dim:  #00628090;
+      --green:     #00FF94;
+      --green-dim: #00804A50;
+      --amber:     #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:    #9D6FFF;
+      --purple-dim:#4B2A9040;
+      --red:       #FF5F6D;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri { display: flex; align-items: center; gap: 0.85rem; }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char { color: var(--green); font-weight: 600; margin-right: 0.2rem; }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif { color: var(--text-primary); font-weight: 500; }
+
+    /* MAIN */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item { display: flex; align-items: center; gap: 0.4rem; }
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* DAFTAR SUBBAB */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before { content: '//'; color: var(--cyan); font-size: 0.8rem; }
+
+    .daftar-subbab ol { list-style: none; padding: 0; display: grid; gap: 0.35rem; }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* TIPOGRAFI KONTEN */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol { padding-left: 1.5rem; margin-bottom: 1.25rem; color: var(--text-secondary); font-size: 0.93rem; }
+    .konten ul { list-style: none; padding-left: 0; }
+    .konten ul li { padding-left: 1.25rem; position: relative; margin-bottom: 0.5rem; }
+    .konten ul li::before { content: '▸'; color: var(--cyan); position: absolute; left: 0; font-size: 0.7rem; top: 0.35rem; }
+    .konten ol li { margin-bottom: 0.5rem; }
+    .konten strong { color: var(--text-primary); font-weight: 600; }
+    .konten a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(0,200,255,0.3); transition: all 0.2s; }
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* BLOK KODE */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik { display: flex; gap: 0.4rem; }
+    .blok-kode-header .titik-titik span { width: 10px; height: 10px; border-radius: 50%; }
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre { padding: 1.25rem 1.5rem; overflow-x: auto; margin: 0; }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* KARTU */
+    .kartu-info, .kartu-peringatan, .kartu-tips, .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info       { background: rgba(0,200,255,0.05);   border: 1px solid rgba(0,200,255,0.2); }
+    .kartu-peringatan { background: rgba(255,184,48,0.05);  border: 1px solid rgba(255,184,48,0.25); }
+    .kartu-tips       { background: rgba(0,255,148,0.05);   border: 1px solid rgba(0,255,148,0.2); }
+    .kartu-catatan    { background: rgba(157,111,255,0.06); border: 1px solid rgba(157,111,255,0.25); }
+
+    .kartu-ikon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .kartu-isi  { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* TABEL */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--font-mono); }
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* NAVIGASI BAB */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover { border-color: rgba(0,200,255,0.4); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+    .indikator-progres { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .nomor-bab-sekarang { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.08em; }
+    .dot-progres { display: flex; gap: 4px; }
+    .dot-progres span { width: 5px; height: 5px; border-radius: 50%; background: var(--border); }
+    .dot-progres span.aktif { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); background: var(--bg-base); padding: 2rem 0; }
+    footer .wadah { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-kiri { display: flex; align-items: center; gap: 0.75rem; }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .footer-kanan { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-muted); text-align: right; }
+    .footer-kanan a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ANIMASI */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* RESPONSIF */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+      .navigasi-bab .wadah { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+      .posisi-tengah { grid-column: 1 / -1; order: -1; }
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-07-penanganan-berkas-dan-kesalahan</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian II — Python Dasar</span>
+          <span class="label-nomor-bab">Bab 7 / 15</span>
+        </div>
+        <h1 class="judul-bab">Penanganan Berkas dan Kesalahan<span class="aksen">.</span></h1>
+        <p class="deskripsi-bab">
+          Program yang hanya berjalan di memori dan tidak bisa berinteraksi dengan dunia luar sangat terbatas kegunaannya. Di bab ini kamu belajar cara membaca dan menulis file — pintu masuk ke data nyata yang tersimpan di disk. Kamu juga belajar cara menulis kode yang tidak langsung mati saat bertemu situasi tak terduga, melainkan menanganinya dengan cara yang terkontrol dan informatif.
+        </p>
+        <div class="pita-info-bab">
+          <div class="info-item"><span>⏱</span><span class="info-val">~3 jam baca + latihan</span></div>
+          <div class="info-item"><span>📦</span><span class="info-val">csv (bawaan Python)</span></div>
+          <div class="info-item"><span>🔗</span><span class="info-val">Prasyarat: Bab 4–6</span></div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li><span class="nomor-subbab">7.1</span><a href="#subbab-1">Membaca dan menulis file teks</a></li>
+          <li><span class="nomor-subbab">7.2</span><a href="#subbab-2">Bekerja dengan file CSV</a></li>
+          <li><span class="nomor-subbab">7.3</span><a href="#subbab-3">Memahami dan membaca pesan error</a></li>
+          <li><span class="nomor-subbab">7.4</span><a href="#subbab-4">try, except, dan finally</a></li>
+          <li><span class="nomor-subbab">7.5</span><a href="#subbab-5">Menulis kode yang gagal dengan anggun</a></li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">7.1 Membaca dan Menulis File Teks</h2>
+
+        <p>
+          Hampir semua pekerjaan data dimulai dari file — entah itu file teks berisi log sistem, file CSV berisi data penjualan, atau file JSON dari API. Python punya cara yang sangat bersih untuk membuka, membaca, menulis, dan menutup file menggunakan fungsi bawaan <code>open()</code>.
+        </p>
+
+        <p>
+          Saat membuka file, kamu perlu menentukan <strong>mode</strong> — apakah file dibuka untuk dibaca, ditulis, atau ditambahi. Selain mode, penting juga menentukan <strong>encoding</strong> — cara karakter dikodekan dalam file. Untuk teks bahasa Indonesia yang mengandung karakter seperti "é", "ñ", atau bahkan emoji, selalu gunakan <code>encoding="utf-8"</code> untuk menghindari error karakter aneh.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Mode file yang paling sering dipakai:</span>
+<span class="cm"># "r"  → read   (baca, file harus ada)        ← default</span>
+<span class="cm"># "w"  → write  (tulis, buat baru / timpa lama)</span>
+<span class="cm"># "a"  → append (tambah ke akhir file yang ada)</span>
+<span class="cm"># "r+" → read+write (baca dan tulis)</span>
+
+<span class="cm"># Cara lama — harus ingat menutup file sendiri</span>
+f = <span class="fn">open</span>(<span class="st">"catatan.txt"</span>, <span class="st">"r"</span>, encoding=<span class="st">"utf-8"</span>)
+isi = f.<span class="fn">read</span>()
+f.<span class="fn">close</span>()   <span class="cm"># mudah terlupakan → file bisa bocor (resource leak)</span>
+
+<span class="cm"># Cara modern — pakai 'with' statement (context manager)</span>
+<span class="cm"># File OTOMATIS ditutup saat keluar dari blok 'with', bahkan kalau error</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"catatan.txt"</span>, <span class="st">"r"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    isi = f.<span class="fn">read</span>()   <span class="cm"># baca seluruh file sebagai satu string</span>
+<span class="fn">print</span>(isi)
+<span class="cm"># setelah blok with, f sudah ditutup secara otomatis</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Selalu Pakai with Statement</strong>
+            <p>Pernyataan <code>with open(...) as f:</code> adalah cara yang benar dan dianjurkan untuk membuka file di Python. Ia memastikan file selalu ditutup — bahkan jika terjadi error di dalam bloknya. Lupa menutup file bisa menyebabkan data tidak tersimpan dengan benar atau file terkunci sehingga program lain tidak bisa mengaksesnya. Jadikan ini kebiasaan dari awal.</p>
+          </div>
+        </div>
+
+        <h3>Tiga Cara Membaca File Teks</h3>
+
+        <p>
+          Ada tiga metode untuk membaca isi file, masing-masing cocok untuk situasi yang berbeda. <code>read()</code> membaca seluruh file sekaligus sebagai satu string — cocok untuk file kecil. <code>readlines()</code> membaca seluruh file dan mengembalikan list dimana setiap elemen adalah satu baris. <code>readline()</code> membaca satu baris saja setiap kali dipanggil. Untuk file yang sangat besar, cara paling hemat memori adalah mengiterasi file langsung dengan <code>for</code>:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Buat file contoh dulu untuk demo</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.txt"</span>, <span class="st">"w"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="st">"Andi,85\n"</span>)
+    f.<span class="fn">write</span>(<span class="st">"Budi,92\n"</span>)
+    f.<span class="fn">write</span>(<span class="st">"Citra,78\n"</span>)
+    f.<span class="fn">write</span>(<span class="st">"Dian,95\n"</span>)
+
+<span class="cm"># 1. read() — seluruh isi sebagai satu string</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.txt"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    isi = f.<span class="fn">read</span>()
+<span class="fn">print</span>(<span class="fn">repr</span>(isi))
+<span class="cm"># → 'Andi,85\nBudi,92\nCitra,78\nDian,95\n'</span>
+
+<span class="cm"># 2. readlines() — list per baris</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.txt"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    baris_baris = f.<span class="fn">readlines</span>()
+<span class="fn">print</span>(baris_baris)
+<span class="cm"># → ['Andi,85\n', 'Budi,92\n', 'Citra,78\n', 'Dian,95\n']</span>
+
+<span class="cm"># 3. Iterasi langsung — paling hemat memori, cocok file besar</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.txt"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> baris <span class="kw">in</span> f:
+        baris = baris.<span class="fn">strip</span>()   <span class="cm"># hapus \n di akhir</span>
+        nama, nilai = baris.<span class="fn">split</span>(<span class="st">","</span>)
+        <span class="fn">print</span>(<span class="st">f"{nama}: {nilai}"</span>)</code></pre>
+        </div>
+
+        <h3>Menulis dan Menambah Konten ke File</h3>
+
+        <p>
+          Mode <code>"w"</code> membuat file baru atau <strong>menimpa</strong> isi file yang sudah ada — hati-hati dengan ini. Mode <code>"a"</code> menambahkan konten ke akhir file yang ada tanpa menghapus isinya, cocok untuk menulis log atau mencatat hasil eksperimen secara bertahap. Untuk menulis banyak baris sekaligus, gunakan <code>writelines()</code> atau gabungkan dengan <code>join()</code>:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Menulis — mode "w" timpa file lama</span>
+hasil_eksperimen = [
+    <span class="st">"Eksperimen 1: lr=0.001, akurasi=0.82\n"</span>,
+    <span class="st">"Eksperimen 2: lr=0.01,  akurasi=0.87\n"</span>,
+    <span class="st">"Eksperimen 3: lr=0.0001, akurasi=0.79\n"</span>,
+]
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"log_eksperimen.txt"</span>, <span class="st">"w"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">writelines</span>(hasil_eksperimen)
+
+<span class="cm"># Menambah — mode "a" tambah ke akhir, tidak timpa</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"log_eksperimen.txt"</span>, <span class="st">"a"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="st">"Eksperimen 4: lr=0.005, akurasi=0.89\n"</span>)
+
+<span class="cm"># Menulis dengan f-string — cara yang paling sering dipakai</span>
+<span class="kw">import</span> datetime
+waktu = datetime.datetime.<span class="fn">now</span>().<span class="fn">strftime</span>(<span class="st">"%Y-%m-%d %H:%M:%S"</span>)
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"log_pelatihan.txt"</span>, <span class="st">"a"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="st">f"[{waktu}] epoch=50, loss=0.0234, val_acc=0.912\n"</span>)
+
+<span class="fn">print</span>(<span class="st">"Log tersimpan!"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Mode "w" Menghapus File Lama Tanpa Peringatan</strong>
+            <p>Membuka file dengan mode <code>"w"</code> langsung mengosongkan isi file tersebut, bahkan sebelum kamu menulis apapun. Tidak ada dialog konfirmasi, tidak ada tong sampah — data langsung hilang. Kalau niatmu menambah konten ke file yang sudah ada, gunakan mode <code>"a"</code>. Kalau memang ingin membuat file baru tapi file sudah ada, pertimbangkan untuk cek dulu dengan <code>os.path.exists()</code> sebelum menulis.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">7.2 Bekerja dengan File CSV</h2>
+
+        <p>
+          CSV *(Comma-Separated Values)* adalah format file yang paling umum untuk data terstruktur — hampir semua dataset yang kamu unduh dari Kaggle, pemerintah, atau portal data publik tersedia dalam format ini. Setiap baris adalah satu rekaman data, dan setiap kolom dipisahkan oleh koma (atau karakter pemisah lain seperti titik koma atau tab).
+        </p>
+
+        <p>
+          Python punya modul bawaan bernama <code>csv</code> yang sudah menangani semua kerumitan format CSV — termasuk nilai yang mengandung koma di dalamnya, tanda kutip, dan baris kosong. Di bab-bab selanjutnya kamu akan memakai Pandas yang jauh lebih canggih untuk pekerjaan data serius, tapi memahami modul <code>csv</code> bawaan tetap penting karena ia tersedia di semua lingkungan tanpa perlu instalasi.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">import</span> csv
+
+<span class="cm"># Buat file CSV contoh dulu</span>
+header = [<span class="st">"nama"</span>, <span class="st">"nilai"</span>, <span class="st">"kelas"</span>]
+data   = [
+    [<span class="st">"Andi"</span>,    <span class="nm">85</span>, <span class="st">"XII-A"</span>],
+    [<span class="st">"Budi"</span>,    <span class="nm">92</span>, <span class="st">"XII-A"</span>],
+    [<span class="st">"Citra"</span>,   <span class="nm">78</span>, <span class="st">"XII-B"</span>],
+    [<span class="st">"Dian"</span>,    <span class="nm">95</span>, <span class="st">"XII-B"</span>],
+    [<span class="st">"Evan"</span>,    <span class="nm">88</span>, <span class="st">"XII-A"</span>],
+]
+
+<span class="cm"># Menulis file CSV</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.csv"</span>, <span class="st">"w"</span>, newline=<span class="st">""</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    penulis = csv.<span class="fn">writer</span>(f)
+    penulis.<span class="fn">writerow</span>(header)   <span class="cm"># tulis baris header</span>
+    penulis.<span class="fn">writerows</span>(data)    <span class="cm"># tulis semua baris data sekaligus</span>
+
+<span class="fn">print</span>(<span class="st">"File siswa.csv berhasil dibuat!"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>newline="" Saat Menulis CSV di Windows</strong>
+            <p>Saat membuka file untuk menulis CSV, selalu tambahkan argumen <code>newline=""</code>. Ini mencegah modul <code>csv</code> dan Python menambahkan karakter baris baru yang berbeda secara bersamaan, yang akan menghasilkan baris kosong ekstra di antara setiap baris data di file (khususnya di Windows). Ini quirk kecil Python yang kalau dilewatkan bisa bikin bingung saat file dibuka di Excel.</p>
+          </div>
+        </div>
+
+        <h3>Membaca CSV sebagai List dan Dictionary</h3>
+
+        <p>
+          Ada dua pembaca CSV utama yang perlu kamu tahu: <code>csv.reader</code> yang membaca setiap baris sebagai list biasa, dan <code>csv.DictReader</code> yang membaca setiap baris sebagai dictionary dengan kunci dari baris header. Untuk data dengan banyak kolom, <code>DictReader</code> jauh lebih nyaman karena kamu bisa mengakses kolom berdasarkan namanya, bukan posisi angkanya:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Membaca CSV sebagai list — csv.reader</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.csv"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    pembaca = csv.<span class="fn">reader</span>(f)
+    header  = <span class="fn">next</span>(pembaca)   <span class="cm"># ambil baris pertama sebagai header</span>
+    <span class="fn">print</span>(<span class="st">f"Kolom: {header}"</span>)
+    <span class="kw">for</span> baris <span class="kw">in</span> pembaca:
+        <span class="fn">print</span>(baris)
+<span class="cm"># → Kolom: ['nama', 'nilai', 'kelas']</span>
+<span class="cm"># → ['Andi', '85', 'XII-A']</span>
+<span class="cm"># → ['Budi', '92', 'XII-A']  ← nilai adalah STRING, bukan int!</span>
+
+<span class="cm"># Membaca CSV sebagai dict — csv.DictReader (lebih nyaman)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"siswa.csv"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    pembaca = csv.<span class="fn">DictReader</span>(f)   <span class="cm"># header otomatis jadi kunci dict</span>
+    siswa_list = <span class="fn">list</span>(pembaca)
+
+<span class="cm"># Akses berdasarkan nama kolom, bukan indeks angka</span>
+<span class="kw">for</span> siswa <span class="kw">in</span> siswa_list:
+    nama  = siswa[<span class="st">"nama"</span>]
+    nilai = <span class="fn">int</span>(siswa[<span class="st">"nilai"</span>])   <span class="cm"># konversi dari string ke int</span>
+    kelas = siswa[<span class="st">"kelas"</span>]
+    <span class="fn">print</span>(<span class="st">f"{nama} ({kelas}): {nilai}"</span>)</code></pre>
+        </div>
+
+        <h3>Contoh Nyata: Analisis Data dari CSV</h3>
+
+        <p>
+          Setelah membaca data dari CSV, kamu bisa langsung memproses dan menganalisisnya dengan semua yang sudah kamu pelajari di bab-bab sebelumnya. Ini adalah alur kerja yang akan terus kamu ulangi sepanjang karir di data science — baca data, olah, hasilkan insight:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — analisis lengkap dari CSV</span>
+          </div>
+          <pre><code><span class="kw">import</span> csv
+
+<span class="kw">def</span> <span class="fn">analisis_nilai_siswa</span>(path_file):
+    <span class="st">"""Baca file CSV siswa dan hasilkan laporan ringkas."""</span>
+    <span class="kw">with</span> <span class="fn">open</span>(path_file, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+        data = <span class="fn">list</span>(csv.<span class="fn">DictReader</span>(f))
+
+    <span class="cm"># Konversi nilai ke integer</span>
+    <span class="kw">for</span> baris <span class="kw">in</span> data:
+        baris[<span class="st">"nilai"</span>] = <span class="fn">int</span>(baris[<span class="st">"nilai"</span>])
+
+    semua_nilai = [b[<span class="st">"nilai"</span>] <span class="kw">for</span> b <span class="kw">in</span> data]
+
+    <span class="cm"># Hitung statistik</span>
+    rata    = <span class="fn">sum</span>(semua_nilai) / <span class="fn">len</span>(semua_nilai)
+    tertinggi = <span class="fn">max</span>(semua_nilai)
+    terendah  = <span class="fn">min</span>(semua_nilai)
+    lulus     = [b <span class="kw">for</span> b <span class="kw">in</span> data <span class="kw">if</span> b[<span class="st">"nilai"</span>] <span class="op">&gt;=</span> <span class="nm">75</span>]
+
+    <span class="cm"># Kelompokkan per kelas</span>
+    per_kelas = {}
+    <span class="kw">for</span> b <span class="kw">in</span> data:
+        k = b[<span class="st">"kelas"</span>]
+        <span class="kw">if</span> k <span class="kw">not</span> <span class="kw">in</span> per_kelas:
+            per_kelas[k] = []
+        per_kelas[k].append(b[<span class="st">"nilai"</span>])
+
+    <span class="cm"># Cetak laporan</span>
+    <span class="fn">print</span>(<span class="st">"=== Laporan Nilai Siswa ==="</span>)
+    <span class="fn">print</span>(<span class="st">f"Total siswa  : {len(data)}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Rata-rata    : {rata:.1f}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Tertinggi    : {tertinggi}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Terendah     : {terendah}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Lulus (≥75)  : {len(lulus)} dari {len(data)}"</span>)
+    <span class="fn">print</span>()
+    <span class="fn">print</span>(<span class="st">"Rata-rata per kelas:"</span>)
+    <span class="kw">for</span> kelas, nilai_kelas <span class="kw">in</span> <span class="fn">sorted</span>(per_kelas.items()):
+        r = <span class="fn">sum</span>(nilai_kelas) / <span class="fn">len</span>(nilai_kelas)
+        <span class="fn">print</span>(<span class="st">f"  {kelas}: {r:.1f}"</span>)
+
+<span class="fn">analisis_nilai_siswa</span>(<span class="st">"siswa.csv"</span>)</code></pre>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">7.3 Memahami dan Membaca Pesan Error</h2>
+
+        <p>
+          Error adalah bagian normal dari pemrograman — bukan tanda bahwa kamu tidak berbakat. Bahkan programmer paling berpengalaman pun menghabiskan banyak waktu membaca pesan error. Yang membedakan pemula dan yang sudah berpengalaman bukan frekuensi error, melainkan kecepatan membacanya dan kemampuan menemukan penyebabnya.
+        </p>
+
+        <p>
+          Saat program Python berhenti karena kesalahan, ia mencetak <strong>traceback</strong> — jejak perjalanan error dari titik awal pemanggilan sampai baris yang sebenarnya bermasalah. Membaca traceback dari <strong>bawah ke atas</strong> adalah kuncinya: baris paling bawah adalah masalah yang sebenarnya, baris-baris di atasnya adalah konteks pemanggilan yang mengantarkan ke sana.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — contoh traceback</span>
+          </div>
+          <pre><code><span class="cm"># Contoh kode yang menghasilkan error</span>
+<span class="kw">def</span> <span class="fn">bagi</span>(a, b):
+    <span class="kw">return</span> a / b
+
+<span class="kw">def</span> <span class="fn">hitung_rata</span>(nilai_list):
+    total = <span class="fn">sum</span>(nilai_list)
+    n     = <span class="fn">len</span>(nilai_list)
+    <span class="kw">return</span> <span class="fn">bagi</span>(total, n)   <span class="cm"># memanggil bagi()</span>
+
+<span class="fn">hitung_rata</span>([])   <span class="cm"># list kosong → n = 0 → error!</span>
+
+<span class="cm"># Error yang muncul di konsol:</span>
+<span class="cm"># Traceback (most recent call last):</span>
+<span class="cm">#   File "belajar.py", line 9, in &lt;module&gt;</span>
+<span class="cm">#     hitung_rata([])                   ← titik panggilan pertama</span>
+<span class="cm">#   File "belajar.py", line 7, in hitung_rata</span>
+<span class="cm">#     return bagi(total, n)             ← lanjut ke sini</span>
+<span class="cm">#   File "belajar.py", line 2, in bagi</span>
+<span class="cm">#     return a / b                      ← INI yang bermasalah</span>
+<span class="cm"># ZeroDivisionError: division by zero   ← nama + pesan error</span>
+<span class="cm">#                                          ↑ baca dari sini dulu!</span></code></pre>
+        </div>
+
+        <h3>Jenis Error yang Paling Sering Ditemui</h3>
+
+        <p>
+          Python punya sistem hirarki error yang sangat terorganisir. Setiap jenis error punya nama yang deskriptif — begitu kamu melihat nama errornya, kamu sudah punya gambaran tentang apa yang salah. Berikut error yang hampir pasti kamu temui berulang kali:
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Error</th>
+                <th>Artinya</th>
+                <th>Contoh Penyebab</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>SyntaxError</code></td>
+                <td>Kode tidak terbaca karena penulisan salah</td>
+                <td>Lupa titik dua setelah <code>if</code>, tanda kurung tidak tutup</td>
+              </tr>
+              <tr>
+                <td><code>NameError</code></td>
+                <td>Variabel atau fungsi belum pernah didefinisikan</td>
+                <td>Typo nama variabel, pakai variabel sebelum dibuat</td>
+              </tr>
+              <tr>
+                <td><code>TypeError</code></td>
+                <td>Tipe data tidak cocok untuk operasi yang diminta</td>
+                <td><code>"3" + 5</code>, memanggil string sebagai fungsi</td>
+              </tr>
+              <tr>
+                <td><code>ValueError</code></td>
+                <td>Tipe benar tapi nilai tidak masuk akal</td>
+                <td><code>int("halo")</code>, <code>int("")</code></td>
+              </tr>
+              <tr>
+                <td><code>IndexError</code></td>
+                <td>Indeks list di luar jangkauan</td>
+                <td><code>list[10]</code> padahal list hanya punya 5 elemen</td>
+              </tr>
+              <tr>
+                <td><code>KeyError</code></td>
+                <td>Kunci tidak ada di dictionary</td>
+                <td><code>dict["kunci_salah"]</code></td>
+              </tr>
+              <tr>
+                <td><code>FileNotFoundError</code></td>
+                <td>File atau direktori tidak ditemukan</td>
+                <td><code>open("data.csv")</code> padahal file tidak ada</td>
+              </tr>
+              <tr>
+                <td><code>ZeroDivisionError</code></td>
+                <td>Pembagian dengan nol</td>
+                <td><code>10 / 0</code>, atau <code>n</code> yang ternyata 0</td>
+              </tr>
+              <tr>
+                <td><code>AttributeError</code></td>
+                <td>Objek tidak punya atribut atau metode yang dipanggil</td>
+                <td><code>None.split()</code>, typo nama metode</td>
+              </tr>
+              <tr>
+                <td><code>ImportError</code></td>
+                <td>Modul tidak bisa diimpor</td>
+                <td>Typo nama modul, modul belum terinstal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Cara Tercepat Mengatasi Error</strong>
+            <p>Baca nama error dan pesannya terlebih dahulu — seringkali itu sudah cukup. Kalau masih bingung, salin teks errornya (nama error + pesan singkat) dan cari di Google atau tanyakan ke model bahasa besar. Komunitas Stack Overflow hampir pasti sudah menjawab error Python yang kamu temui, karena Python sudah dipakai jutaan orang selama puluhan tahun.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">7.4 try, except, dan finally</h2>
+
+        <p>
+          Mengetahui jenis-jenis error sudah bagus — tapi lebih bagus lagi kalau programmu bisa menanganinya sendiri tanpa berhenti. Inilah tujuan penanganan pengecualian *(exception handling)* menggunakan blok <code>try-except</code>. Kamu menaruh kode yang mungkin gagal di dalam blok <code>try</code>, dan menentukan apa yang harus dilakukan kalau error terjadi di dalam blok <code>except</code>.
+        </p>
+
+        <p>
+          Filosofi yang perlu kamu pegang: gunakan <code>try-except</code> untuk menangani error yang <em>bisa kamu antisipasi dan pulihkan</em> — bukan untuk menyembunyikan semua error. Blok <code>except</code> yang kosong atau yang menangkap <code>Exception</code> terlalu luas bisa menyembunyikan bug nyata dan membuat debugging menjadi mimpi buruk.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Struktur dasar try-except</span>
+<span class="kw">try</span>:
+    angka = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Masukkan angka: "</span>))
+    hasil = <span class="nm">100</span> / angka
+    <span class="fn">print</span>(<span class="st">f"100 / {angka} = {hasil}"</span>)
+<span class="kw">except</span> ValueError:
+    <span class="fn">print</span>(<span class="st">"Itu bukan angka. Masukkan bilangan bulat."</span>)
+<span class="kw">except</span> ZeroDivisionError:
+    <span class="fn">print</span>(<span class="st">"Tidak bisa dibagi dengan nol."</span>)
+
+<span class="cm"># Menangkap beberapa error sekaligus dalam satu except</span>
+<span class="kw">try</span>:
+    nilai = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Nilai: "</span>))
+<span class="kw">except</span> (ValueError, OverflowError) <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="st">f"Input tidak valid: {e}"</span>)
+
+<span class="cm"># Blok 'else' — dijalankan jika TIDAK ada error</span>
+<span class="kw">try</span>:
+    f = <span class="fn">open</span>(<span class="st">"data.txt"</span>, encoding=<span class="st">"utf-8"</span>)
+<span class="kw">except</span> FileNotFoundError:
+    <span class="fn">print</span>(<span class="st">"File tidak ditemukan."</span>)
+<span class="kw">else</span>:
+    isi = f.<span class="fn">read</span>()    <span class="cm"># hanya jalan kalau open() berhasil</span>
+    f.<span class="fn">close</span>()
+    <span class="fn">print</span>(<span class="st">f"Berhasil membaca {len(isi)} karakter."</span>)</code></pre>
+        </div>
+
+        <h3>finally — Selalu Dijalankan</h3>
+
+        <p>
+          Blok <code>finally</code> dijalankan <em>selalu</em> — baik ada error maupun tidak. Ini berguna untuk kode pembersihan *(cleanup)* yang harus berjalan apapun yang terjadi, seperti menutup file, menutup koneksi database, atau melepaskan sumber daya lain. Dalam praktiknya, blok <code>with</code> yang sudah kamu pelajari menangani ini secara otomatis untuk file, tapi <code>finally</code> penting untuk sumber daya lain:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># finally dijalankan SELALU — cocok untuk cleanup</span>
+<span class="kw">def</span> <span class="fn">proses_file</span>(path):
+    f = <span class="kw">None</span>
+    <span class="kw">try</span>:
+        f = <span class="fn">open</span>(path, encoding=<span class="st">"utf-8"</span>)
+        data = f.<span class="fn">read</span>()
+        <span class="fn">print</span>(<span class="st">f"Berhasil: {len(data)} karakter dibaca"</span>)
+        <span class="kw">return</span> data
+    <span class="kw">except</span> FileNotFoundError:
+        <span class="fn">print</span>(<span class="st">f"Error: file '{path}' tidak ditemukan"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">except</span> PermissionError:
+        <span class="fn">print</span>(<span class="st">f"Error: tidak ada izin membaca '{path}'"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">finally</span>:
+        <span class="kw">if</span> f <span class="kw">is not</span> <span class="kw">None</span>:
+            f.<span class="fn">close</span>()   <span class="cm"># selalu tutup file, apapun yang terjadi</span>
+        <span class="fn">print</span>(<span class="st">"Blok finally: pembersihan selesai."</span>)
+
+<span class="fn">proses_file</span>(<span class="st">"ada.txt"</span>)     <span class="cm"># akan cetak "finally" meski berhasil</span>
+<span class="fn">proses_file</span>(<span class="st">"tidak_ada.txt"</span>)  <span class="cm"># akan cetak "finally" meski error</span></code></pre>
+        </div>
+
+        <h3>Mengangkat Error Sendiri dengan raise</h3>
+
+        <p>
+          Kamu juga bisa sengaja memunculkan error menggunakan <code>raise</code> — berguna untuk memvalidasi input di fungsi dan memberikan pesan error yang informatif kepada pengguna fungsimu. Ini jauh lebih baik daripada membiarkan error membingungkan muncul di tempat yang tidak terduga:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="fn">normalisasi</span>(data, min_val, max_val):
+    <span class="st">"""Normalisasi list angka ke rentang 0–1."""</span>
+    <span class="kw">if</span> <span class="kw">not</span> data:
+        <span class="kw">raise</span> ValueError(<span class="st">"Data tidak boleh kosong"</span>)
+    <span class="kw">if</span> min_val <span class="op">&gt;=</span> max_val:
+        <span class="kw">raise</span> ValueError(<span class="st">f"min_val ({min_val}) harus lebih kecil dari max_val ({max_val})"</span>)
+    rentang = max_val <span class="op">-</span> min_val
+    <span class="kw">return</span> [(x <span class="op">-</span> min_val) / rentang <span class="kw">for</span> x <span class="kw">in</span> data]
+
+<span class="cm"># Penggunaan normal</span>
+<span class="fn">print</span>(<span class="fn">normalisasi</span>([<span class="nm">20</span>, <span class="nm">50</span>, <span class="nm">80</span>], <span class="nm">0</span>, <span class="nm">100</span>))
+<span class="cm"># → [0.2, 0.5, 0.8]</span>
+
+<span class="cm"># Tangkap error yang kita sendiri angkat</span>
+<span class="kw">try</span>:
+    <span class="fn">normalisasi</span>([], <span class="nm">0</span>, <span class="nm">100</span>)
+<span class="kw">except</span> ValueError <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="st">f"Error validasi: {e}"</span>)
+<span class="cm"># → Error validasi: Data tidak boleh kosong</span>
+
+<span class="kw">try</span>:
+    <span class="fn">normalisasi</span>([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>], <span class="nm">100</span>, <span class="nm">0</span>)
+<span class="kw">except</span> ValueError <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="st">f"Error validasi: {e}"</span>)
+<span class="cm"># → Error validasi: min_val (100) harus lebih kecil dari max_val (0)</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">7.5 Menulis Kode yang Gagal dengan Anggun</h2>
+
+        <p>
+          "Gagal dengan anggun" *(fail gracefully)* adalah prinsip penting dalam rekayasa perangkat lunak: ketika sesuatu tidak berjalan sesuai rencana, program harus memberikan informasi yang berguna, membersihkan sumber daya, dan jika memungkinkan, melanjutkan bekerja dengan cara yang masuk akal — bukan langsung crash dan meninggalkan pengguna bingung.
+        </p>
+
+        <p>
+          Dalam konteks kecerdasan buatan dan data science, ini sangat relevan: kamu sering memproses ratusan atau ribuan file dan tidak ingin satu file yang rusak menghentikan seluruh proses. Kamu ingin program bisa melewati file bermasalah, mencatatnya, dan terus memproses sisanya.
+        </p>
+
+        <h3>Pola: Memproses Banyak File dengan Tangguh</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">import</span> csv
+<span class="kw">import</span> os
+
+<span class="kw">def</span> <span class="fn">baca_satu_csv</span>(path):
+    <span class="st">"""Baca satu file CSV, kembalikan list of dict atau None jika gagal."""</span>
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(path, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+            <span class="kw">return</span> <span class="fn">list</span>(csv.<span class="fn">DictReader</span>(f))
+    <span class="kw">except</span> FileNotFoundError:
+        <span class="fn">print</span>(<span class="st">f"  [LEWATI] File tidak ditemukan: {path}"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">except</span> PermissionError:
+        <span class="fn">print</span>(<span class="st">f"  [LEWATI] Tidak ada izin baca: {path}"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">except</span> UnicodeDecodeError:
+        <span class="fn">print</span>(<span class="st">f"  [LEWATI] Encoding tidak sesuai: {path}"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">proses_semua_csv</span>(daftar_path):
+    <span class="st">"""Proses semua file CSV, laporkan yang gagal."""</span>
+    berhasil = <span class="nm">0</span>
+    gagal    = <span class="nm">0</span>
+    semua_data = []
+
+    <span class="fn">print</span>(<span class="st">f"Memproses {len(daftar_path)} file..."</span>)
+    <span class="kw">for</span> path <span class="kw">in</span> daftar_path:
+        data = <span class="fn">baca_satu_csv</span>(path)
+        <span class="kw">if</span> data <span class="kw">is not</span> <span class="kw">None</span>:
+            semua_data.extend(data)
+            berhasil <span class="op">+=</span> <span class="nm">1</span>
+        <span class="kw">else</span>:
+            gagal <span class="op">+=</span> <span class="nm">1</span>
+
+    <span class="fn">print</span>(<span class="st">f"\nSelesai: {berhasil} berhasil, {gagal} gagal."</span>)
+    <span class="fn">print</span>(<span class="st">f"Total baris data terkumpul: {len(semua_data)}"</span>)
+    <span class="kw">return</span> semua_data
+
+<span class="cm"># Simulasi pemrosesan — dua ada, satu tidak ada</span>
+file_list = [<span class="st">"siswa.csv"</span>, <span class="st">"guru.csv"</span>, <span class="st">"nilai_tidak_ada.csv"</span>]
+semua = <span class="fn">proses_semua_csv</span>(file_list)</code></pre>
+        </div>
+
+        <h3>Pola: Mencatat Error ke File Log</h3>
+
+        <p>
+          Dalam program produksi, error tidak boleh hanya dicetak ke layar — harus dicatat ke file log agar bisa ditelusuri nanti. Ini adalah praktik standar di industri. Modul <code>logging</code> bawaan Python adalah cara yang benar untuk ini, tapi untuk memulai, menulis ke file teks sudah cukup untuk belajar:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="kw">import</span> datetime
+
+<span class="kw">def</span> <span class="fn">catat_log</span>(level, pesan, path_log=<span class="st">"app.log"</span>):
+    <span class="st">"""Catat pesan log ke file dengan timestamp."""</span>
+    waktu = datetime.datetime.<span class="fn">now</span>().<span class="fn">strftime</span>(<span class="st">"%Y-%m-%d %H:%M:%S"</span>)
+    baris = <span class="st">f"[{waktu}] [{level.upper():8}] {pesan}\n"</span>
+    <span class="kw">with</span> <span class="fn">open</span>(path_log, <span class="st">"a"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+        f.<span class="fn">write</span>(baris)
+    <span class="fn">print</span>(baris, end=<span class="st">""</span>)   <span class="cm"># cetak ke layar sekaligus</span>
+
+<span class="kw">def</span> <span class="fn">muat_konfigurasi</span>(path):
+    <span class="st">"""Muat konfigurasi dari file, gunakan default jika gagal."""</span>
+    default = {<span class="st">"lr"</span>: <span class="nm">0.001</span>, <span class="st">"batch_size"</span>: <span class="nm">32</span>, <span class="st">"epochs"</span>: <span class="nm">100</span>}
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(path, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+            <span class="kw">import</span> json
+            config = json.<span class="fn">load</span>(f)
+        <span class="fn">catat_log</span>(<span class="st">"info"</span>, <span class="st">f"Konfigurasi dimuat dari {path}"</span>)
+        <span class="kw">return</span> config
+    <span class="kw">except</span> FileNotFoundError:
+        <span class="fn">catat_log</span>(<span class="st">"warning"</span>, <span class="st">f"File konfigurasi '{path}' tidak ditemukan. Pakai default."</span>)
+        <span class="kw">return</span> default
+    <span class="kw">except</span> json.JSONDecodeError <span class="kw">as</span> e:
+        <span class="fn">catat_log</span>(<span class="st">"error"</span>, <span class="st">f"File konfigurasi '{path}' rusak: {e}. Pakai default."</span>)
+        <span class="kw">return</span> default
+
+config = <span class="fn">muat_konfigurasi</span>(<span class="st">"config.json"</span>)
+<span class="fn">print</span>(<span class="st">f"\nKonfigurasi aktif: {config}"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Jangan Tangkap Exception Terlalu Luas</strong>
+            <p>Menulis <code>except Exception:</code> atau <code>except:</code> tanpa nama error adalah kebiasaan buruk — ia menyembunyikan semua jenis error, termasuk bug nyata yang seharusnya diperbaiki. Tangkap hanya error yang kamu tahu cara menanganinya dan tangkap sekecil mungkin. Kalau kamu tidak yakin error apa yang mungkin muncul, biarkan error itu muncul dulu, baca, baru tambahkan penanganannya.</p>
+          </div>
+        </div>
+
+        <h3>Pola Lengkap: Memproses CSV dengan Validasi Penuh</h3>
+
+        <p>
+          Mari gabungkan semua yang sudah kamu pelajari di bab ini — membaca file, menangani error, dan logging — menjadi satu fungsi yang benar-benar siap pakai di proyek nyata:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — pola siap pakai</span>
+          </div>
+          <pre><code><span class="kw">import</span> csv
+
+<span class="kw">def</span> <span class="fn">muat_data_nilai</span>(path_csv, kolom_nilai=<span class="st">"nilai"</span>):
+    <span class="st">"""
+    Muat data nilai dari CSV dengan validasi dan penanganan error lengkap.
+
+    Parameter:
+        path_csv    (str)  : path ke file CSV
+        kolom_nilai (str)  : nama kolom nilai numerik
+
+    Kembalian:
+        tuple: (list_data_valid, jumlah_dilewati) atau (None, 0) jika file gagal dimuat
+    """</span>
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(path_csv, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+            baris_mentah = <span class="fn">list</span>(csv.<span class="fn">DictReader</span>(f))
+    <span class="kw">except</span> FileNotFoundError:
+        <span class="fn">print</span>(<span class="st">f"[ERROR] File tidak ditemukan: {path_csv}"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>, <span class="nm">0</span>
+
+    data_valid   = []
+    dilewati     = <span class="nm">0</span>
+    pesan_error  = []
+
+    <span class="kw">for</span> i, baris <span class="kw">in</span> <span class="fn">enumerate</span>(baris_mentah, start=<span class="nm">2</span>):  <span class="cm"># mulai dari 2 (baris 1 = header)</span>
+        <span class="kw">if</span> kolom_nilai <span class="kw">not</span> <span class="kw">in</span> baris:
+            pesan_error.append(<span class="st">f"  Baris {i}: kolom '{kolom_nilai}' tidak ada"</span>)
+            dilewati <span class="op">+=</span> <span class="nm">1</span>
+            <span class="kw">continue</span>
+        <span class="kw">try</span>:
+            baris[kolom_nilai] = <span class="fn">float</span>(baris[kolom_nilai])
+            data_valid.append(baris)
+        <span class="kw">except</span> ValueError:
+            pesan_error.append(<span class="st">f"  Baris {i}: nilai '{baris[kolom_nilai]}' bukan angka"</span>)
+            dilewati <span class="op">+=</span> <span class="nm">1</span>
+
+    <span class="kw">if</span> pesan_error:
+        <span class="fn">print</span>(<span class="st">f"[WARNING] {dilewati} baris dilewati:"</span>)
+        <span class="kw">for</span> msg <span class="kw">in</span> pesan_error:
+            <span class="fn">print</span>(msg)
+
+    <span class="fn">print</span>(<span class="st">f"[OK] {len(data_valid)} baris valid dimuat dari {path_csv}"</span>)
+    <span class="kw">return</span> data_valid, dilewati
+
+<span class="cm"># Penggunaan</span>
+data, lewat = <span class="fn">muat_data_nilai</span>(<span class="st">"siswa.csv"</span>)
+<span class="kw">if</span> data:
+    nilai_list = [d[<span class="st">"nilai"</span>] <span class="kw">for</span> d <span class="kw">in</span> data]
+    <span class="fn">print</span>(<span class="st">f"Rata-rata nilai: {sum(nilai_list)/len(nilai_list):.1f}"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Menuju Bab 8: Pemrograman Berorientasi Objek</strong>
+            <p>Sejauh ini kamu sudah bisa menulis program Python yang fungsional — bekerja dengan data, file, dan menangani error. Di Bab 8 kamu akan belajar cara mengorganisir kode menjadi lebih terstruktur menggunakan kelas *(class)* dan objek. OOP *(object-oriented programming)* adalah paradigma yang akan kamu temui di hampir semua library ML besar, dari scikit-learn sampai PyTorch.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <a href="b01-bab-06.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 6: Fungsi</span>
+      </a>
+
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 7 / 15</div>
+          <div class="dot-progres">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span class="aktif"></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="b01-bab-08.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 8: Pemrograman Berorientasi Objek</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 7</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

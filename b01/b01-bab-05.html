@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alur Kendali Program — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+      --cyan:      #00C8FF;
+      --cyan-dim:  #00628090;
+      --green:     #00FF94;
+      --green-dim: #00804A50;
+      --amber:     #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:    #9D6FFF;
+      --purple-dim:#4B2A9040;
+      --red:       #FF5F6D;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri { display: flex; align-items: center; gap: 0.85rem; }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char { color: var(--green); font-weight: 600; margin-right: 0.2rem; }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif { color: var(--text-primary); font-weight: 500; }
+
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item { display: flex; align-items: center; gap: 0.4rem; }
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before { content: '//'; color: var(--cyan); font-size: 0.8rem; }
+
+    .daftar-subbab ol { list-style: none; padding: 0; display: grid; gap: 0.35rem; }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; padding: 0.2rem 0; }
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol { padding-left: 1.5rem; margin-bottom: 1.25rem; color: var(--text-secondary); font-size: 0.93rem; }
+    .konten ul { list-style: none; padding-left: 0; }
+    .konten ul li { padding-left: 1.25rem; position: relative; margin-bottom: 0.5rem; }
+    .konten ul li::before { content: '▸'; color: var(--cyan); position: absolute; left: 0; font-size: 0.7rem; top: 0.35rem; }
+    .konten ol li { margin-bottom: 0.5rem; }
+    .konten strong { color: var(--text-primary); font-weight: 600; }
+    .konten a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(0,200,255,0.3); transition: all 0.2s; }
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik { display: flex; gap: 0.4rem; }
+    .blok-kode-header .titik-titik span { width: 10px; height: 10px; border-radius: 50%; }
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre { padding: 1.25rem 1.5rem; overflow-x: auto; margin: 0; }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    .kartu-info, .kartu-peringatan, .kartu-tips, .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info      { background: rgba(0,200,255,0.05);   border: 1px solid rgba(0,200,255,0.2); }
+    .kartu-peringatan{ background: rgba(255,184,48,0.05);  border: 1px solid rgba(255,184,48,0.25); }
+    .kartu-tips      { background: rgba(0,255,148,0.05);   border: 1px solid rgba(0,255,148,0.2); }
+    .kartu-catatan   { background: rgba(157,111,255,0.06); border: 1px solid rgba(157,111,255,0.25); }
+
+    .kartu-ikon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .kartu-isi  { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--font-mono); }
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover { border-color: rgba(0,200,255,0.4); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+    .indikator-progres { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .nomor-bab-sekarang { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.08em; }
+    .dot-progres { display: flex; gap: 4px; }
+    .dot-progres span { width: 5px; height: 5px; border-radius: 50%; background: var(--border); }
+    .dot-progres span.aktif { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+
+    footer { border-top: 1px solid var(--border); background: var(--bg-base); padding: 2rem 0; }
+    footer .wadah { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-kiri { display: flex; align-items: center; gap: 0.75rem; }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .footer-kanan { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-muted); text-align: right; }
+    .footer-kanan a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+      .navigasi-bab .wadah { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+      .posisi-tengah { grid-column: 1 / -1; order: -1; }
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-05-alur-kendali-program</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian II — Python Dasar</span>
+          <span class="label-nomor-bab">Bab 5 / 15</span>
+        </div>
+        <h1 class="judul-bab">Alur Kendali Program<span class="aksen">.</span></h1>
+        <p class="deskripsi-bab">
+          Kode yang berjalan lurus dari atas ke bawah punya kemampuan yang sangat terbatas. Kekuatan pemrograman sejati muncul ketika program bisa mengambil keputusan dan mengulang pekerjaan ribuan kali tanpa lelah. Bab ini mengajarkan dua fondasi itu, ditambah satu fitur Python yang akan kamu pakai setiap hari dalam proyek data.
+        </p>
+        <div class="pita-info-bab">
+          <div class="info-item"><span>⏱</span><span class="info-val">~3 jam baca + latihan</span></div>
+          <div class="info-item"><span>📦</span><span class="info-val">Tidak ada library — Python murni</span></div>
+          <div class="info-item"><span>🔗</span><span class="info-val">Prasyarat: Bab 3 &amp; 4</span></div>
+        </div>
+      </div>
+
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li><span class="nomor-subbab">5.1</span><a href="#subbab-1">Percabangan: if, elif, else</a></li>
+          <li><span class="nomor-subbab">5.2</span><a href="#subbab-2">Perulangan: for loop</a></li>
+          <li><span class="nomor-subbab">5.3</span><a href="#subbab-3">Perulangan: while loop</a></li>
+          <li><span class="nomor-subbab">5.4</span><a href="#subbab-4">break, continue, dan pass</a></li>
+          <li><span class="nomor-subbab">5.5</span><a href="#subbab-5">Pemahaman daftar (list comprehension)</a></li>
+        </ol>
+      </div>
+
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">5.1 Percabangan: if, elif, else</h2>
+
+        <p>
+          Percabangan adalah kemampuan program untuk memilih jalan yang berbeda berdasarkan sebuah kondisi. Kalau kamu bayangkan kode sebagai petunjuk perjalanan, percabangan adalah bagian "jika lampu merah, berhenti; jika lampu hijau, jalan." Di Python, ini ditulis dengan kata kunci <code>if</code>, <code>elif</code> (singkatan dari "else if"), dan <code>else</code>.
+        </p>
+
+        <p>
+          Satu hal yang sangat penting di Python adalah <strong>indentasi</strong> — baris kode di dalam blok <code>if</code> harus menjorok ke dalam sebesar 4 spasi. Python menggunakan indentasi untuk menentukan blok kode, bukan kurung kurawal seperti bahasa lain. Ini berarti indentasi bukan soal estetika semata — ia adalah bagian dari sintaksis Python yang wajib benar.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Struktur dasar if-elif-else</span>
+nilai = <span class="nm">78</span>
+
+<span class="kw">if</span> nilai <span class="op">&gt;=</span> <span class="nm">90</span>:
+    <span class="fn">print</span>(<span class="st">"Grade: A"</span>)
+<span class="kw">elif</span> nilai <span class="op">&gt;=</span> <span class="nm">80</span>:
+    <span class="fn">print</span>(<span class="st">"Grade: B"</span>)
+<span class="kw">elif</span> nilai <span class="op">&gt;=</span> <span class="nm">70</span>:
+    <span class="fn">print</span>(<span class="st">"Grade: C"</span>)    <span class="cm"># ← ini yang tercetak</span>
+<span class="kw">elif</span> nilai <span class="op">&gt;=</span> <span class="nm">60</span>:
+    <span class="fn">print</span>(<span class="st">"Grade: D"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Grade: E — tidak lulus"</span>)
+
+<span class="cm"># Python memeriksa kondisi dari atas ke bawah</span>
+<span class="cm"># dan berhenti begitu menemukan satu yang True</span></code></pre>
+        </div>
+
+        <p>
+          Python memeriksa setiap kondisi secara berurutan dari atas. Begitu menemukan kondisi yang bernilai <code>True</code>, ia menjalankan blok kode yang sesuai lalu melompati semua <code>elif</code> dan <code>else</code> di bawahnya. Kalau tidak ada satu pun kondisi yang <code>True</code>, blok <code>else</code>-lah yang dijalankan. Blok <code>else</code> ini opsional — kamu tidak wajib menyertakannya.
+        </p>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Indentasi Salah = Program Error</strong>
+            <p>Di Python, indentasi yang salah akan menyebabkan <code>IndentationError</code> yang menghentikan program. Gunakan 4 spasi secara konsisten — bukan campuran Tab dan spasi. VS Code otomatis mengubah Tab menjadi 4 spasi untuk file Python, jadi kamu tidak perlu khawatir selama pakai editor yang benar.</p>
+          </div>
+        </div>
+
+        <h3>Kondisi Majemuk dan Kondisi Bersarang</h3>
+
+        <p>
+          Kondisi bisa diperkaya dengan menggabungkan operator logika <code>and</code>, <code>or</code>, dan <code>not</code>, atau dengan menaruh blok <code>if</code> di dalam blok <code>if</code> yang lain (bersarang). Dalam kode kecerdasan buatan, kamu sering menemui kondisi seperti "jika akurasi lebih dari 85% DAN jumlah data lebih dari 1000, maka model siap digunakan":
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Kondisi majemuk — lebih bersih dari bersarang</span>
+akurasi     = <span class="nm">0.87</span>
+jumlah_data = <span class="nm">1500</span>
+
+<span class="kw">if</span> akurasi <span class="op">&gt;=</span> <span class="nm">0.85</span> <span class="kw">and</span> jumlah_data <span class="op">&gt;=</span> <span class="nm">1000</span>:
+    <span class="fn">print</span>(<span class="st">"Model siap deploy: akurasi tinggi + data cukup"</span>)
+<span class="kw">elif</span> akurasi <span class="op">&gt;=</span> <span class="nm">0.85</span> <span class="kw">and</span> jumlah_data <span class="op">&lt;</span> <span class="nm">1000</span>:
+    <span class="fn">print</span>(<span class="st">"Akurasi bagus, tapi data masih kurang"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Model perlu ditingkatkan"</span>)
+
+<span class="cm"># Perbandingan berantai — idiom khas Python yang elegan</span>
+nilai = <span class="nm">75</span>
+<span class="kw">if</span> <span class="nm">60</span> <span class="op">&lt;=</span> nilai <span class="op">&lt;</span> <span class="nm">80</span>:
+    <span class="fn">print</span>(<span class="st">"Nilai berada di rentang C"</span>)  <span class="cm"># ← tercetak</span></code></pre>
+        </div>
+
+        <h3>Ekspresi Kondisional Satu Baris</h3>
+
+        <p>
+          Python punya cara singkat menulis <code>if-else</code> sederhana dalam satu baris, sering disebut operator ternary. Sintaksinya: <code>nilai_jika_true if kondisi else nilai_jika_false</code>. Ini sangat berguna untuk penugasan nilai yang bergantung pada kondisi sederhana, dan sangat sering muncul dalam kode preprocessing data:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Penugasan kondisional satu baris</span>
+nilai  = <span class="nm">75</span>
+status = <span class="st">"lulus"</span> <span class="kw">if</span> nilai <span class="op">&gt;=</span> <span class="nm">60</span> <span class="kw">else</span> <span class="st">"tidak lulus"</span>
+<span class="fn">print</span>(<span class="st">f"Status: {status}"</span>)  <span class="cm"># → Status: lulus</span>
+
+<span class="cm"># Membuat label dari probabilitas prediksi model</span>
+prob  = <span class="nm">0.73</span>
+label = <span class="st">"positif"</span> <span class="kw">if</span> prob <span class="op">&gt;=</span> <span class="nm">0.5</span> <span class="kw">else</span> <span class="st">"negatif"</span>
+<span class="fn">print</span>(<span class="st">f"Prediksi: {label}"</span>)   <span class="cm"># → Prediksi: positif</span>
+
+<span class="cm"># Bisa langsung di dalam f-string</span>
+stok = <span class="nm">0</span>
+<span class="fn">print</span>(<span class="st">f"Stok: {'tersedia' if stok > 0 else 'habis'}"</span>)
+<span class="cm"># → Stok: habis</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">5.2 Perulangan: for Loop</h2>
+
+        <p>
+          Bayangkan kamu punya dataset dengan 10.000 baris dan perlu memproses setiap barisnya. Tanpa perulangan, kamu harus menulis 10.000 baris kode yang hampir identik — jelas tidak masuk akal. <code>for</code> loop memungkinkan kamu menjalankan blok kode yang sama untuk setiap elemen dalam sebuah koleksi: list, tuple, string, dictionary, atau objek yang bisa diiterasi lainnya.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Iterasi atas list</span>
+kota = [<span class="st">"Jakarta"</span>, <span class="st">"Bandung"</span>, <span class="st">"Surabaya"</span>, <span class="st">"Medan"</span>]
+<span class="kw">for</span> nama_kota <span class="kw">in</span> kota:
+    <span class="fn">print</span>(<span class="st">f"Kota: {nama_kota}"</span>)
+
+<span class="cm"># Iterasi atas string — setiap karakter</span>
+<span class="kw">for</span> huruf <span class="kw">in</span> <span class="st">"Python"</span>:
+    <span class="fn">print</span>(huruf, end=<span class="st">" "</span>)
+<span class="cm"># → P y t h o n</span>
+
+<span class="cm"># Iterasi atas dictionary dengan .items()</span>
+config = {<span class="st">"lr"</span>: <span class="nm">0.001</span>, <span class="st">"batch"</span>: <span class="nm">32</span>, <span class="st">"epoch"</span>: <span class="nm">50</span>}
+<span class="kw">for</span> kunci, nilai <span class="kw">in</span> config.items():
+    <span class="fn">print</span>(<span class="st">f"  {kunci} = {nilai}"</span>)</code></pre>
+        </div>
+
+        <h3>Fungsi range() untuk Perulangan Angka</h3>
+
+        <p>
+          Sangat sering kamu butuh melakukan sesuatu sebanyak N kali atau mengiterasi rentang angka tertentu. Fungsi <code>range()</code> menghasilkan urutan angka yang bisa langsung dipakai oleh <code>for</code>. Ada tiga bentuk penggunaannya: <code>range(stop)</code>, <code>range(start, stop)</code>, dan <code>range(start, stop, step)</code>. Penting diingat bahwa nilai <code>stop</code> tidak ikut masuk ke urutan — jadi <code>range(5)</code> menghasilkan 0, 1, 2, 3, 4 (bukan 5).
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># range(stop) — 0 sampai stop-1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):
+    <span class="fn">print</span>(i, end=<span class="st">" "</span>)
+<span class="cm"># → 0 1 2 3 4</span>
+
+<span class="cm"># range(start, stop)</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    <span class="fn">print</span>(i, end=<span class="st">" "</span>)
+<span class="cm"># → 1 2 3 4 5</span>
+
+<span class="cm"># range(start, stop, step) — dengan langkah</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">20</span>, <span class="nm">5</span>):
+    <span class="fn">print</span>(i, end=<span class="st">" "</span>)
+<span class="cm"># → 0 5 10 15</span>
+
+<span class="cm"># Mundur dengan step negatif</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>, <span class="nm">0</span>, <span class="op">-</span><span class="nm">2</span>):
+    <span class="fn">print</span>(i, end=<span class="st">" "</span>)
+<span class="cm"># → 10 8 6 4 2</span>
+
+<span class="cm"># Simulasi epoch pelatihan model</span>
+<span class="fn">print</span>(<span class="st">"\n--- Simulasi Pelatihan ---"</span>)
+<span class="kw">for</span> epoch <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    loss = <span class="nm">1.0</span> / epoch
+    <span class="fn">print</span>(<span class="st">f"Epoch {epoch}/5 — Loss: {loss:.4f}"</span>)
+<span class="cm"># → Epoch 1/5 — Loss: 1.0000</span>
+<span class="cm"># → Epoch 2/5 — Loss: 0.5000</span>
+<span class="cm"># → ... dan seterusnya</span></code></pre>
+        </div>
+
+        <h3>enumerate() dan zip() — Wajib Kamu Kuasai</h3>
+
+        <p>
+          Dua fungsi bawaan ini sangat sering muncul dalam kode Python profesional. <code>enumerate()</code> memberikan nomor indeks sekaligus nilainya saat iterasi — sangat berguna ketika kamu butuh tahu posisi elemen. <code>zip()</code> memungkinkan kamu mengiterasi dua atau lebih list secara bersamaan, elemen per elemen — sangat berguna saat kamu punya dua list yang berkorespondensi, seperti list nama model dan list akurasinya:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># enumerate() — indeks + nilai sekaligus</span>
+model_list = [<span class="st">"Regresi Logistik"</span>, <span class="st">"Random Forest"</span>, <span class="st">"XGBoost"</span>]
+
+<span class="kw">for</span> nomor, nama <span class="kw">in</span> <span class="fn">enumerate</span>(model_list, start=<span class="nm">1</span>):
+    <span class="fn">print</span>(<span class="st">f"{nomor}. {nama}"</span>)
+<span class="cm"># → 1. Regresi Logistik</span>
+<span class="cm"># → 2. Random Forest</span>
+<span class="cm"># → 3. XGBoost</span>
+
+<span class="cm"># zip() — iterasi dua list bersamaan</span>
+nama_model = [<span class="st">"Reg. Logistik"</span>, <span class="st">"Random Forest"</span>, <span class="st">"XGBoost"</span>]
+akurasi    = [<span class="nm">0.82</span>, <span class="nm">0.91</span>, <span class="nm">0.93</span>]
+
+<span class="kw">for</span> nama, skor <span class="kw">in</span> <span class="fn">zip</span>(nama_model, akurasi):
+    <span class="fn">print</span>(<span class="st">f"{nama:20} → {skor:.1%}"</span>)
+<span class="cm"># → Reg. Logistik        → 82.0%</span>
+<span class="cm"># → Random Forest        → 91.0%</span>
+<span class="cm"># → XGBoost              → 93.0%</span>
+
+<span class="cm"># Kombinasi enumerate + zip</span>
+fitur = [<span class="st">"usia"</span>, <span class="st">"gaji"</span>, <span class="st">"pendidikan"</span>]
+bobot = [<span class="nm">0.3</span>, <span class="nm">0.5</span>, <span class="nm">0.2</span>]
+<span class="kw">for</span> i, (f, b) <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="fn">zip</span>(fitur, bobot)):
+    <span class="fn">print</span>(<span class="st">f"Fitur [{i}] {f}: bobot = {b}"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Hindari range(len(list)) — Pakai enumerate()</strong>
+            <p>Pemula sering menulis <code>for i in range(len(daftar)):</code> lalu mengakses <code>daftar[i]</code>. Ini bekerja, tapi bukan cara idiomatik Python. Cara yang lebih bersih dan profesional adalah <code>for i, item in enumerate(daftar):</code>. Kode yang mengikuti gaya Python disebut "pythonic" dan lebih mudah dibaca oleh kolega di tim.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">5.3 Perulangan: while Loop</h2>
+
+        <p>
+          Sementara <code>for</code> mengiterasi atas koleksi yang sudah diketahui isinya, <code>while</code> terus berjalan <em>selama</em> sebuah kondisi bernilai <code>True</code> — tidak peduli sudah berapa iterasi. Kamu pakai <code>while</code> ketika kamu tidak tahu sebelumnya berapa kali perulangan perlu dilakukan.
+        </p>
+
+        <p>
+          Skenario paling umum untuk <code>while</code> di dunia kecerdasan buatan adalah pelatihan model konvergen: "terus latih sampai loss tidak turun signifikan lagi." Skenario lain termasuk membaca antrian data sampai kosong, atau meminta input ulang sampai nilai yang valid diterima.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># while loop dasar</span>
+hitung = <span class="nm">1</span>
+<span class="kw">while</span> hitung <span class="op">&lt;=</span> <span class="nm">5</span>:
+    <span class="fn">print</span>(<span class="st">f"Hitungan: {hitung}"</span>)
+    hitung <span class="op">+=</span> <span class="nm">1</span>   <span class="cm"># WAJIB! tanpa ini loop tidak pernah berhenti</span>
+
+<span class="cm"># Simulasi pelatihan sampai konvergen</span>
+<span class="kw">import</span> random
+random.seed(<span class="nm">42</span>)
+
+loss        = <span class="nm">1.0</span>
+epoch       = <span class="nm">0</span>
+target_loss = <span class="nm">0.15</span>
+
+<span class="fn">print</span>(<span class="st">"Mulai pelatihan..."</span>)
+<span class="kw">while</span> loss <span class="op">&gt;</span> target_loss:
+    penurunan = random.uniform(<span class="nm">0.1</span>, <span class="nm">0.3</span>)
+    loss      = <span class="fn">max</span>(loss <span class="op">-</span> penurunan, <span class="nm">0</span>)
+    epoch    <span class="op">+=</span> <span class="nm">1</span>
+    <span class="fn">print</span>(<span class="st">f"  Epoch {epoch:2d}: loss = {loss:.4f}"</span>)
+
+<span class="fn">print</span>(<span class="st">f"Konvergen setelah {epoch} epoch!"</span>)</code></pre>
+        </div>
+
+        <h3>Validasi Input dengan while Loop</h3>
+
+        <p>
+          Pola klasik yang sangat berguna: program terus meminta input sampai pengguna memasukkan nilai yang valid. Ini menggabungkan <code>while</code> dengan penanganan error menggunakan <code>try-except</code> — yang akan kita bahas lengkap di Bab 7:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Terus minta input sampai angka valid (0–100) diberikan</span>
+nilai = <span class="kw">None</span>
+<span class="kw">while</span> nilai <span class="kw">is</span> <span class="kw">None</span>:
+    teks = <span class="fn">input</span>(<span class="st">"Masukkan nilai ujian (0–100): "</span>)
+    <span class="kw">try</span>:
+        angka = <span class="fn">int</span>(teks)
+        <span class="kw">if</span> <span class="nm">0</span> <span class="op">&lt;=</span> angka <span class="op">&lt;=</span> <span class="nm">100</span>:
+            nilai = angka
+        <span class="kw">else</span>:
+            <span class="fn">print</span>(<span class="st">"Nilai harus antara 0 dan 100. Coba lagi."</span>)
+    <span class="kw">except</span> ValueError:
+        <span class="fn">print</span>(<span class="st">"Itu bukan angka. Coba lagi."</span>)
+
+<span class="fn">print</span>(<span class="st">f"Nilai diterima: {nilai}"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Awas: Infinite Loop</strong>
+            <p>Loop tak terbatas terjadi ketika kondisi <code>while</code> tidak pernah menjadi <code>False</code> — biasanya karena lupa mengubah variabel kondisi di dalam loop. Program akan macet dan tidak bisa berhenti sendiri. Kalau ini terjadi, tekan <strong>Ctrl + C</strong> di terminal untuk memaksanya berhenti. Selalu pastikan ada sesuatu di dalam loop yang pada akhirnya membuat kondisi menjadi <code>False</code>.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">5.4 break, continue, dan pass</h2>
+
+        <p>
+          Ketiga kata kunci ini memberikan kendali yang lebih halus atas jalannya sebuah loop. Masing-masing punya peran yang berbeda dan sangat berguna dalam situasi tertentu. Memahami kapan memakai yang mana akan membuat kode kamu lebih bersih dan lebih efisien.
+        </p>
+
+        <h3>break — Hentikan Loop Sekarang</h3>
+
+        <p>
+          <code>break</code> langsung menghentikan loop dan melompat ke baris kode setelah loop tersebut, terlepas dari apakah kondisi loop masih terpenuhi atau belum. Gunakan ini ketika kamu sudah menemukan apa yang dicari dan tidak perlu melanjutkan iterasi — misalnya mencari data pertama yang memenuhi syarat tertentu dalam sebuah dataset:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Cari pelanggan pertama dengan skor kredit memenuhi syarat</span>
+data_pelanggan = [
+    {<span class="st">"nama"</span>: <span class="st">"Andi"</span>,  <span class="st">"skor"</span>: <span class="nm">720</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Budi"</span>,  <span class="st">"skor"</span>: <span class="nm">580</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Citra"</span>, <span class="st">"skor"</span>: <span class="nm">810</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Dian"</span>,  <span class="st">"skor"</span>: <span class="nm">750</span>},
+]
+
+ditemukan = <span class="kw">None</span>
+<span class="kw">for</span> p <span class="kw">in</span> data_pelanggan:
+    <span class="kw">if</span> p[<span class="st">"skor"</span>] <span class="op">&gt;=</span> <span class="nm">800</span>:
+        ditemukan = p
+        <span class="kw">break</span>    <span class="cm"># berhenti segera, tidak perlu cek sisanya</span>
+
+<span class="kw">if</span> ditemukan:
+    <span class="fn">print</span>(<span class="st">f"Ditemukan: {ditemukan['nama']} (skor: {ditemukan['skor']})"</span>)
+    <span class="cm"># → Ditemukan: Citra (skor: 810)</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Tidak ada yang memenuhi syarat"</span>)</code></pre>
+        </div>
+
+        <h3>continue — Lewati Iterasi Ini, Lanjut ke Berikutnya</h3>
+
+        <p>
+          <code>continue</code> melewati sisa kode di iterasi saat ini dan langsung melompat ke iterasi berikutnya. Berbeda dari <code>break</code> yang menghentikan loop, <code>continue</code> hanya melewatkan satu iterasi. Sangat berguna untuk memfilter data yang tidak valid tanpa menghentikan pemrosesan keseluruhan:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Proses hanya data valid — lewati yang bermasalah</span>
+nilai_mentah = [<span class="nm">85</span>, <span class="kw">None</span>, <span class="nm">92</span>, <span class="op">-</span><span class="nm">5</span>, <span class="nm">78</span>, <span class="kw">None</span>, <span class="nm">110</span>, <span class="nm">88</span>]
+
+nilai_valid = []
+dilewati    = <span class="nm">0</span>
+
+<span class="kw">for</span> n <span class="kw">in</span> nilai_mentah:
+    <span class="kw">if</span> n <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="kw">not</span> (<span class="nm">0</span> <span class="op">&lt;=</span> n <span class="op">&lt;=</span> <span class="nm">100</span>):
+        dilewati <span class="op">+=</span> <span class="nm">1</span>
+        <span class="kw">continue</span>    <span class="cm"># lewati, pergi ke elemen berikutnya</span>
+    nilai_valid.append(n)
+
+<span class="fn">print</span>(<span class="st">f"Data valid   : {nilai_valid}"</span>)
+<span class="cm"># → Data valid   : [85, 92, 78, 88]</span>
+<span class="fn">print</span>(<span class="st">f"Data dilewati: {dilewati} entri bermasalah"</span>)
+<span class="cm"># → Data dilewati: 4 entri bermasalah</span>
+<span class="fn">print</span>(<span class="st">f"Rata-rata    : {sum(nilai_valid)/len(nilai_valid):.1f}"</span>)
+<span class="cm"># → Rata-rata    : 85.8</span></code></pre>
+        </div>
+
+        <h3>pass — Lakukan Tidak Ada</h3>
+
+        <p>
+          <code>pass</code> adalah kata kunci yang secara harfiah tidak melakukan apapun. Ia ada karena Python tidak mengizinkan blok kode yang kosong — setiap blok <code>if</code>, <code>for</code>, fungsi, atau kelas harus berisi setidaknya satu baris kode. <code>pass</code> berfungsi sebagai placeholder saat kamu sedang membangun kerangka *(skeleton)* kode dan belum siap mengisi implementasinya:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># pass sebagai placeholder — kerangka kode yang belum diisi</span>
+<span class="kw">def</span> <span class="fn">latih_model</span>(data, config):
+    <span class="kw">pass</span>    <span class="cm"># TODO: implementasi pelatihan</span>
+
+<span class="kw">def</span> <span class="fn">evaluasi_model</span>(model, data_uji):
+    <span class="kw">pass</span>    <span class="cm"># TODO: implementasi evaluasi</span>
+
+<span class="kw">def</span> <span class="fn">simpan_model</span>(model, path):
+    <span class="kw">pass</span>    <span class="cm"># TODO: implementasi penyimpanan</span>
+
+<span class="cm"># Kode di atas bisa dijalankan tanpa error</span>
+<span class="cm"># pass memungkinkan kamu merancang struktur dulu, isi belakangan</span>
+
+<span class="cm"># pass juga berguna di dalam kondisi saat satu kasus sengaja diabaikan</span>
+for kode <span class="kw">in</span> [<span class="nm">200</span>, <span class="nm">404</span>, <span class="nm">500</span>, <span class="nm">200</span>]:
+    <span class="kw">if</span> kode <span class="op">==</span> <span class="nm">200</span>:
+        <span class="fn">print</span>(<span class="st">f"OK: {kode}"</span>)
+    <span class="kw">elif</span> kode <span class="op">==</span> <span class="nm">404</span>:
+        <span class="kw">pass</span>    <span class="cm"># untuk sekarang abaikan 404</span>
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">f"Error: {kode}"</span>)</code></pre>
+        </div>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Kata Kunci</th>
+                <th>Efek pada Loop</th>
+                <th>Kapan Dipakai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>break</code></td>
+                <td>Hentikan loop sepenuhnya, lanjut setelah loop</td>
+                <td>Sudah menemukan yang dicari, tidak perlu lanjut</td>
+              </tr>
+              <tr>
+                <td><code>continue</code></td>
+                <td>Lewati iterasi ini, lanjut ke iterasi berikutnya</td>
+                <td>Elemen saat ini tidak valid / tidak perlu diproses</td>
+              </tr>
+              <tr>
+                <td><code>pass</code></td>
+                <td>Tidak melakukan apapun</td>
+                <td>Placeholder untuk blok yang belum diimplementasi</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">5.5 Pemahaman Daftar (List Comprehension)</h2>
+
+        <p>
+          List comprehension adalah salah satu fitur Python yang paling elegan dan paling sering dipakai dalam pekerjaan data. Ia memungkinkan kamu membuat list baru dari koleksi lain dalam <strong>satu baris kode yang singkat dan mudah dibaca</strong>, tanpa harus menulis for loop yang panjang ditambah perintah <code>append</code>.
+        </p>
+
+        <p>
+          Sintaksis dasarnya adalah <code>[ekspresi for item in koleksi]</code>. Kamu bisa membacanya hampir seperti kalimat bahasa Inggris: "buat list yang berisi <em>ekspresi</em> untuk setiap <em>item</em> dalam <em>koleksi</em>." Opsional, tambahkan kondisi filter: <code>[ekspresi for item in koleksi if kondisi]</code> — artinya hanya item yang memenuhi kondisi yang diproses.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Perbandingan: for loop biasa vs list comprehension</span>
+
+<span class="cm"># ── Cara lama: for loop + append ───────────────</span>
+kuadrat_lama = []
+<span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    kuadrat_lama.append(n <span class="op">**</span> <span class="nm">2</span>)
+
+<span class="cm"># ── Cara modern: list comprehension ────────────</span>
+kuadrat_baru = [n <span class="op">**</span> <span class="nm">2</span> <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>)]
+
+<span class="fn">print</span>(kuadrat_lama)  <span class="cm"># → [1, 4, 9, 16, 25]</span>
+<span class="fn">print</span>(kuadrat_baru)  <span class="cm"># → [1, 4, 9, 16, 25]  ← hasil sama, kode lebih ringkas</span></code></pre>
+        </div>
+
+        <h3>Filter dengan Kondisi if</h3>
+
+        <p>
+          Tambahkan kondisi <code>if</code> di akhir untuk memfilter elemen. Ini menggantikan kombinasi for + if + append yang membutuhkan empat baris menjadi satu baris yang langsung bisa dibaca. Ini pola yang sangat umum dalam pembersihan data *(data cleaning)*:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Filter: hanya angka genap dari 1 sampai 10</span>
+genap = [n <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">11</span>) <span class="kw">if</span> n <span class="op">%</span> <span class="nm">2</span> <span class="op">==</span> <span class="nm">0</span>]
+<span class="fn">print</span>(genap)  <span class="cm"># → [2, 4, 6, 8, 10]</span>
+
+<span class="cm"># Ambil nilai yang lulus saja</span>
+semua_nilai  = [<span class="nm">85</span>, <span class="nm">45</span>, <span class="nm">92</span>, <span class="nm">38</span>, <span class="nm">78</span>, <span class="nm">55</span>, <span class="nm">88</span>]
+nilai_lulus  = [n <span class="kw">for</span> n <span class="kw">in</span> semua_nilai <span class="kw">if</span> n <span class="op">&gt;=</span> <span class="nm">60</span>]
+<span class="fn">print</span>(nilai_lulus)  <span class="cm"># → [85, 92, 78, 88]</span>
+
+<span class="cm"># Konversi tipe data sekaligus — sangat sering di preprocessing</span>
+nilai_string = [<span class="st">"85"</span>, <span class="st">"92"</span>, <span class="st">"78"</span>, <span class="st">"95"</span>]
+nilai_int    = [<span class="fn">int</span>(n) <span class="kw">for</span> n <span class="kw">in</span> nilai_string]
+<span class="fn">print</span>(nilai_int)   <span class="cm"># → [85, 92, 78, 95]</span>
+<span class="fn">print</span>(<span class="st">f"Rata-rata: {sum(nilai_int) / len(nilai_int):.1f}"</span>)
+<span class="cm"># → Rata-rata: 87.5</span>
+
+<span class="cm"># Transformasi teks — bersihkan dan standarisasi</span>
+ulasan_kotor  = [<span class="st">"  Produk Bagus! "</span>, <span class="st">"SANGAT MEMBANTU"</span>, <span class="st">"  kurang memuaskan  "</span>]
+ulasan_bersih = [u.strip().lower() <span class="kw">for</span> u <span class="kw">in</span> ulasan_kotor]
+<span class="fn">print</span>(ulasan_bersih)
+<span class="cm"># → ['produk bagus!', 'sangat membantu', 'kurang memuaskan']</span></code></pre>
+        </div>
+
+        <h3>Pola Nyata dalam Proyek Kecerdasan Buatan</h3>
+
+        <p>
+          List comprehension sangat bersinar dalam pekerjaan data dan kecerdasan buatan. Berikut empat pola yang akan kamu temui berulang kali dalam proyek nyata — simpan baik-baik karena kamu akan sering membutuhkannya:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — pola nyata di ML</span>
+          </div>
+          <pre><code><span class="cm"># POLA 1: Normalisasi nilai ke rentang 0–1 (min-max scaling)</span>
+nilai_mentah   = [<span class="nm">20</span>, <span class="nm">50</span>, <span class="nm">80</span>, <span class="nm">35</span>, <span class="nm">95</span>]
+min_val        = <span class="fn">min</span>(nilai_mentah)
+max_val        = <span class="fn">max</span>(nilai_mentah)
+ternormalisasi = [(n - min_val) / (max_val - min_val) <span class="kw">for</span> n <span class="kw">in</span> nilai_mentah]
+<span class="fn">print</span>([<span class="st">f"{v:.2f}"</span> <span class="kw">for</span> v <span class="kw">in</span> ternormalisasi])
+<span class="cm"># → ['0.00', '0.40', '0.80', '0.20', '1.00']</span>
+
+<span class="cm"># POLA 2: Konversi probabilitas ke label biner</span>
+probabilitas = [<span class="nm">0.2</span>, <span class="nm">0.75</span>, <span class="nm">0.6</span>, <span class="nm">0.1</span>, <span class="nm">0.9</span>]
+label        = [<span class="nm">1</span> <span class="kw">if</span> p <span class="op">&gt;=</span> <span class="nm">0.5</span> <span class="kw">else</span> <span class="nm">0</span> <span class="kw">for</span> p <span class="kw">in</span> probabilitas]
+<span class="fn">print</span>(label)  <span class="cm"># → [0, 1, 1, 0, 1]</span>
+
+<span class="cm"># POLA 3: Ekstrak satu kolom dari list of dictionaries</span>
+dataset    = [
+    {<span class="st">"nama"</span>: <span class="st">"Andi"</span>,  <span class="st">"gaji"</span>: <span class="nm">8_000_000</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Budi"</span>,  <span class="st">"gaji"</span>: <span class="nm">12_000_000</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Citra"</span>, <span class="st">"gaji"</span>: <span class="nm">6_500_000</span>},
+]
+semua_nama = [d[<span class="st">"nama"</span>] <span class="kw">for</span> d <span class="kw">in</span> dataset]
+semua_gaji = [d[<span class="st">"gaji"</span>] <span class="kw">for</span> d <span class="kw">in</span> dataset]
+<span class="fn">print</span>(semua_nama)
+<span class="cm"># → ['Andi', 'Budi', 'Citra']</span>
+<span class="fn">print</span>(<span class="st">f"Rata-rata gaji: Rp {sum(semua_gaji)/len(semua_gaji):,.0f}"</span>)
+<span class="cm"># → Rata-rata gaji: Rp 8,833,333</span>
+
+<span class="cm"># POLA 4: Filter data yang memenuhi kriteria tertentu</span>
+gaji_tinggi = [d <span class="kw">for</span> d <span class="kw">in</span> dataset <span class="kw">if</span> d[<span class="st">"gaji"</span>] <span class="op">&gt;</span> <span class="nm">8_000_000</span>]
+<span class="fn">print</span>([d[<span class="st">"nama"</span>] <span class="kw">for</span> d <span class="kw">in</span> gaji_tinggi])
+<span class="cm"># → ['Budi']</span></code></pre>
+        </div>
+
+        <h3>Dictionary dan Set Comprehension</h3>
+
+        <p>
+          Python juga mendukung comprehension untuk dictionary dan set. Dictionary comprehension menggunakan sintaksis <code>{kunci: nilai for item in koleksi}</code>, sedangkan set comprehension cukup <code>{ekspresi for item in koleksi}</code>. Keduanya bekerja persis sama dengan list comprehension, hanya tipe hasilnya yang berbeda:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python</span>
+          </div>
+          <pre><code><span class="cm"># Dictionary comprehension</span>
+kata_kata    = [<span class="st">"python"</span>, <span class="st">"belajar"</span>, <span class="st">"data"</span>]
+peta_panjang = {kata: <span class="fn">len</span>(kata) <span class="kw">for</span> kata <span class="kw">in</span> kata_kata}
+<span class="fn">print</span>(peta_panjang)
+<span class="cm"># → {'python': 6, 'belajar': 7, 'data': 4}</span>
+
+<span class="cm"># Membalik kunci dan nilai dictionary</span>
+kode_kota = {<span class="st">"JKT"</span>: <span class="st">"Jakarta"</span>, <span class="st">"BDG"</span>: <span class="st">"Bandung"</span>, <span class="st">"SBY"</span>: <span class="st">"Surabaya"</span>}
+kota_kode  = {v: k <span class="kw">for</span> k, v <span class="kw">in</span> kode_kota.items()}
+<span class="fn">print</span>(kota_kode)
+<span class="cm"># → {'Jakarta': 'JKT', 'Bandung': 'BDG', 'Surabaya': 'SBY'}</span>
+
+<span class="cm"># Set comprehension — otomatis hilangkan duplikat</span>
+kalimat   = <span class="st">"belajar python dan belajar data science"</span>
+kata_unik = {kata <span class="kw">for</span> kata <span class="kw">in</span> kalimat.split()}
+<span class="fn">print</span>(kata_unik)
+<span class="cm"># → {'belajar', 'python', 'dan', 'data', 'science'}  ← 'belajar' hanya sekali</span></code></pre>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Kapan List Comprehension, Kapan for Loop Biasa?</strong>
+            <p>Gunakan list comprehension untuk transformasi dan filter sederhana yang menghasilkan list baru — lebih cepat dan lebih ringkas. Pakai for loop biasa ketika logikanya kompleks (banyak kondisi bersarang atau banyak operasi per elemen), ketika kamu butuh efek samping selain membuat list, atau ketika comprehension-nya sudah terlalu panjang untuk dibaca dalam satu baris. Kode yang mudah dibaca selalu lebih penting dari kode yang sekadar singkat.</p>
+          </div>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Siap Menuju Bab 6: Fungsi</strong>
+            <p>Kamu sekarang bisa menulis program yang mengambil keputusan dan mengulang pekerjaan. Tapi semua kode kamu masih ada di satu tempat secara linear. Di Bab 6, kamu akan belajar fungsi: cara membungkus sekumpulan kode menjadi satu unit bernama yang bisa dipanggil berulang kali dari mana saja. Fungsi adalah kunci untuk menulis kode yang terorganisir, mudah diuji, dan tidak penuh duplikasi.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <a href="b01-bab-04.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 4: Struktur Data</span>
+      </a>
+
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 5 / 15</div>
+          <div class="dot-progres">
+            <span></span><span></span><span></span><span></span>
+            <span class="aktif"></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="b01-bab-06.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 6: Fungsi</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 5</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

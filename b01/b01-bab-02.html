@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menyiapkan Lingkungan Kerja — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===========================
+       VARIABEL & RESET
+    =========================== */
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+
+      --cyan:    #00C8FF;
+      --cyan-dim: #00628090;
+      --green:   #00FF94;
+      --green-dim: #00804A50;
+      --amber:   #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:  #9D6FFF;
+      --purple-dim: #4B2A9040;
+      --red:     #FF5F6D;
+
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===========================
+       HEADER
+    =========================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* ===========================
+       BREADCRUMB
+    =========================== */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char {
+      color: var(--green);
+      font-weight: 600;
+      margin-right: 0.2rem;
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ===========================
+       KONTEN UTAMA
+    =========================== */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* ===========================
+       DAFTAR SUBBAB
+    =========================== */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before {
+      content: '//';
+      color: var(--cyan);
+      font-size: 0.8rem;
+    }
+
+    .daftar-subbab ol {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* ===========================
+       TIPOGRAFI KONTEN
+    =========================== */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul, .konten ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+    }
+
+    .konten ul { list-style: none; padding-left: 0; }
+
+    .konten ul li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .konten ul li::before {
+      content: '▸';
+      color: var(--cyan);
+      position: absolute;
+      left: 0;
+      font-size: 0.7rem;
+      top: 0.35rem;
+    }
+
+    .konten ol li { margin-bottom: 0.5rem; }
+
+    .konten strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .konten a {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,200,255,0.3);
+      transition: all 0.2s;
+    }
+
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* ===========================
+       BLOK KODE
+    =========================== */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .blok-kode-header .titik-titik span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* ===========================
+       KARTU
+    =========================== */
+    .kartu-info,
+    .kartu-peringatan,
+    .kartu-tips,
+    .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info {
+      background: rgba(0,200,255,0.05);
+      border: 1px solid rgba(0,200,255,0.2);
+    }
+
+    .kartu-peringatan {
+      background: rgba(255,184,48,0.05);
+      border: 1px solid rgba(255,184,48,0.25);
+    }
+
+    .kartu-tips {
+      background: rgba(0,255,148,0.05);
+      border: 1px solid rgba(0,255,148,0.2);
+    }
+
+    .kartu-catatan {
+      background: rgba(157,111,255,0.06);
+      border: 1px solid rgba(157,111,255,0.25);
+    }
+
+    .kartu-ikon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .kartu-isi { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* ===========================
+       TABEL
+    =========================== */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.7rem 1rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* ===========================
+       NAVIGASI BAB
+    =========================== */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover {
+      border-color: rgba(0,200,255,0.4);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+
+    .indikator-progres {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nomor-bab-sekarang {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .dot-progres { display: flex; gap: 4px; }
+
+    .dot-progres span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot-progres span.aktif {
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--bg-base);
+      padding: 2rem 0;
+    }
+
+    footer .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-kiri {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .footer-kanan {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .footer-kanan a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ===========================
+       ANIMASI MASUK
+    =========================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* ===========================
+       RESPONSIF
+    =========================== */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+
+      .navigasi-bab .wadah {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .posisi-tengah {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-02-lingkungan-kerja</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian I — Berkenalan dengan Dunia Pemrograman</span>
+          <span class="label-nomor-bab">Bab 2 / 15</span>
+        </div>
+
+        <h1 class="judul-bab">
+          Menyiapkan Lingkungan Kerja<span class="aksen">.</span>
+        </h1>
+
+        <p class="deskripsi-bab">
+          Sebelum bisa mulai menulis kode yang sesungguhnya, kamu perlu menyiapkan "bengkel" kerjamu. Bab ini memandu kamu langkah demi langkah — dari instalasi Python, mengenal terminal, menyiapkan editor kode, hingga memahami konsep lingkungan virtual yang akan menyelamatkanmu dari banyak masalah di masa depan.
+        </p>
+
+        <div class="pita-info-bab">
+          <div class="info-item">
+            <span>⏱</span>
+            <span class="info-val">~2–3 jam baca + instalasi</span>
+          </div>
+          <div class="info-item">
+            <span>📦</span>
+            <span class="info-val">Python, VS Code, Jupyter</span>
+          </div>
+          <div class="info-item">
+            <span>🔗</span>
+            <span class="info-val">Prasyarat: Bab 1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li>
+            <span class="nomor-subbab">2.1</span>
+            <a href="#subbab-1">Instalasi Python dan memilih versi yang tepat</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">2.2</span>
+            <a href="#subbab-2">Mengenal terminal / baris perintah</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">2.3</span>
+            <a href="#subbab-3">Instalasi dan konfigurasi VS Code</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">2.4</span>
+            <a href="#subbab-4">Mengenal dan menyiapkan lingkungan virtual</a>
+          </li>
+          <li>
+            <span class="nomor-subbab">2.5</span>
+            <a href="#subbab-5">Jupyter Notebook: kapan pakai, kapan tidak</a>
+          </li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">2.1 Instalasi Python dan Memilih Versi yang Tepat</h2>
+
+        <p>
+          Python bisa diunduh langsung dari situs resminya di <strong>python.org</strong>. Saat kamu membuka halaman unduhan, kamu akan melihat ada banyak versi tersedia — mulai dari yang paling lama sampai yang paling baru. Ini bisa membingungkan kalau kamu tidak tahu mana yang harus dipilih.
+        </p>
+
+        <p>
+          Aturan sederhananya begini: <strong>jangan pakai versi paling baru yang baru rilis, dan jangan pakai versi yang terlalu lama</strong>. Versi yang baru rilis sering masih punya masalah yang belum terselesaikan, dan banyak pustaka *(library)* populer belum sempat menyesuaikan diri. Versi yang terlalu lama — misalnya Python 2.x — sudah tidak didukung sama sekali dan tidak boleh dipakai untuk proyek baru.
+        </p>
+
+        <p>
+          Yang paling aman adalah memilih <strong>versi stabil terbaru dari cabang yang sudah teruji</strong> — biasanya ini adalah versi dengan angka minor satu atau dua di bawah yang paling baru. Misalnya, jika versi terbaru adalah 3.13, maka 3.11 atau 3.12 adalah pilihan yang sangat solid. Sebagian besar pustaka kecerdasan buatan dan pembelajaran mesin sudah diuji dengan baik pada versi-versi ini.
+        </p>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Versi Mana yang Aman?</strong>
+            <p>Saat seri ini ditulis, Python 3.11 dan 3.12 adalah pilihan paling stabil untuk proyek kecerdasan buatan. Cek situs python.org untuk versi terkini yang direkomendasikan, dan perhatikan label "stable" di daftar unduhan.</p>
+          </div>
+        </div>
+
+        <h3>Cara Instalasi di Windows</h3>
+
+        <p>
+          Unduh installer dari python.org dan jalankan. Ada satu langkah yang <strong>sangat penting dan sering dilewatkan</strong>: pada layar pertama installer, centang kotak yang bertuliskan <strong>"Add Python to PATH"</strong> sebelum kamu mengklik Install Now. Kalau kamu melewatkan ini, Python tidak akan bisa dipanggil dari terminal, dan kamu harus menginstal ulang dari awal.
+        </p>
+
+        <p>
+          Setelah instalasi selesai, buka terminal (tekan tombol Windows, ketik "cmd" atau "PowerShell", lalu tekan Enter) dan ketik perintah berikut untuk memverifikasi bahwa Python berhasil terinstal:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal</span>
+          </div>
+          <pre><code>python --version
+<span class="cm"># Output yang diharapkan: Python 3.11.x atau 3.12.x</span>
+
+pip --version
+<span class="cm"># Output yang diharapkan: pip 23.x.x from ... (python 3.11)</span></code></pre>
+        </div>
+
+        <p>
+          Kalau kedua perintah di atas menghasilkan output seperti yang diharapkan, selamat — Python sudah terinstal dengan benar. Kalau muncul pesan seperti <code>'python' is not recognized as an internal or external command</code>, berarti Python belum masuk ke PATH dan kamu perlu menginstal ulang dengan mencentang opsi "Add Python to PATH" tadi.
+        </p>
+
+        <h3>Cara Instalasi di macOS</h3>
+
+        <p>
+          macOS biasanya sudah punya Python bawaan, tapi versinya sering kali sudah tua dan tidak disarankan untuk pengembangan. Cara terbaik adalah menginstal Python baru menggunakan <strong>Homebrew</strong> — sebuah manajer paket *(package manager)* untuk macOS yang sangat populer di kalangan pengembang.
+        </p>
+
+        <p>
+          Pertama, instal Homebrew dengan membuka Terminal (bisa dicari di Spotlight dengan menekan Cmd + Spasi) dan menjalankan perintah berikut:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal</span>
+          </div>
+          <pre><code><span class="cm"># Instal Homebrew (copy dan jalankan seluruh baris ini)</span>
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+<span class="cm"># Setelah Homebrew terinstal, instal Python</span>
+brew install python@3.12
+
+<span class="cm"># Verifikasi instalasi</span>
+python3 --version
+<span class="cm"># Output: Python 3.12.x</span></code></pre>
+        </div>
+
+        <p>
+          Perhatikan bahwa di macOS, kamu biasanya perlu mengetik <code>python3</code> bukan <code>python</code> untuk memanggil Python 3. Ini adalah perbedaan kecil tapi penting yang sering membuat bingung pemula.
+        </p>
+
+        <h3>Cara Instalasi di Linux</h3>
+
+        <p>
+          Di sebagian besar distribusi Linux — terutama Ubuntu dan Debian — Python 3 biasanya sudah terinstal secara bawaan. Kamu bisa memverifikasinya dengan membuka terminal dan menjalankan <code>python3 --version</code>. Kalau belum ada atau versinya terlalu lama, gunakan manajer paket bawaan distribusimu:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal (ubuntu/debian)</span>
+          </div>
+          <pre><code><span class="cm"># Perbarui daftar paket terlebih dahulu</span>
+sudo apt update
+
+<span class="cm"># Instal Python 3 dan pip</span>
+sudo apt install python3 python3-pip python3-venv
+
+<span class="cm"># Verifikasi</span>
+python3 --version
+pip3 --version</code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Jangan Hapus Python Bawaan di macOS dan Linux</strong>
+            <p>Sistem operasi macOS dan Linux menggunakan Python secara internal untuk berbagai proses sistem. Jangan pernah menghapus atau memodifikasi instalasi Python bawaan sistem. Selalu instal Python versi baru secara terpisah — dengan Homebrew di macOS atau melalui manajer paket di Linux.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">2.2 Mengenal Terminal / Baris Perintah</h2>
+
+        <p>
+          Terminal — yang juga sering disebut baris perintah *(command line)*, konsol *(console)*, atau cangkang *(shell)* — adalah antarmuka berbasis teks untuk berkomunikasi langsung dengan sistem operasi komputer kamu. Alih-alih mengklik ikon dan menu, kamu mengetikkan perintah dan komputer menjalankannya.
+        </p>
+
+        <p>
+          Banyak orang yang baru belajar pemrograman menganggap terminal menakutkan karena tampilannya gelap dan isinya hanya teks. Tapi setelah kamu terbiasa, terminal akan terasa jauh lebih cepat dan lebih kuat dari antarmuka grafis untuk banyak tugas pemrograman. Hampir semua pekerjaan sebagai insinyur kecerdasan buatan melibatkan terminal — mulai dari menjalankan skrip, menginstal paket, mengelola kode dengan Git, sampai mendeploy aplikasi ke server.
+        </p>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">🖥️</span>
+          <div class="kartu-isi">
+            <strong>Cara Membuka Terminal</strong>
+            <p><strong>Windows:</strong> Tekan Windows + R, ketik "cmd" atau "powershell", tekan Enter. Atau cari "Terminal" di Start Menu. — <strong>macOS:</strong> Tekan Cmd + Spasi, ketik "Terminal", tekan Enter. Atau buka dari Applications &gt; Utilities &gt; Terminal. — <strong>Linux:</strong> Tekan Ctrl + Alt + T, atau cari "Terminal" di menu aplikasi.</p>
+          </div>
+        </div>
+
+        <h3>Perintah Dasar yang Wajib Kamu Kuasai</h3>
+
+        <p>
+          Kamu tidak perlu menghafal ratusan perintah terminal — cukup kuasai sekitar 10–15 perintah yang paling sering dipakai, dan kamu sudah bisa menangani hampir semua kebutuhan sehari-hari. Berikut ini perintah-perintah paling penting yang perlu kamu tahu:
+        </p>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Perintah (Mac/Linux)</th>
+                <th>Perintah (Windows)</th>
+                <th>Fungsi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>pwd</code></td>
+                <td><code>cd</code></td>
+                <td>Tampilkan lokasi folder saat ini</td>
+              </tr>
+              <tr>
+                <td><code>ls</code></td>
+                <td><code>dir</code></td>
+                <td>Tampilkan isi folder saat ini</td>
+              </tr>
+              <tr>
+                <td><code>cd nama-folder</code></td>
+                <td><code>cd nama-folder</code></td>
+                <td>Masuk ke dalam folder</td>
+              </tr>
+              <tr>
+                <td><code>cd ..</code></td>
+                <td><code>cd ..</code></td>
+                <td>Naik satu level ke folder induk</td>
+              </tr>
+              <tr>
+                <td><code>mkdir nama-folder</code></td>
+                <td><code>mkdir nama-folder</code></td>
+                <td>Buat folder baru</td>
+              </tr>
+              <tr>
+                <td><code>touch nama-file.py</code></td>
+                <td><code>echo. > nama-file.py</code></td>
+                <td>Buat file baru yang kosong</td>
+              </tr>
+              <tr>
+                <td><code>rm nama-file</code></td>
+                <td><code>del nama-file</code></td>
+                <td>Hapus file</td>
+              </tr>
+              <tr>
+                <td><code>clear</code></td>
+                <td><code>cls</code></td>
+                <td>Bersihkan layar terminal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Mari kita coba langsung. Buka terminal kamu sekarang dan ikuti urutan perintah berikut ini — ini akan membuatmu membangun rasa percaya diri dengan terminal sejak dini:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal — latihan navigasi</span>
+          </div>
+          <pre><code><span class="cm"># 1. Lihat di mana kamu sekarang</span>
+pwd
+<span class="cm"># Contoh output: /Users/nama-kamu atau C:\Users\nama-kamu</span>
+
+<span class="cm"># 2. Lihat isi folder saat ini</span>
+ls        <span class="cm"># Mac/Linux</span>
+dir       <span class="cm"># Windows</span>
+
+<span class="cm"># 3. Buat folder baru untuk proyek belajar</span>
+mkdir belajar-python
+
+<span class="cm"># 4. Masuk ke folder tersebut</span>
+cd belajar-python
+
+<span class="cm"># 5. Buat file Python pertama</span>
+touch halo.py      <span class="cm"># Mac/Linux</span>
+echo. > halo.py    <span class="cm"># Windows</span>
+
+<span class="cm"># 6. Konfirmasi file sudah terbuat</span>
+ls
+<span class="cm"># Output: halo.py</span></code></pre>
+        </div>
+
+        <h3>Tips Menggunakan Terminal Lebih Efisien</h3>
+
+        <p>
+          Ada beberapa trik yang akan sangat mempercepat kerja kamu di terminal. Pertama, gunakan tombol <code>Tab</code> untuk melengkapi nama file atau folder secara otomatis — ketik beberapa huruf pertama, tekan Tab, dan terminal akan melengkapinya. Kalau ada lebih dari satu kemungkinan, tekan Tab dua kali untuk melihat semua pilihannya.
+        </p>
+
+        <p>
+          Kedua, tekan tombol <code>↑</code> (panah atas) di keyboard untuk mengulang perintah terakhir yang kamu ketik. Ini sangat berguna saat kamu ingin menjalankan perintah yang sama berulang kali, atau saat kamu ingin mengedit sedikit perintah sebelumnya tanpa harus mengetik ulang semuanya.
+        </p>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Shortcut Terminal Paling Berguna</strong>
+            <p>Tab = lengkapi otomatis nama file/folder. Panah ↑/↓ = navigasi riwayat perintah. Ctrl + C = hentikan proses yang sedang berjalan (ini sangat penting — gunakan ini ketika program kamu "macet" atau loop tanpa henti). Ctrl + L = bersihkan layar (alternatif dari perintah clear/cls).</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">2.3 Instalasi dan Konfigurasi VS Code</h2>
+
+        <p>
+          Editor kode adalah tempat kamu akan menghabiskan sebagian besar waktumu sebagai pengembang. Ada banyak pilihan editor di luar sana — Vim, Emacs, PyCharm, Sublime Text, dan masih banyak lagi. Tapi untuk belajar dan untuk mayoritas pekerjaan industri kecerdasan buatan, <strong>Visual Studio Code</strong> (biasa disebut VS Code) adalah pilihan terbaik saat ini.
+        </p>
+
+        <p>
+          VS Code dibuat oleh Microsoft, gratis, dan lintas platform — bisa dipakai di Windows, macOS, dan Linux. Yang menjadikannya luar biasa bukan fitur bawaannya yang memang sudah bagus, melainkan ekosistem ekstensinya yang sangat kaya. Ada ribuan ekstensi yang dibuat oleh komunitas untuk memperluas kemampuan VS Code — mulai dari penanda sintaksis *(syntax highlighting)* untuk ratusan bahasa pemrograman, integrasi Git, debugger, sampai asisten kode berbasis kecerdasan buatan.
+        </p>
+
+        <h3>Cara Menginstal VS Code</h3>
+
+        <p>
+          Unduh VS Code dari <strong>code.visualstudio.com</strong> dan ikuti proses instalasi standar sesuai sistem operasimu. Proses ini biasanya hanya butuh beberapa menit. Setelah terinstal, buka VS Code dan kamu akan disambut dengan layar selamat datang.
+        </p>
+
+        <h3>Ekstensi Wajib untuk Python</h3>
+
+        <p>
+          Langkah pertama setelah menginstal VS Code adalah memasang ekstensi Python. Ekstensi ini akan memberikanmu fitur-fitur penting seperti pelengkap kode otomatis *(autocomplete)*, penanda kesalahan secara langsung saat kamu mengetik, kemampuan menjalankan dan men-debug kode Python, serta integrasi dengan Jupyter Notebook.
+        </p>
+
+        <p>
+          Cara memasang ekstensi: klik ikon yang terlihat seperti empat kotak kecil di bilah sisi kiri VS Code (atau tekan Ctrl+Shift+X), lalu cari dan instal ekstensi-ekstensi berikut:
+        </p>
+
+        <ul>
+          <li><strong>Python</strong> (oleh Microsoft) — ini yang paling penting, harus ada</li>
+          <li><strong>Pylance</strong> (oleh Microsoft) — memberikan pengecekan tipe data dan pelengkap kode yang lebih cerdas</li>
+          <li><strong>Jupyter</strong> (oleh Microsoft) — untuk menjalankan Jupyter Notebook langsung di dalam VS Code</li>
+          <li><strong>GitLens</strong> (oleh GitKraken) — membuat Git jauh lebih mudah digunakan dari dalam editor</li>
+        </ul>
+
+        <h3>Konfigurasi Dasar yang Direkomendasikan</h3>
+
+        <p>
+          Ada beberapa pengaturan VS Code yang sangat disarankan untuk diaktifkan. Buka pengaturan dengan menekan Ctrl+, (tanda koma), lalu cari dan aktifkan pengaturan berikut:
+        </p>
+
+        <ul>
+          <li><strong>Format On Save</strong> — otomatis merapikan format kode setiap kali kamu menyimpan file. Ini membiasakanmu menulis kode yang rapi sejak awal.</li>
+          <li><strong>Auto Save</strong> — simpan file otomatis setelah beberapa detik tidak ada perubahan. Ini mencegah kamu kehilangan pekerjaan karena lupa menyimpan.</li>
+          <li><strong>Word Wrap</strong> — membuat teks yang terlalu panjang otomatis turun ke baris berikutnya tanpa kamu harus scroll ke kanan.</li>
+        </ul>
+
+        <p>
+          Untuk mengatur formatter Python, VS Code biasanya akan menanyakan mana yang ingin kamu gunakan saat pertama kali kamu membuka file Python. Pilih <strong>Black</strong> — ini adalah formatter Python yang paling populer di industri dan hampir tidak memerlukan konfigurasi tambahan.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal — instal black formatter</span>
+          </div>
+          <pre><code><span class="cm"># Instal Black, formatter Python standar industri</span>
+pip install black
+
+<span class="cm"># Coba format sebuah file (setelah kamu punya file Python)</span>
+black nama-file.py
+
+<span class="cm"># Black akan otomatis merapikan kode kamu sesuai standar PEP 8</span></code></pre>
+        </div>
+
+        <h3>Menjalankan Kode Python Pertamamu di VS Code</h3>
+
+        <p>
+          Setelah semuanya terpasang, mari coba jalankan kode Python pertama di VS Code. Buat file baru dengan nama <code>halo_dunia.py</code>, tulis kode berikut, lalu simpan:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">python — halo_dunia.py</span>
+          </div>
+          <pre><code><span class="cm"># Program Python pertama</span>
+<span class="fn">print</span>(<span class="st">"Halo, dunia!"</span>)
+<span class="fn">print</span>(<span class="st">"Saya sedang belajar Python untuk menjadi Insinyur KA."</span>)
+
+<span class="cm"># Coba operasi sederhana</span>
+angka_satu = <span class="nm">10</span>
+angka_dua  = <span class="nm">25</span>
+jumlah = angka_satu <span class="op">+</span> angka_dua
+<span class="fn">print</span>(<span class="st">f"Hasil penjumlahan: {jumlah}"</span>)</code></pre>
+        </div>
+
+        <p>
+          Untuk menjalankannya, kamu bisa: (1) klik tombol segitiga hijau ▶ di pojok kanan atas editor, atau (2) klik kanan di area kode dan pilih "Run Python File in Terminal", atau (3) buka terminal terintegrasi VS Code dengan Ctrl+` (tanda backtick) dan ketik <code>python halo_dunia.py</code>. Cara ketiga adalah cara yang paling sering dipakai oleh insinyur profesional.
+        </p>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">2.4 Mengenal dan Menyiapkan Lingkungan Virtual</h2>
+
+        <p>
+          Ini adalah salah satu konsep yang paling sering dilewatkan oleh pemula, tapi sangat penting untuk dipahami sejak awal. Lingkungan virtual *(virtual environment)* adalah cara untuk mengisolasi paket *(package)* Python yang dipakai oleh setiap proyek secara terpisah satu sama lain.
+        </p>
+
+        <p>
+          Bayangkan kamu sedang mengerjakan dua proyek berbeda. Proyek A membutuhkan pustaka <code>numpy</code> versi 1.23, tapi Proyek B membutuhkan versi 1.26 yang sudah punya fitur baru. Tanpa lingkungan virtual, kamu tidak bisa punya kedua versi secara bersamaan di satu komputer — menginstal versi baru akan menimpa yang lama dan bisa merusak Proyek A. Dengan lingkungan virtual, setiap proyek punya "ruangan" sendiri yang berisi paket-paket versi yang mereka butuhkan, tanpa saling mengganggu.
+        </p>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">📦</span>
+          <div class="kartu-isi">
+            <strong>Aturan Emas: Satu Proyek, Satu Lingkungan Virtual</strong>
+            <p>Selalu buat lingkungan virtual baru untuk setiap proyek Python yang kamu mulai. Ini adalah praktik standar industri yang akan menyelamatkanmu dari konflik versi paket yang bisa sangat sulit di-debug.</p>
+          </div>
+        </div>
+
+        <h3>Membuat dan Mengaktifkan Lingkungan Virtual</h3>
+
+        <p>
+          Python sudah menyertakan modul <code>venv</code> secara bawaan untuk membuat lingkungan virtual — kamu tidak perlu menginstal apa-apa tambahan. Berikut cara penggunaannya:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal — membuat lingkungan virtual</span>
+          </div>
+          <pre><code><span class="cm"># 1. Masuk ke folder proyek kamu</span>
+cd belajar-python
+
+<span class="cm"># 2. Buat lingkungan virtual baru dengan nama "venv"</span>
+python -m venv venv       <span class="cm"># Windows</span>
+python3 -m venv venv      <span class="cm"># macOS/Linux</span>
+
+<span class="cm"># 3. Aktifkan lingkungan virtual</span>
+venv\Scripts\activate     <span class="cm"># Windows (Command Prompt)</span>
+venv\Scripts\Activate.ps1 <span class="cm"># Windows (PowerShell)</span>
+source venv/bin/activate  <span class="cm"># macOS/Linux</span>
+
+<span class="cm"># 4. Setelah aktif, nama lingkungan akan muncul di awal baris terminal</span>
+<span class="cm"># Contoh: (venv) C:\Users\kamu\belajar-python></span>
+<span class="cm"># Atau:   (venv) nama-kamu@komputer:~/belajar-python$</span>
+
+<span class="cm"># 5. Sekarang instal paket — hanya tersimpan di lingkungan ini</span>
+pip install numpy pandas
+
+<span class="cm"># 6. Untuk keluar dari lingkungan virtual</span>
+deactivate</code></pre>
+        </div>
+
+        <p>
+          Perhatikan tanda <code>(venv)</code> di awal baris terminal. Ini adalah penanda bahwa kamu sedang berada di dalam lingkungan virtual aktif. Setiap paket yang kamu instal dengan <code>pip install</code> selama tanda ini muncul akan tersimpan di dalam folder <code>venv</code> di proyekmu, bukan di instalasi Python utama di komputermu.
+        </p>
+
+        <h3>Menyimpan Daftar Paket yang Digunakan</h3>
+
+        <p>
+          Salah satu manfaat besar lingkungan virtual adalah kamu bisa dengan mudah membuat daftar semua paket yang dipakai proyekmu, sehingga orang lain (atau kamu sendiri di komputer lain) bisa menginstal semua yang dibutuhkan sekaligus. File daftar ini secara konvensi bernama <code>requirements.txt</code>:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal — requirements.txt</span>
+          </div>
+          <pre><code><span class="cm"># Simpan semua paket yang terinstal ke dalam file</span>
+pip freeze > requirements.txt
+
+<span class="cm"># Untuk menginstal dari file ini (di komputer lain atau lingkungan baru)</span>
+pip install -r requirements.txt
+
+<span class="cm"># Lihat isi requirements.txt — contohnya akan terlihat seperti ini:</span>
+<span class="cm"># numpy==1.26.4</span>
+<span class="cm"># pandas==2.1.4</span>
+<span class="cm"># scikit-learn==1.3.2</span></code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Jangan Upload Folder venv ke GitHub</strong>
+            <p>Folder <code>venv</code> berisi ribuan file biner yang ukurannya besar dan tidak perlu disimpan di repositori. Cukup simpan file <code>requirements.txt</code> saja. Di bab Git nanti, kamu akan belajar cara menambahkan <code>venv/</code> ke file <code>.gitignore</code> supaya tidak sengaja ter-upload.</p>
+          </div>
+        </div>
+
+        <h3>Lingkungan Virtual di VS Code</h3>
+
+        <p>
+          VS Code bisa otomatis mendeteksi lingkungan virtual di proyekmu. Setelah kamu membuat lingkungan virtual, buka folder proyekmu di VS Code (File → Open Folder), lalu buka file Python apapun. Di pojok kanan bawah VS Code, kamu akan melihat nama dan versi Python yang sedang aktif — klik di sana untuk memilih interpreter Python dari lingkungan virtualmu. Setelah dipilih, terminal terintegrasi VS Code akan otomatis mengaktifkan lingkungan virtual tersebut setiap kali dibuka.
+        </p>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">2.5 Jupyter Notebook: Kapan Pakai, Kapan Tidak</h2>
+
+        <p>
+          Jupyter Notebook adalah lingkungan pengembangan interaktif yang memungkinkan kamu menulis dan menjalankan kode Python dalam potongan-potongan kecil yang disebut <em>sel</em> *(cell)*, satu per satu, sambil langsung melihat hasilnya di bawah setiap sel. Kamu juga bisa menyelipkan teks penjelasan, rumus matematika, dan visualisasi grafik di antara sel-sel kode — semuanya dalam satu dokumen yang bisa dibagikan.
+        </p>
+
+        <p>
+          Jupyter sangat populer di kalangan ilmuwan data *(data scientist)* dan peneliti karena format ini memudahkan eksplorasi data secara interaktif. Kamu bisa mencoba sesuatu, melihat hasilnya langsung, mengubah kodenya, dan mencoba lagi — tanpa harus menjalankan ulang seluruh program setiap kali.
+        </p>
+
+        <h3>Kapan Pakai Jupyter Notebook</h3>
+
+        <p>
+          Jupyter sangat cocok digunakan untuk beberapa situasi spesifik: <strong>eksplorasi data awal</strong> — ketika kamu baru pertama kali melihat sebuah dataset dan ingin memahami strukturnya, <strong>analisis dan visualisasi</strong> — ketika kamu ingin membuat grafik dan melihat hasilnya langsung, <strong>pembelajaran dan eksperimen</strong> — mencoba konsep baru dengan cepat tanpa harus membuat file .py yang lengkap, dan <strong>presentasi hasil</strong> — Jupyter Notebook bisa diekspor sebagai HTML atau PDF yang terlihat rapi untuk dibagikan ke orang lain.
+        </p>
+
+        <h3>Kapan Tidak Pakai Jupyter Notebook</h3>
+
+        <p>
+          Jupyter bukan pilihan yang tepat untuk semua situasi. <strong>Pengembangan aplikasi</strong> — ketika kamu membangun program atau API yang nyata, kamu butuh file .py yang terstruktur, bukan notebook. <strong>Kode yang akan berjalan di produksi</strong> — sistem di server tidak mengenal format .ipynb (format file Jupyter). <strong>Proyek kolaborasi besar</strong> — kode di notebook lebih sulit di-review dan di-debug karena tidak punya struktur yang jelas.
+        </p>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Rekomendasi Penggunaan di Seri Ini</strong>
+            <p>Dalam seri ini, kamu akan banyak menggunakan Jupyter di Buku 2 (analisis data) dan Buku 3 (eksperimen model ML). Tapi di Buku 4 dan 5, kamu akan beralih ke file .py murni karena kita sudah mulai membangun sistem yang lebih kompleks dan akan dideploy. Ini mencerminkan cara kerja yang sesungguhnya di industri.</p>
+          </div>
+        </div>
+
+        <h3>Cara Instal dan Menjalankan Jupyter</h3>
+
+        <p>
+          Menginstal Jupyter sangat mudah — cukup dengan satu perintah pip. Pastikan lingkungan virtualmu sudah aktif sebelum menginstal:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">terminal</span>
+          </div>
+          <pre><code><span class="cm"># Pastikan lingkungan virtual aktif dulu (ada tanda (venv) di terminal)</span>
+
+<span class="cm"># Instal JupyterLab — versi modern dari Jupyter Notebook</span>
+pip install jupyterlab
+
+<span class="cm"># Jalankan JupyterLab</span>
+jupyter lab
+
+<span class="cm"># Terminal akan menampilkan URL seperti ini:</span>
+<span class="cm"># http://localhost:8888/lab?token=xxxxxxxxxxxx</span>
+<span class="cm"># Peramban akan otomatis terbuka, atau kamu bisa copy-paste URL-nya</span>
+
+<span class="cm"># Untuk menghentikan server Jupyter, tekan Ctrl+C di terminal</span></code></pre>
+        </div>
+
+        <p>
+          Setelah JupyterLab terbuka di peramban, kamu bisa membuat notebook baru dengan mengklik tombol "+ New" dan memilih "Python 3". Sebuah notebook baru akan terbuka dengan satu sel kosong siap untuk diisi kode.
+        </p>
+
+        <p>
+          Di dalam notebook, ada beberapa pintasan keyboard yang wajib kamu tahu: <strong>Shift + Enter</strong> untuk menjalankan sel saat ini dan pindah ke sel berikutnya, <strong>Ctrl + Enter</strong> untuk menjalankan sel saat ini tanpa pindah, <strong>A</strong> untuk menambah sel baru di atas, <strong>B</strong> untuk menambah sel baru di bawah, dan <strong>D + D</strong> (tekan D dua kali) untuk menghapus sel yang dipilih. Biasakan pintasan-pintasan ini dan produktivitasmu di Jupyter akan meningkat drastis.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik">
+              <span class="titik-merah"></span>
+              <span class="titik-kuning"></span>
+              <span class="titik-hijau"></span>
+            </div>
+            <span class="label-bahasa">jupyter notebook — contoh sel pertama</span>
+          </div>
+          <pre><code><span class="cm"># Coba ini di sel pertama notebook kamu</span>
+<span class="fn">print</span>(<span class="st">"Halo dari Jupyter!"</span>)
+
+nama = <span class="st">"Calon Insinyur KA"</span>
+angka = [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>]
+rata_rata = <span class="fn">sum</span>(angka) / <span class="fn">len</span>(angka)
+
+<span class="fn">print</span>(<span class="st">f"Nama: {nama}"</span>)
+<span class="fn">print</span>(<span class="st">f"Rata-rata angka: {rata_rata}"</span>)
+
+<span class="cm"># Jupyter otomatis menampilkan nilai ekspresi terakhir di sel</span>
+<span class="cm"># tanpa perlu print() — ini fitur khas Jupyter</span>
+rata_rata</code></pre>
+        </div>
+
+        <p>
+          Tekan Shift + Enter untuk menjalankan sel di atas. Kamu akan melihat output langsung muncul di bawahnya — itulah keunggulan utama Jupyter. Selamat, lingkungan kerjamu sudah siap sepenuhnya!
+        </p>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>Checklist Lingkungan Kerja Siap</strong>
+            <p>Pastikan kamu bisa mencentang semua ini sebelum lanjut ke Bab 3: ✓ Python terinstal dan bisa dipanggil dari terminal. ✓ VS Code terinstal dengan ekstensi Python dan Pylance. ✓ Bisa membuat dan mengaktifkan lingkungan virtual. ✓ JupyterLab terinstal dan bisa dibuka di peramban. ✓ Bisa menjalankan file .py dari terminal dan dari VS Code.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <!-- TOMBOL SEBELUMNYA -->
+      <a href="b01-bab-01.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 1: Kenapa Python dan Kenapa Sekarang</span>
+      </a>
+
+      <!-- POSISI SEKARANG -->
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 2 / 15</div>
+          <div class="dot-progres">
+            <span></span>
+            <span class="aktif"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOMBOL SELANJUTNYA -->
+      <a href="b01-bab-03.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 3: Blok Bangunan Python</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 2</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
