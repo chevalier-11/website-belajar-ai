@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teknik Python yang Sering Dipakai di KA — Fondasi Python & Git | Dari Nol ke Insinyur KA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-root:       #050A14;
+      --bg-base:       #080D1A;
+      --bg-surface:    #0C1220;
+      --bg-elevated:   #101828;
+      --bg-card:       #111827;
+      --border:        #1A2740;
+      --border-glow:   #1E3A5F;
+      --text-primary:   #E2EAF4;
+      --text-secondary: #7A8BA8;
+      --text-muted:     #3D5270;
+      --text-code:      #A8D8EA;
+      --cyan:      #00C8FF;
+      --cyan-dim:  #00628090;
+      --green:     #00FF94;
+      --green-dim: #00804A50;
+      --amber:     #FFB830;
+      --amber-dim: #7A5A1840;
+      --purple:    #9D6FFF;
+      --purple-dim:#4B2A9040;
+      --red:       #FF5F6D;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --glow-cyan:  0 0 20px rgba(0,200,255,0.15), 0 0 60px rgba(0,200,255,0.05);
+      --glow-green: 0 0 20px rgba(0,255,148,0.12), 0 0 60px rgba(0,255,148,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg-root);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,100,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wadah {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+    }
+
+    header .wadah {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+    }
+
+    .header-kiri { display: flex; align-items: center; gap: 0.85rem; }
+
+    .header-ikon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0C2040, #0A1830);
+      border: 1px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .label-seri {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .label-buku {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      margin-top: 0.1rem;
+    }
+
+    .tautan-beranda {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .tautan-beranda:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.05);
+      box-shadow: 0 0 12px rgba(0,200,255,0.1);
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      background: var(--bg-base);
+    }
+
+    .breadcrumb .wadah {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb .prompt-char { color: var(--green); font-weight: 600; margin-right: 0.2rem; }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb .pemisah { color: var(--text-muted); }
+    .breadcrumb .aktif { color: var(--text-primary); font-weight: 500; }
+
+    /* MAIN */
+    main { padding: 2.5rem 0 4rem; }
+
+    .header-bab {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .baris-atas-bab {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .label-bagian {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: rgba(0,200,255,0.07);
+      border: 1px solid rgba(0,200,255,0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .label-nomor-bab {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    h1.judul-bab {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1.judul-bab span.aksen { color: var(--cyan); }
+
+    .deskripsi-bab {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 680px;
+      border-left: 2px solid var(--border-glow);
+      padding-left: 1rem;
+    }
+
+    .pita-info-bab {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pita-info-bab .info-item { display: flex; align-items: center; gap: 0.4rem; }
+    .pita-info-bab .info-item .info-val { color: var(--text-secondary); }
+
+    /* DAFTAR SUBBAB */
+    .daftar-subbab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daftar-subbab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .daftar-subbab-judul {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .daftar-subbab-judul::before { content: '//'; color: var(--cyan); font-size: 0.8rem; }
+
+    .daftar-subbab ol { list-style: none; padding: 0; display: grid; gap: 0.35rem; }
+
+    .daftar-subbab ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .daftar-subbab ol li .nomor-subbab {
+      font-size: 0.68rem;
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .daftar-subbab ol li a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.2rem 0;
+    }
+
+    .daftar-subbab ol li a:hover { color: var(--cyan); }
+
+    /* TIPOGRAFI KONTEN */
+    .konten h2 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.1rem;
+      padding-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .konten h2::before {
+      content: '#';
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .konten h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .konten p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    .konten ul { list-style: none; padding-left: 0; margin-bottom: 1.25rem; color: var(--text-secondary); font-size: 0.93rem; }
+    .konten ul li { padding-left: 1.25rem; position: relative; margin-bottom: 0.5rem; }
+    .konten ul li::before { content: '▸'; color: var(--cyan); position: absolute; left: 0; font-size: 0.7rem; top: 0.35rem; }
+    .konten ol { padding-left: 1.5rem; margin-bottom: 1.25rem; color: var(--text-secondary); font-size: 0.93rem; }
+    .konten ol li { margin-bottom: 0.5rem; }
+    .konten strong { color: var(--text-primary); font-weight: 600; }
+    .konten a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(0,200,255,0.3); transition: all 0.2s; }
+    .konten a:hover { border-bottom-color: var(--cyan); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--amber);
+      background: rgba(255,184,48,0.08);
+      border: 1px solid rgba(255,184,48,0.2);
+      padding: 0.12em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* BLOK KODE */
+    .blok-kode {
+      background: #02060F;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin: 1.75rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .blok-kode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blok-kode-header .titik-titik { display: flex; gap: 0.4rem; }
+    .blok-kode-header .titik-titik span { width: 10px; height: 10px; border-radius: 50%; }
+    .titik-merah  { background: #FF5F57; }
+    .titik-kuning { background: #FFBC2E; }
+    .titik-hijau  { background: #28C840; }
+
+    .label-bahasa {
+      font-size: 0.68rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .blok-kode pre { padding: 1.25rem 1.5rem; overflow-x: auto; margin: 0; }
+
+    .blok-kode code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-code);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .blok-kode .kw  { color: #7DD3FC; }
+    .blok-kode .fn  { color: #67E8F9; }
+    .blok-kode .st  { color: #86EFAC; }
+    .blok-kode .cm  { color: #3D5270; font-style: italic; }
+    .blok-kode .nm  { color: #FCA5A5; }
+    .blok-kode .op  { color: var(--amber); }
+
+    /* KARTU */
+    .kartu-info, .kartu-peringatan, .kartu-tips, .kartu-catatan {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+
+    .kartu-info       { background: rgba(0,200,255,0.05);   border: 1px solid rgba(0,200,255,0.2); }
+    .kartu-peringatan { background: rgba(255,184,48,0.05);  border: 1px solid rgba(255,184,48,0.25); }
+    .kartu-tips       { background: rgba(0,255,148,0.05);   border: 1px solid rgba(0,255,148,0.2); }
+    .kartu-catatan    { background: rgba(157,111,255,0.06); border: 1px solid rgba(157,111,255,0.25); }
+
+    .kartu-ikon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .kartu-isi  { flex: 1; }
+
+    .kartu-isi strong {
+      display: block;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .kartu-info .kartu-isi strong       { color: var(--cyan); }
+    .kartu-peringatan .kartu-isi strong { color: var(--amber); }
+    .kartu-tips .kartu-isi strong       { color: var(--green); }
+    .kartu-catatan .kartu-isi strong    { color: var(--purple); }
+
+    .kartu-isi p { margin: 0 !important; line-height: 1.65; }
+    .kartu-info .kartu-isi p       { color: rgba(0,200,255,0.85); }
+    .kartu-peringatan .kartu-isi p { color: rgba(255,184,48,0.85); }
+    .kartu-tips .kartu-isi p       { color: rgba(0,255,148,0.8); }
+    .kartu-catatan .kartu-isi p    { color: rgba(157,111,255,0.9); }
+
+    /* TABEL */
+    .wadah-tabel {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--font-mono); }
+    thead tr { background: var(--bg-surface); }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,200,255,0.03); }
+
+    /* NAVIGASI BAB */
+    .navigasi-bab {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      margin-top: 3.5rem;
+    }
+
+    .navigasi-bab .wadah {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .tombol-navigasi {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: all 0.25s ease;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol-navigasi::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .tombol-navigasi:hover { border-color: rgba(0,200,255,0.4); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+    .tombol-navigasi:hover::before { opacity: 1; }
+    .tombol-navigasi.kanan { text-align: right; }
+
+    .arah {
+      font-size: 0.67rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .arah-panah { color: var(--cyan); }
+
+    .judul-bab-nav {
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .posisi-tengah { text-align: center; }
+    .indikator-progres { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .nomor-bab-sekarang { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.08em; }
+    .dot-progres { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; max-width: 120px; }
+    .dot-progres span { width: 5px; height: 5px; border-radius: 50%; background: var(--border); }
+    .dot-progres span.aktif { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); background: var(--bg-base); padding: 2rem 0; }
+    footer .wadah { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-kiri { display: flex; align-items: center; gap: 0.75rem; }
+
+    .footer-ikon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .footer-nama-seri { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .footer-kanan { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-muted); text-align: right; }
+    .footer-kanan a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-kanan a:hover { color: var(--cyan); }
+
+    /* ANIMASI */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header         { animation: fadeUp 0.4s ease both; }
+    .header-bab    { animation: fadeUp 0.5s 0.1s ease both; }
+    .daftar-subbab { animation: fadeUp 0.5s 0.2s ease both; }
+    .konten        { animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* RESPONSIF */
+    @media (max-width: 640px) {
+      h1.judul-bab { font-size: 1.7rem; }
+      .navigasi-bab .wadah { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+      .posisi-tengah { grid-column: 1 / -1; order: -1; }
+      footer .wadah { flex-direction: column; align-items: flex-start; }
+      .footer-kanan { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wadah">
+      <div class="header-kiri">
+        <div class="header-ikon">⬡</div>
+        <div>
+          <div class="label-seri">Buku 1 dari 6 &nbsp;·&nbsp; Dari Nol ke Insinyur KA</div>
+          <div class="label-buku">Fondasi: Python &amp; Git</div>
+        </div>
+      </div>
+      <a href="../index.html" class="tautan-beranda">← beranda</a>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb" aria-label="Navigasi posisi">
+    <div class="wadah">
+      <span class="prompt-char">$</span>
+      <a href="../index.html">~/beranda</a>
+      <span class="pemisah">/</span>
+      <a href="../index.html#buku-1">python-dan-git</a>
+      <span class="pemisah">/</span>
+      <span class="aktif">bab-10-teknik-python-di-ka</span>
+    </div>
+  </nav>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <main>
+    <div class="wadah">
+
+      <!-- Header bab -->
+      <div class="header-bab">
+        <div class="baris-atas-bab">
+          <span class="label-bagian">Bagian III — Python Menengah</span>
+          <span class="label-nomor-bab">Bab 10 / 15</span>
+        </div>
+        <h1 class="judul-bab">Teknik Python yang Sering Dipakai di Kecerdasan Buatan<span class="aksen">.</span></h1>
+        <p class="deskripsi-bab">
+          Ada sekelompok fitur Python yang hampir selalu muncul saat kamu membaca kode library ML populer — tapi jarang dibahas tuntas di tutorial dasar. Lambda, <code>map()</code>, <code>filter()</code>, generator, dan dekorator sering bikin kepala muter pertama kali ketemu. Bab ini membahas semuanya dengan cara yang jelas dan langsung terhubung ke konteks kecerdasan buatan, sehingga kamu tidak cuma paham secara teori tapi juga tahu kapan dan kenapa memakainya.
+        </p>
+        <div class="pita-info-bab">
+          <div class="info-item"><span>⏱</span><span class="info-val">~3 jam baca + latihan</span></div>
+          <div class="info-item"><span>📦</span><span class="info-val">Tidak ada library — Python murni</span></div>
+          <div class="info-item"><span>🔗</span><span class="info-val">Prasyarat: Bab 5–9</span></div>
+        </div>
+      </div>
+
+      <!-- Daftar subbab -->
+      <div class="daftar-subbab">
+        <div class="daftar-subbab-judul">Yang akan kamu pelajari di bab ini</div>
+        <ol>
+          <li><span class="nomor-subbab">10.1</span><a href="#subbab-1">Lambda function — fungsi anonim sekali pakai</a></li>
+          <li><span class="nomor-subbab">10.2</span><a href="#subbab-2">map(), filter(), dan zip() — triumvirat fungsional</a></li>
+          <li><span class="nomor-subbab">10.3</span><a href="#subbab-3">Pemahaman kamus (dictionary comprehension)</a></li>
+          <li><span class="nomor-subbab">10.4</span><a href="#subbab-4">Generator dan iterator dasar</a></li>
+          <li><span class="nomor-subbab">10.5</span><a href="#subbab-5">Dekorator (decorator) — pengantar singkat</a></li>
+        </ol>
+      </div>
+
+      <!-- ===== ISI KONTEN BAB ===== -->
+      <div class="konten">
+
+        <!-- SUBBAB 1 -->
+        <h2 id="subbab-1">10.1 Lambda Function — Fungsi Anonim Sekali Pakai</h2>
+
+        <p>
+          Di Bab 6 kamu sudah berkenalan sekilas dengan lambda sebagai bagian dari bahasan fungsi sebagai objek. Sekarang saatnya memahaminya lebih mendalam — termasuk kapan lambda adalah pilihan tepat, dan kapan ia justru memperkeruh kode. Lambda adalah fungsi yang didefinisikan tanpa nama, dalam satu baris, menggunakan kata kunci <code>lambda</code>. Ia bisa menerima satu atau lebih parameter, dan tubuhnya hanya boleh berisi <em>satu ekspresi</em> yang nilainya langsung dikembalikan.
+        </p>
+
+        <p>
+          Nilai utama lambda bukan kemampuan teknisnya — secara teknis ia tidak bisa melakukan apapun yang tidak bisa dilakukan fungsi biasa. Nilainya ada di <strong>keterbacaan dalam konteks tertentu</strong>: ketika fungsi yang dibutuhkan sangat pendek dan hanya dipakai di satu tempat, menulisnya sebagai lambda langsung di tempat pemakaiannya seringkali lebih bersih daripada mendefinisikan fungsi bernama di tempat lain.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — anatomi lambda</span>
+          </div>
+          <pre><code><span class="cm"># Sintaksis: lambda parameter1, parameter2, ...: ekspresi</span>
+
+<span class="cm"># Setara dengan:</span>
+<span class="cm"># def kuadrat(x):</span>
+<span class="cm">#     return x ** 2</span>
+kuadrat = <span class="kw">lambda</span> x: x <span class="op">**</span> <span class="nm">2</span>
+
+<span class="fn">print</span>(<span class="fn">kuadrat</span>(<span class="nm">5</span>))    <span class="cm"># → 25</span>
+<span class="fn">print</span>(<span class="fn">type</span>(kuadrat))  <span class="cm"># → &lt;class 'function'&gt;</span>
+
+<span class="cm"># Lambda dengan banyak parameter</span>
+tambah   = <span class="kw">lambda</span> a, b: a <span class="op">+</span> b
+f1_score = <span class="kw">lambda</span> p, r: <span class="nm">2</span> <span class="op">*</span> p <span class="op">*</span> r / (p <span class="op">+</span> r)
+
+<span class="fn">print</span>(<span class="fn">tambah</span>(<span class="nm">3</span>, <span class="nm">4</span>))                   <span class="cm"># → 7</span>
+<span class="fn">print</span>(<span class="fn">f1_score</span>(<span class="nm">0.85</span>, <span class="nm">0.78</span>))          <span class="cm"># → 0.8134...</span>
+
+<span class="cm"># Lambda dengan ekspresi kondisional (ternary)</span>
+label = <span class="kw">lambda</span> p: <span class="st">"lulus"</span> <span class="kw">if</span> p <span class="op">&gt;=</span> <span class="nm">0.5</span> <span class="kw">else</span> <span class="st">"tidak lulus"</span>
+<span class="fn">print</span>(<span class="fn">label</span>(<span class="nm">0.72</span>))    <span class="cm"># → lulus</span>
+<span class="fn">print</span>(<span class="fn">label</span>(<span class="nm">0.31</span>))    <span class="cm"># → tidak lulus</span></code></pre>
+        </div>
+
+        <h3>Lambda sebagai Argumen — Penggunaan Paling Umum</h3>
+
+        <p>
+          Lambda paling sering muncul sebagai argumen untuk fungsi lain, khususnya sebagai nilai <code>key</code> di fungsi <code>sorted()</code>, atau sebagai fungsi transformasi di <code>map()</code> dan <code>filter()</code>. Di sinilah lambda bersinar — menulis fungsi bernama terpisah hanya untuk dipakai sekali sebagai argumen terasa berlebihan, dan lambda mempersingkatnya menjadi satu baris yang masih bisa dibaca:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — lambda sebagai argumen di konteks ML</span>
+          </div>
+          <pre><code><span class="cm"># Pengurutan dengan kunci kustom</span>
+hasil_model = [
+    {<span class="st">"nama"</span>: <span class="st">"XGBoost"</span>,     <span class="st">"akurasi"</span>: <span class="nm">0.934</span>, <span class="st">"waktu_latih"</span>: <span class="nm">12.3</span>},
+    {<span class="st">"nama"</span>: <span class="st">"Random Forest"</span>, <span class="st">"akurasi"</span>: <span class="nm">0.912</span>, <span class="st">"waktu_latih"</span>: <span class="nm">8.7</span>},
+    {<span class="st">"nama"</span>: <span class="st">"SVM"</span>,           <span class="st">"akurasi"</span>: <span class="nm">0.891</span>, <span class="st">"waktu_latih"</span>: <span class="nm">45.1</span>},
+    {<span class="st">"nama"</span>: <span class="st">"LogReg"</span>,        <span class="st">"akurasi"</span>: <span class="nm">0.867</span>, <span class="st">"waktu_latih"</span>: <span class="nm">2.1</span>},
+]
+
+<span class="cm"># Urut berdasarkan akurasi (tertinggi dulu)</span>
+urut_akurasi = <span class="fn">sorted</span>(hasil_model, key=<span class="kw">lambda</span> m: m[<span class="st">"akurasi"</span>], reverse=<span class="kw">True</span>)
+<span class="fn">print</span>(<span class="st">"Terbaik:"</span>, urut_akurasi[<span class="nm">0</span>][<span class="st">"nama"</span>])   <span class="cm"># → XGBoost</span>
+
+<span class="cm"># Urut berdasarkan rasio akurasi/waktu (efisiensi)</span>
+urut_efisien = <span class="fn">sorted</span>(
+    hasil_model,
+    key=<span class="kw">lambda</span> m: m[<span class="st">"akurasi"</span>] / m[<span class="st">"waktu_latih"</span>],
+    reverse=<span class="kw">True</span>
+)
+<span class="fn">print</span>(<span class="st">"Paling efisien:"</span>, urut_efisien[<span class="nm">0</span>][<span class="st">"nama"</span>])   <span class="cm"># → LogReg</span>
+
+<span class="cm"># Temukan yang terbaik dengan max()</span>
+terbaik = <span class="fn">max</span>(hasil_model, key=<span class="kw">lambda</span> m: m[<span class="st">"akurasi"</span>])
+tercepat = <span class="fn">min</span>(hasil_model, key=<span class="kw">lambda</span> m: m[<span class="st">"waktu_latih"</span>])
+<span class="fn">print</span>(<span class="st">f"Paling akurat : {terbaik['nama']} ({terbaik['akurasi']:.1%})"</span>)
+<span class="fn">print</span>(<span class="st">f"Paling cepat  : {tercepat['nama']} ({tercepat['waktu_latih']:.1f}s)"</span>)</code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Kapan Lambda, Kapan Def Biasa?</strong>
+            <p>Gunakan lambda ketika: fungsi sangat pendek (satu ekspresi), hanya dipakai sekali sebagai argumen, dan namanya tidak akan menambah kejelasan. Gunakan <code>def</code> ketika: fungsi punya lebih dari satu baris logika, butuh docstring, akan dipanggil dari banyak tempat, atau perlu debugging yang mudah. Lambda tanpa nama artinya tidak bisa muncul di traceback dengan nama yang informatif — membuat debugging lebih susah kalau ada error.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 2 -->
+        <h2 id="subbab-2">10.2 map(), filter(), dan zip() — Triumvirat Fungsional</h2>
+
+        <p>
+          Tiga fungsi bawaan ini berasal dari paradigma pemrograman fungsional *(functional programming)* — cara berpikir tentang transformasi data sebagai rangkaian operasi yang diterapkan ke koleksi, tanpa loop eksplisit. Ketiganya bekerja dengan cara yang serupa: menerima sebuah fungsi dan sebuah iterable, lalu menerapkan atau mengombinasikan mereka secara efisien. Memahami ketiganya membuat kode data-processing kamu jauh lebih ringkas dan ekspresif.
+        </p>
+
+        <p>
+          Satu hal penting: di Python 3, <code>map()</code> dan <code>filter()</code> mengembalikan <strong>objek iterator yang malas</strong> *(lazy iterator)* — bukan list langsung. Artinya elemen dihitung satu per satu hanya saat dibutuhkan, bukan semuanya sekaligus. Untuk mendapatkan list, bungkus hasilnya dengan <code>list()</code>. Ini sengaja dirancang demikian untuk efisiensi memori saat bekerja dengan data besar.
+        </p>
+
+        <h3>map() — Terapkan Fungsi ke Setiap Elemen</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — map()</span>
+          </div>
+          <pre><code><span class="cm"># map(fungsi, iterable) → terapkan fungsi ke setiap elemen</span>
+
+<span class="cm"># Contoh dasar</span>
+angka = [<span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">9</span>, <span class="nm">16</span>, <span class="nm">25</span>]
+akar  = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x <span class="op">**</span> <span class="nm">0.5</span>, angka))
+<span class="fn">print</span>(akar)   <span class="cm"># → [1.0, 2.0, 3.0, 4.0, 5.0]</span>
+
+<span class="cm"># map() dengan fungsi bernama — lebih bersih untuk operasi kompleks</span>
+<span class="kw">def</span> <span class="fn">bersihkan_teks</span>(teks):
+    <span class="st">"""Hapus spasi tepi, ubah ke huruf kecil, ganti spasi dengan garis bawah."""</span>
+    <span class="kw">return</span> teks.<span class="fn">strip</span>().<span class="fn">lower</span>().<span class="fn">replace</span>(<span class="st">" "</span>, <span class="st">"_"</span>)
+
+kolom_kotor  = [<span class="st">"  Nama Lengkap  "</span>, <span class="st">"Nilai Ujian"</span>, <span class="st">" KELAS  "</span>, <span class="st">"Tanggal Lahir"</span>]
+kolom_bersih = <span class="fn">list</span>(<span class="fn">map</span>(bersihkan_teks, kolom_kotor))
+<span class="fn">print</span>(kolom_bersih)
+<span class="cm"># → ['nama_lengkap', 'nilai_ujian', 'kelas', 'tanggal_lahir']</span>
+
+<span class="cm"># map() dengan banyak iterable — fungsi menerima elemen dari keduanya bersamaan</span>
+y_asli     = [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>]
+y_prediksi = [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>]
+
+hasil_cek = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> a, p: <span class="st">"✓"</span> <span class="kw">if</span> a <span class="op">==</span> p <span class="kw">else</span> <span class="st">"✗"</span>, y_asli, y_prediksi))
+<span class="fn">print</span>(hasil_cek)   <span class="cm"># → ['✓', '✓', '✗', '✓', '✗']</span>
+akurasi = hasil_cek.<span class="fn">count</span>(<span class="st">"✓"</span>) / <span class="fn">len</span>(hasil_cek)
+<span class="fn">print</span>(<span class="st">f"Akurasi: {akurasi:.1%}"</span>)   <span class="cm"># → 60.0%</span>
+
+<span class="cm"># Konversi tipe massal — sangat sering di preprocessing</span>
+nilai_str = [<span class="st">"85"</span>, <span class="st">"92"</span>, <span class="st">"78"</span>, <span class="st">"95"</span>, <span class="st">"88"</span>]
+nilai_int = <span class="fn">list</span>(<span class="fn">map</span>(<span class="fn">int</span>, nilai_str))   <span class="cm"># int adalah fungsi!</span>
+<span class="fn">print</span>(nilai_int)   <span class="cm"># → [85, 92, 78, 95, 88]</span></code></pre>
+        </div>
+
+        <h3>filter() — Saring Elemen Berdasarkan Kondisi</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — filter()</span>
+          </div>
+          <pre><code><span class="cm"># filter(fungsi_kondisi, iterable) → hanya elemen yang fungsinya True</span>
+
+nilai  = [<span class="nm">85</span>, <span class="nm">45</span>, <span class="nm">92</span>, <span class="nm">38</span>, <span class="nm">78</span>, <span class="nm">55</span>, <span class="nm">88</span>, <span class="nm">60</span>]
+lulus  = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> n: n <span class="op">&gt;=</span> <span class="nm">60</span>, nilai))
+gagal  = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> n: n <span class="op">&lt;</span> <span class="nm">60</span>, nilai))
+<span class="fn">print</span>(<span class="st">f"Lulus: {lulus}"</span>)   <span class="cm"># → [85, 92, 78, 88, 60]</span>
+<span class="fn">print</span>(<span class="st">f"Gagal: {gagal}"</span>)   <span class="cm"># → [45, 38, 55]</span>
+
+<span class="cm"># Filter dengan fungsi bernama — lebih jelas untuk kondisi kompleks</span>
+<span class="kw">def</span> <span class="fn">adalah_outlier</span>(nilai, batas_bawah=<span class="nm">10</span>, batas_atas=<span class="nm">100</span>):
+    <span class="st">"""Cek apakah nilai di luar rentang normal."""</span>
+    <span class="kw">return</span> nilai <span class="op">&lt;</span> batas_bawah <span class="kw">or</span> nilai <span class="op">&gt;</span> batas_atas
+
+data_mentah = [<span class="nm">85</span>, <span class="nm">-5</span>, <span class="nm">92</span>, <span class="nm">110</span>, <span class="nm">78</span>, <span class="nm">0</span>, <span class="nm">88</span>]
+data_bersih = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x: <span class="kw">not</span> <span class="fn">adalah_outlier</span>(x), data_mentah))
+outlier     = <span class="fn">list</span>(<span class="fn">filter</span>(adalah_outlier, data_mentah))
+<span class="fn">print</span>(<span class="st">f"Data bersih : {data_bersih}"</span>)   <span class="cm"># → [85, 92, 78, 88]</span>
+<span class="fn">print</span>(<span class="st">f"Outlier     : {outlier}"</span>)        <span class="cm"># → [-5, 110, 0]</span>
+
+<span class="cm"># Filter None dari list — sangat berguna saat data punya nilai kosong</span>
+data_dengan_none = [<span class="nm">1</span>, <span class="kw">None</span>, <span class="nm">3</span>, <span class="kw">None</span>, <span class="nm">5</span>]
+data_valid = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">None</span>, data_dengan_none))   <span class="cm"># None sebagai filter → hapus falsy</span>
+<span class="fn">print</span>(data_valid)   <span class="cm"># → [1, 3, 5]</span></code></pre>
+        </div>
+
+        <h3>zip() — Gabungkan Banyak Iterable Secara Paralel</h3>
+
+        <p>
+          Fungsi <code>zip()</code> menggabungkan dua atau lebih iterable menjadi iterator yang menghasilkan tuple berisi elemen-elemen dari posisi yang sama. Ia berhenti saat iterable terpendek habis. Di dunia ML, <code>zip()</code> hampir selalu hadir saat kamu perlu menggabungkan fitur dengan label, nama kolom dengan nilainya, atau hasil prediksi dengan data asli:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — zip() dan kombinasinya</span>
+          </div>
+          <pre><code><span class="cm"># zip() dasar</span>
+nama_fitur = [<span class="st">"usia"</span>, <span class="st">"gaji"</span>, <span class="st">"pengalaman"</span>]
+nilai_fitur = [<span class="nm">28</span>, <span class="nm">12_000_000</span>, <span class="nm">5</span>]
+
+gabung = <span class="fn">list</span>(<span class="fn">zip</span>(nama_fitur, nilai_fitur))
+<span class="fn">print</span>(gabung)
+<span class="cm"># → [('usia', 28), ('gaji', 12000000), ('pengalaman', 5)]</span>
+
+<span class="cm"># Buat dictionary dari dua list — pola sangat umum</span>
+dict_fitur = <span class="fn">dict</span>(<span class="fn">zip</span>(nama_fitur, nilai_fitur))
+<span class="fn">print</span>(dict_fitur)
+<span class="cm"># → {'usia': 28, 'gaji': 12000000, 'pengalaman': 5}</span>
+
+<span class="cm"># Bandingkan prediksi vs asli dengan zip</span>
+y_asli     = [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>]
+y_prediksi = [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>]
+
+benar = <span class="fn">sum</span>(a <span class="op">==</span> p <span class="kw">for</span> a, p <span class="kw">in</span> <span class="fn">zip</span>(y_asli, y_prediksi))
+<span class="fn">print</span>(<span class="st">f"Prediksi benar: {benar}/{len(y_asli)}"</span>)   <span class="cm"># → 3/5</span>
+
+<span class="cm"># zip dengan tiga list sekaligus</span>
+nama_siswa = [<span class="st">"Andi"</span>, <span class="st">"Budi"</span>, <span class="st">"Citra"</span>]
+nilai_uts  = [<span class="nm">80</span>, <span class="nm">75</span>, <span class="nm">90</span>]
+nilai_uas  = [<span class="nm">85</span>, <span class="nm">80</span>, <span class="nm">88</span>]
+
+<span class="kw">for</span> nama, uts, uas <span class="kw">in</span> <span class="fn">zip</span>(nama_siswa, nilai_uts, nilai_uas):
+    rata = (uts <span class="op">+</span> uas) / <span class="nm">2</span>
+    <span class="fn">print</span>(<span class="st">f"{nama:8} UTS={uts}  UAS={uas}  Rata={rata:.1f}"</span>)
+
+<span class="cm"># Kebalikan zip: unzip dengan * (unpacking)</span>
+pasangan = [(<span class="st">"apel"</span>, <span class="nm">5</span>), (<span class="st">"mangga"</span>, <span class="nm">3</span>), (<span class="st">"jeruk"</span>, <span class="nm">8</span>)]
+buah, jumlah = <span class="fn">zip</span>(<span class="op">*</span>pasangan)   <span class="cm"># * untuk unpack list of tuples</span>
+<span class="fn">print</span>(<span class="fn">list</span>(buah))    <span class="cm"># → ['apel', 'mangga', 'jeruk']</span>
+<span class="fn">print</span>(<span class="fn">list</span>(jumlah))  <span class="cm"># → [5, 3, 8]</span></code></pre>
+        </div>
+
+        <div class="kartu-tips">
+          <span class="kartu-ikon">✅</span>
+          <div class="kartu-isi">
+            <strong>map() vs List Comprehension — Kapan Mana?</strong>
+            <p>Keduanya melakukan hal serupa. Pilih <strong>list comprehension</strong> ketika transformasinya melibatkan kondisi atau lebih dari satu langkah — karena sintaksinya lebih mudah dibaca. Pilih <strong>map()</strong> ketika kamu sudah punya fungsi bernama yang ingin diterapkan ke setiap elemen (terutama fungsi bawaan Python seperti <code>int</code>, <code>str</code>, <code>float</code>) — karena <code>list(map(int, data))</code> lebih ringkas dari <code>[int(x) for x in data]</code>. Dalam praktiknya, list comprehension lebih sering dipakai karena lebih Pythonic.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 3 -->
+        <h2 id="subbab-3">10.3 Pemahaman Kamus (Dictionary Comprehension)</h2>
+
+        <p>
+          Kamu sudah mengenal list comprehension di Bab 5. Python juga mendukung comprehension untuk tipe data lain — dictionary, set, dan bahkan generator. <strong>Pemahaman kamus</strong> *(dictionary comprehension)* adalah cara ringkas membuat dictionary baru dari iterable dalam satu baris. Sintaksinya mirip list comprehension, tapi menggunakan kurung kurawal dan harus mendefinisikan pasangan kunci-nilai:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — dict comprehension dasar</span>
+          </div>
+          <pre><code><span class="cm"># Sintaksis: {kunci: nilai for item in iterable if kondisi}</span>
+
+<span class="cm"># Contoh dasar — kuadrat angka</span>
+kuadrat = {n: n <span class="op">**</span> <span class="nm">2</span> <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>)}
+<span class="fn">print</span>(kuadrat)   <span class="cm"># → {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}</span>
+
+<span class="cm"># Dari dua list menjadi dictionary</span>
+nama_kolom   = [<span class="st">"usia"</span>, <span class="st">"gaji"</span>, <span class="st">"pengalaman"</span>, <span class="st">"skor_kredit"</span>]
+nilai_kolom  = [<span class="nm">28</span>, <span class="nm">12_000_000</span>, <span class="nm">5</span>, <span class="nm">750</span>]
+fitur = {k: v <span class="kw">for</span> k, v <span class="kw">in</span> <span class="fn">zip</span>(nama_kolom, nilai_kolom)}
+<span class="fn">print</span>(fitur)
+<span class="cm"># → {'usia': 28, 'gaji': 12000000, 'pengalaman': 5, 'skor_kredit': 750}</span>
+
+<span class="cm"># Dengan kondisi — hanya nilai di atas nol</span>
+skor_mentah  = {<span class="st">"presisi"</span>: <span class="nm">0.85</span>, <span class="st">"recall"</span>: <span class="nm">0.0</span>, <span class="st">"f1"</span>: <span class="nm">0.0</span>, <span class="st">"akurasi"</span>: <span class="nm">0.91</span>}
+skor_valid   = {k: v <span class="kw">for</span> k, v <span class="kw">in</span> skor_mentah.items() <span class="kw">if</span> v <span class="op">&gt;</span> <span class="nm">0</span>}
+<span class="fn">print</span>(skor_valid)   <span class="cm"># → {'presisi': 0.85, 'akurasi': 0.91}</span>
+
+<span class="cm"># Transformasi kunci dan nilai sekaligus</span>
+nama_model   = [<span class="st">"xgboost"</span>, <span class="st">"random_forest"</span>, <span class="st">"svm"</span>]
+akurasi_list = [<span class="nm">0.934</span>, <span class="nm">0.912</span>, <span class="nm">0.891</span>]
+
+<span class="cm"># Buat dict dengan kunci huruf kapital dan nilai sebagai persentase</span>
+laporan = {
+    nama.<span class="fn">upper</span>(): <span class="st">f"{acc:.1%}"</span>
+    <span class="kw">for</span> nama, acc <span class="kw">in</span> <span class="fn">zip</span>(nama_model, akurasi_list)
+}
+<span class="fn">print</span>(laporan)
+<span class="cm"># → {'XGBOOST': '93.4%', 'RANDOM_FOREST': '91.2%', 'SVM': '89.1%'}</span></code></pre>
+        </div>
+
+        <h3>Pola Dict Comprehension yang Sering Dipakai di ML</h3>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — pola nyata</span>
+          </div>
+          <pre><code><span class="cm"># POLA 1: Normalisasi skor ke 0–1 dalam satu dict</span>
+skor = {<span class="st">"model_a"</span>: <span class="nm">0.72</span>, <span class="st">"model_b"</span>: <span class="nm">0.85</span>, <span class="st">"model_c"</span>: <span class="nm">0.91</span>, <span class="st">"model_d"</span>: <span class="nm">0.68</span>}
+min_s = <span class="fn">min</span>(skor.values())
+max_s = <span class="fn">max</span>(skor.values())
+skor_norm = {k: (v <span class="op">-</span> min_s) / (max_s <span class="op">-</span> min_s) <span class="kw">for</span> k, v <span class="kw">in</span> skor.items()}
+<span class="fn">print</span>({k: <span class="st">f"{v:.3f}"</span> <span class="kw">for</span> k, v <span class="kw">in</span> skor_norm.items()})
+
+<span class="cm"># POLA 2: Balik kunci dan nilai dictionary</span>
+label_ke_angka = {<span class="st">"kucing"</span>: <span class="nm">0</span>, <span class="st">"anjing"</span>: <span class="nm">1</span>, <span class="st">"burung"</span>: <span class="nm">2</span>}
+angka_ke_label = {v: k <span class="kw">for</span> k, v <span class="kw">in</span> label_ke_angka.items()}
+<span class="fn">print</span>(angka_ke_label)   <span class="cm"># → {0: 'kucing', 1: 'anjing', 2: 'burung'}</span>
+
+<span class="cm"># POLA 3: Hitung frekuensi tiap elemen</span>
+prediksi = [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">2</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">0</span>, <span class="nm">1</span>]
+kelas_unik = <span class="fn">set</span>(prediksi)
+frekuensi  = {kls: prediksi.<span class="fn">count</span>(kls) <span class="kw">for</span> kls <span class="kw">in</span> kelas_unik}
+<span class="fn">print</span>(frekuensi)   <span class="cm"># → {0: 4, 1: 4, 2: 2}</span>
+
+<span class="cm"># POLA 4: Kelompokkan data berdasarkan kunci</span>
+dataset = [
+    {<span class="st">"kelas"</span>: <span class="st">"XII-A"</span>, <span class="st">"nama"</span>: <span class="st">"Andi"</span>,  <span class="st">"nilai"</span>: <span class="nm">85</span>},
+    {<span class="st">"kelas"</span>: <span class="st">"XII-B"</span>, <span class="st">"nama"</span>: <span class="st">"Budi"</span>,  <span class="st">"nilai"</span>: <span class="nm">78</span>},
+    {<span class="st">"kelas"</span>: <span class="st">"XII-A"</span>, <span class="st">"nama"</span>: <span class="st">"Citra"</span>, <span class="st">"nilai"</span>: <span class="nm">92</span>},
+    {<span class="st">"kelas"</span>: <span class="st">"XII-B"</span>, <span class="st">"nama"</span>: <span class="st">"Dian"</span>,  <span class="st">"nilai"</span>: <span class="nm">88</span>},
+]
+kelas_list = <span class="fn">list</span>(<span class="fn">set</span>(d[<span class="st">"kelas"</span>] <span class="kw">for</span> d <span class="kw">in</span> dataset))
+rata_per_kelas = {
+    kls: <span class="fn">sum</span>(d[<span class="st">"nilai"</span>] <span class="kw">for</span> d <span class="kw">in</span> dataset <span class="kw">if</span> d[<span class="st">"kelas"</span>] <span class="op">==</span> kls)
+         / <span class="fn">sum</span>(<span class="nm">1</span> <span class="kw">for</span> d <span class="kw">in</span> dataset <span class="kw">if</span> d[<span class="st">"kelas"</span>] <span class="op">==</span> kls)
+    <span class="kw">for</span> kls <span class="kw">in</span> kelas_list
+}
+<span class="fn">print</span>(rata_per_kelas)   <span class="cm"># → {'XII-A': 88.5, 'XII-B': 83.0}</span></code></pre>
+        </div>
+
+        <!-- SUBBAB 4 -->
+        <h2 id="subbab-4">10.4 Generator dan Iterator Dasar</h2>
+
+        <p>
+          Bayangkan kamu punya dataset dengan 10 juta baris dan perlu memproses setiap barisnya. Kalau kamu memuat semuanya ke dalam list sekaligus, program bisa kehabisan memori. Di sinilah generator datang sebagai penyelamat. <strong>Generator</strong> adalah fungsi khusus yang menghasilkan nilai <em>satu per satu</em> setiap kali diminta — ia tidak menyimpan semua nilai sekaligus di memori, melainkan "mengingat" di mana ia berada dan melanjutkan dari situ setiap kali nilai berikutnya diperlukan.
+        </p>
+
+        <p>
+          Cara membuat generator sangat sederhana: tulis fungsi biasa, tapi ganti <code>return</code> dengan kata kunci <code>yield</code>. Saat fungsi generator dipanggil, ia tidak langsung menjalankan kodenya — ia mengembalikan sebuah objek generator. Kode di dalam fungsi baru berjalan sedikit demi sedikit setiap kali kamu meminta elemen berikutnya dengan <code>next()</code> atau saat diiterasi dengan <code>for</code>.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — generator dasar dengan yield</span>
+          </div>
+          <pre><code><span class="cm"># Fungsi biasa — mengembalikan semua nilai sekaligus (di memori)</span>
+<span class="kw">def</span> <span class="fn">kuadrat_list</span>(n):
+    hasil = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        hasil.append(i <span class="op">**</span> <span class="nm">2</span>)
+    <span class="kw">return</span> hasil   <span class="cm"># seluruh list ada di memori sekarang</span>
+
+<span class="cm"># Fungsi generator — menghasilkan nilai satu per satu (hemat memori)</span>
+<span class="kw">def</span> <span class="fn">kuadrat_gen</span>(n):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">yield</span> i <span class="op">**</span> <span class="nm">2</span>   <span class="cm"># 'yield' = hasilkan nilai ini, lalu jeda</span>
+
+<span class="cm"># Membuat dan menggunakan generator</span>
+gen = <span class="fn">kuadrat_gen</span>(<span class="nm">5</span>)
+<span class="fn">print</span>(<span class="fn">type</span>(gen))       <span class="cm"># → &lt;class 'generator'&gt;</span>
+<span class="fn">print</span>(<span class="fn">next</span>(gen))       <span class="cm"># → 0</span>
+<span class="fn">print</span>(<span class="fn">next</span>(gen))       <span class="cm"># → 1</span>
+<span class="fn">print</span>(<span class="fn">next</span>(gen))       <span class="cm"># → 4</span>
+
+<span class="cm"># Cara paling umum: pakai langsung di for loop</span>
+<span class="kw">for</span> nilai <span class="kw">in</span> <span class="fn">kuadrat_gen</span>(<span class="nm">6</span>):
+    <span class="fn">print</span>(nilai, end=<span class="st">" "</span>)
+<span class="cm"># → 0 1 4 9 16 25</span></code></pre>
+        </div>
+
+        <h3>Generator Expression — Cara Cepat Membuat Generator</h3>
+
+        <p>
+          Sama seperti list comprehension punya versi ringkasnya, generator juga punya. Cukup ganti kurung siku dengan kurung biasa dan kamu sudah punya <strong>ekspresi generator</strong> *(generator expression)*. Ia tidak membuat list — ia membuat objek generator yang malas:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — generator expression dan use case ML</span>
+          </div>
+          <pre><code><span class="cm"># List comprehension — buat semua elemen di memori sekarang</span>
+kuadrat_list = [x <span class="op">**</span> <span class="nm">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1_000_000</span>)]   <span class="cm"># ~8MB di memori</span>
+
+<span class="cm"># Generator expression — hitung satu per satu saat diperlukan</span>
+kuadrat_gen = (x <span class="op">**</span> <span class="nm">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1_000_000</span>))     <span class="cm"># ~100 bytes saja!</span>
+
+<span class="cm"># Hitung total tanpa muat semua ke memori — sangat berguna di ML</span>
+total = <span class="fn">sum</span>(x <span class="op">**</span> <span class="nm">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1_000_000</span>))   <span class="cm"># generator di dalam sum()</span>
+<span class="fn">print</span>(<span class="st">f"Total: {total:,}"</span>)
+
+<span class="cm"># Use case nyata: membaca file besar baris per baris</span>
+<span class="kw">def</span> <span class="fn">baca_baris_bersih</span>(path_file):
+    <span class="st">"""Generator yang membaca file baris per baris, bersihkan, dan saring baris kosong."""</span>
+    <span class="kw">with</span> <span class="fn">open</span>(path_file, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> baris <span class="kw">in</span> f:
+            baris_bersih = baris.<span class="fn">strip</span>()
+            <span class="kw">if</span> baris_bersih:        <span class="cm"># lewati baris kosong</span>
+                <span class="kw">yield</span> baris_bersih  <span class="cm"># hasilkan satu baris, jeda</span>
+
+<span class="cm"># Penggunaan: memori tetap kecil meski file-nya gigabyte!</span>
+<span class="cm"># for baris in baca_baris_bersih("data_besar.txt"):</span>
+<span class="cm">#     proses(baris)</span>
+
+<span class="cm"># Use case: generator untuk mini-batch dalam pelatihan model</span>
+<span class="kw">def</span> <span class="fn">buat_batch</span>(data, ukuran_batch):
+    <span class="st">"""Hasilkan data dalam potongan batch — fundamental di deep learning."""</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="fn">len</span>(data), ukuran_batch):
+        <span class="kw">yield</span> data[i : i <span class="op">+</span> ukuran_batch]
+
+dataset = <span class="fn">list</span>(<span class="fn">range</span>(<span class="nm">100</span>))   <span class="cm"># 100 sampel</span>
+<span class="kw">for</span> batch_ke, batch <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="fn">buat_batch</span>(dataset, <span class="nm">32</span>), start=<span class="nm">1</span>):
+    <span class="fn">print</span>(<span class="st">f"Batch {batch_ke}: {len(batch)} sampel"</span>)
+<span class="cm"># → Batch 1: 32 sampel</span>
+<span class="cm"># → Batch 2: 32 sampel</span>
+<span class="cm"># → Batch 3: 32 sampel</span>
+<span class="cm"># → Batch 4: 4 sampel</span></code></pre>
+        </div>
+
+        <div class="kartu-info">
+          <span class="kartu-ikon">💡</span>
+          <div class="kartu-isi">
+            <strong>Generator adalah Dasar DataLoader di PyTorch</strong>
+            <p>Di Buku 4 nanti, kamu akan menggunakan <code>DataLoader</code> dari PyTorch — komponen yang memuat data dalam mini-batch secara efisien selama pelatihan neural network. Di baliknya, <code>DataLoader</code> bekerja persis seperti generator <code>buat_batch()</code> di atas, hanya jauh lebih canggih: ia mendukung pengacakan urutan data, pemuatan paralel di banyak thread, dan transformasi otomatis. Memahami generator sekarang membuat kamu lebih cepat paham cara kerja DataLoader nanti.</p>
+          </div>
+        </div>
+
+        <!-- SUBBAB 5 -->
+        <h2 id="subbab-5">10.5 Dekorator (Decorator) — Pengantar Singkat</h2>
+
+        <p>
+          Dekorator adalah fitur Python yang memungkinkan kamu <strong>membungkus</strong> sebuah fungsi dengan fungsi lain untuk menambah perilaku baru tanpa mengubah kode fungsi aslinya. Konsep ini memanfaatkan hal yang sudah kamu pelajari di Bab 6 — bahwa fungsi adalah objek pertama yang bisa dioper dan dikembalikan. Dekorator sering terlihat misterius karena sintaksis <code>@</code> yang tidak biasa, tapi ide di baliknya sebenarnya sederhana.
+        </p>
+
+        <p>
+          Di dunia ML dan pengembangan aplikasi, dekorator dipakai untuk banyak keperluan: mencatat waktu eksekusi fungsi, memvalidasi input secara otomatis, menambahkan caching, mengatur rute URL di web framework, dan banyak lagi. Kamu belum perlu <em>membuat</em> dekorator yang kompleks sekarang, tapi kamu perlu bisa <em>membaca dan menggunakannya</em> karena mereka ada di mana-mana dalam kode produksi.
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — memahami dekorator dari prinsip pertama</span>
+          </div>
+          <pre><code><span class="cm"># Masalah yang diselesaikan dekorator:</span>
+<span class="cm"># Kamu ingin mengetahui berapa lama setiap fungsi berjalan</span>
+<span class="cm"># Tanpa mengubah kode fungsi-fungsi tersebut satu per satu</span>
+
+<span class="kw">import</span> time
+
+<span class="cm"># TANPA dekorator — harus tambah kode di setiap fungsi (tidak efisien)</span>
+<span class="kw">def</span> <span class="fn">latih_model</span>():
+    mulai = time.<span class="fn">perf_counter</span>()
+    time.<span class="fn">sleep</span>(<span class="nm">0.1</span>)   <span class="cm"># simulasi proses berat</span>
+    <span class="fn">print</span>(<span class="st">f"Model selesai dilatih ({time.perf_counter() - mulai:.3f}s)"</span>)
+
+<span class="cm"># DENGAN dekorator — tulis sekali, pakai di mana saja</span>
+<span class="kw">def</span> <span class="fn">ukur_waktu</span>(fungsi):
+    <span class="st">"""Dekorator yang mengukur waktu eksekusi fungsi."""</span>
+    <span class="kw">def</span> <span class="fn">pembungkus</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs):
+        mulai  = time.<span class="fn">perf_counter</span>()
+        hasil  = <span class="fn">fungsi</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs)   <span class="cm"># jalankan fungsi asli</span>
+        selesai = time.<span class="fn">perf_counter</span>()
+        <span class="fn">print</span>(<span class="st">f"[{fungsi.__name__}] selesai dalam {selesai - mulai:.4f}s"</span>)
+        <span class="kw">return</span> hasil
+    <span class="kw">return</span> pembungkus   <span class="cm"># kembalikan fungsi pembungkus</span>
+
+<span class="cm"># Cara manual menggunakan dekorator (tanpa @)</span>
+<span class="kw">def</span> <span class="fn">preprocessing</span>():
+    time.<span class="fn">sleep</span>(<span class="nm">0.05</span>)
+    <span class="kw">return</span> <span class="st">"data bersih"</span>
+
+preprocessing = <span class="fn">ukur_waktu</span>(preprocessing)   <span class="cm"># bungkus fungsinya</span>
+<span class="fn">preprocessing</span>()   <span class="cm"># → [preprocessing] selesai dalam 0.050xs</span>
+
+<span class="cm"># Cara modern menggunakan sintaksis @ — hasil identik, lebih bersih</span>
+<span class="op">@</span>ukur_waktu
+<span class="kw">def</span> <span class="fn">evaluasi_model</span>(nama_model):
+    <span class="fn">print</span>(<span class="st">f"Mengevaluasi {nama_model}..."</span>)
+    time.<span class="fn">sleep</span>(<span class="nm">0.08</span>)
+    <span class="kw">return</span> <span class="nm">0.934</span>
+
+akurasi = <span class="fn">evaluasi_model</span>(<span class="st">"XGBoost"</span>)
+<span class="cm"># → Mengevaluasi XGBoost...</span>
+<span class="cm"># → [evaluasi_model] selesai dalam 0.080xs</span>
+<span class="fn">print</span>(<span class="st">f"Akurasi: {akurasi}"</span>)</code></pre>
+        </div>
+
+        <h3>Dekorator Bawaan Python yang Sering Ditemui</h3>
+
+        <p>
+          Python menyertakan beberapa dekorator bawaan yang sangat berguna. Yang paling sering kamu temui di kode ML dan library adalah <code>@staticmethod</code>, <code>@classmethod</code>, dan <code>@property</code> di dalam kelas, serta <code>@functools.wraps</code> saat membuat dekorator sendiri. Di luar Python, library populer juga menyediakan dekorator mereka sendiri:
+        </p>
+
+        <div class="blok-kode">
+          <div class="blok-kode-header">
+            <div class="titik-titik"><span class="titik-merah"></span><span class="titik-kuning"></span><span class="titik-hijau"></span></div>
+            <span class="label-bahasa">python — dekorator yang sering ditemui</span>
+          </div>
+          <pre><code><span class="cm"># @staticmethod — metode yang tidak butuh akses ke instans atau kelas</span>
+<span class="kw">class</span> <span class="fn">PraPemrosesan</span>:
+    <span class="op">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">normalisasi</span>(data):
+        <span class="st">"""Bisa dipanggil tanpa membuat objek: PraPemrosesan.normalisasi(data)"""</span>
+        mn, mx = <span class="fn">min</span>(data), <span class="fn">max</span>(data)
+        <span class="kw">return</span> [(x - mn) / (mx - mn) <span class="kw">for</span> x <span class="kw">in</span> data]
+
+hasil = PraPemrosesan.<span class="fn">normalisasi</span>([<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>, <span class="nm">40</span>])
+<span class="fn">print</span>(hasil)   <span class="cm"># → [0.0, 0.333, 0.667, 1.0]</span>
+
+<span class="cm"># functools.cache — menyimpan hasil fungsi agar tidak dihitung ulang</span>
+<span class="kw">from</span> functools <span class="kw">import</span> cache
+
+<span class="op">@cache</span>
+<span class="kw">def</span> <span class="fn">fibonacci</span>(n):
+    <span class="st">"""Fibonacci yang efisien berkat caching otomatis."""</span>
+    <span class="kw">if</span> n <span class="op">&lt;</span> <span class="nm">2</span>: <span class="kw">return</span> n
+    <span class="kw">return</span> <span class="fn">fibonacci</span>(n <span class="op">-</span> <span class="nm">1</span>) <span class="op">+</span> <span class="fn">fibonacci</span>(n <span class="op">-</span> <span class="nm">2</span>)
+
+<span class="fn">print</span>(<span class="fn">fibonacci</span>(<span class="nm">50</span>))   <span class="cm"># → 12586269025 — super cepat karena di-cache</span>
+
+<span class="cm"># Contoh dekorator yang kamu lihat di framework populer:</span>
+<span class="cm">#</span>
+<span class="cm"># FastAPI (deploy model ML):</span>
+<span class="cm"># @app.get("/prediksi")</span>
+<span class="cm"># def prediksi(fitur: list):</span>
+<span class="cm">#     return model.predict(fitur)</span>
+<span class="cm">#</span>
+<span class="cm"># PyTest (pengujian otomatis):</span>
+<span class="cm"># @pytest.fixture</span>
+<span class="cm"># def model_terlatih():</span>
+<span class="cm">#     return ModelKlasifikasi("Test").latih(X, y)</span>
+<span class="fn">print</span>(<span class="st">"Sintaksis @ adalah cara bersih memakai dekorator."</span>)</code></pre>
+        </div>
+
+        <div class="kartu-peringatan">
+          <span class="kartu-ikon">⚠️</span>
+          <div class="kartu-isi">
+            <strong>Dekorator yang Baik Harus Menjaga Identitas Fungsi</strong>
+            <p>Masalah umum dengan dekorator sederhana: fungsi yang didekorasi kehilangan namanya dan docstringnya — <code>fungsi.__name__</code> akan mengembalikan nama pembungkus, bukan nama fungsi asli. Ini mempersulit debugging. Solusinya adalah menambahkan <code>@functools.wraps(fungsi)</code> di dalam fungsi pembungkus — ia menyalin nama, docstring, dan metadata lain dari fungsi asli ke pembungkus. Ini praktik standar saat membuat dekorator sendiri.</p>
+          </div>
+        </div>
+
+        <h3>Ringkasan: Kapan Memakai Teknik Ini</h3>
+
+        <div class="wadah-tabel">
+          <table>
+            <thead>
+              <tr>
+                <th>Teknik</th>
+                <th>Gunakan ketika</th>
+                <th>Hindari ketika</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Lambda</strong></td>
+                <td>Fungsi pendek sekali pakai sebagai argumen</td>
+                <td>Logika lebih dari satu ekspresi, butuh debugging</td>
+              </tr>
+              <tr>
+                <td><strong>map()</strong></td>
+                <td>Terapkan fungsi bawaan ke semua elemen</td>
+                <td>Transformasi kompleks — pakai list comprehension</td>
+              </tr>
+              <tr>
+                <td><strong>filter()</strong></td>
+                <td>Saring elemen berdasarkan fungsi kondisi</td>
+                <td>Kondisi sederhana — <code>[x for x in d if cond]</code> lebih jelas</td>
+              </tr>
+              <tr>
+                <td><strong>zip()</strong></td>
+                <td>Iterasi paralel dua list atau lebih</td>
+                <td>Panjang list berbeda dan semua elemen penting</td>
+              </tr>
+              <tr>
+                <td><strong>Dict Comprehension</strong></td>
+                <td>Buat dictionary baru dari transformasi/filter</td>
+                <td>Logika terlalu kompleks — gunakan loop biasa</td>
+              </tr>
+              <tr>
+                <td><strong>Generator</strong></td>
+                <td>Data besar, streaming, mini-batch ML</td>
+                <td>Data kecil dan butuh akses acak ke elemen</td>
+              </tr>
+              <tr>
+                <td><strong>Dekorator</strong></td>
+                <td>Tambah perilaku silang (logging, timing, cache)</td>
+                <td>Logika yang seharusnya ada di dalam fungsi itu sendiri</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="kartu-catatan">
+          <span class="kartu-ikon">📌</span>
+          <div class="kartu-isi">
+            <strong>Selamat — Python Dasarmu Sudah Solid</strong>
+            <p>Kamu baru saja menyelesaikan Bagian III, Python Menengah. Dengan menguasai semua yang ada di Bab 8–10, kamu sudah siap membaca dan memahami kode dari library ML nyata tanpa kebingungan besar. Bagian selanjutnya adalah Bagian IV: Git dan Kolaborasi Kode — alat yang membuat kode dan karir profesionalmu menjadi nyata. Bab 11 dimulai dengan pertanyaan paling mendasar: kenapa Git itu bukan pilihan, melainkan keharusan?</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- akhir .konten -->
+
+    </div>
+    <!-- akhir .wadah -->
+  </main>
+
+  <!-- ===== NAVIGASI BAB ===== -->
+  <nav class="navigasi-bab" aria-label="Navigasi antar bab">
+    <div class="wadah">
+
+      <a href="b01-bab-09.html" class="tombol-navigasi kiri">
+        <span class="arah"><span class="arah-panah">←</span> bab sebelumnya</span>
+        <span class="judul-bab-nav">Bab 9: Modul dan Paket</span>
+      </a>
+
+      <div class="posisi-tengah">
+        <div class="indikator-progres">
+          <div class="nomor-bab-sekarang">bab 10 / 15</div>
+          <div class="dot-progres">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span class="aktif"></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="b01-bab-11.html" class="tombol-navigasi kanan">
+        <span class="arah">bab selanjutnya <span class="arah-panah">→</span></span>
+        <span class="judul-bab-nav">Bab 11: Kenapa Git Itu Wajib</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wadah">
+      <div class="footer-kiri">
+        <div class="footer-ikon">⬡</div>
+        <div class="footer-nama-seri">Dari Nol ke Insinyur KA</div>
+      </div>
+      <div class="footer-kanan">
+        <div>Fondasi: Python &amp; Git · Bab 10</div>
+        <a href="../index.html">← kembali ke beranda</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
